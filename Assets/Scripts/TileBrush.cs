@@ -17,8 +17,7 @@ public class TileBrush : MonoBehaviour
 	//the thing that holds all the items in the game
 	public ItemDictionary itemDictionary;
 	//holds a list of where all items are
-	//List<Vector2> placedObjects = new List<Vector2>();
-	Dictionary<Vector2, GameObject> placeObjects = new Dictionary<Vector2, GameObject>();
+	public GridControl grid;
 
 	// Update is called once per frame
 	void Update()
@@ -27,32 +26,39 @@ public class TileBrush : MonoBehaviour
 		transform.position = new Vector3(mousePos.x, mousePos.y, 0);
 		roundedMousePos = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
 
+		//placement
 		if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
-			//Debug.Log(worldGrid.WorldToCell(roundedMousePos));
-			//Debug.Log(worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)));
-			if (brushItem != null && (placeObjects.Count == 0 || !placeObjects.ContainsKey(roundedMousePos)))
+			if (brushItem != null && (grid.placeObjects.Count == 0 || !grid.placeObjects.ContainsKey(roundedMousePos)))
 			{
-				placeObjects.Add(roundedMousePos, Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform));
-				//Debug.Log("Placed");
-				//Debug.Log(placeObjects.ContainsKey(roundedMousePos));
+				GameObject objectPlaceholder;
+				//place the object in the world aligned to the grid and add it to the grids dictionary for easy lookup for other things
+				grid.placeObjects.Add(roundedMousePos, objectPlaceholder = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform));
+
+				if (objectPlaceholder.GetComponent<Placeable>() != null)
+				{
+					objectPlaceholder.GetComponent<Placeable>().PlacedAction(grid);
+				}
 			}
 		}
 
+		// deconstruction
 		if (Input.GetMouseButtonDown(1))
 		{
-			if (placeObjects.ContainsKey(roundedMousePos))
+			if (grid.placeObjects.ContainsKey(roundedMousePos))
 			{
-				Debug.Log(placeObjects[roundedMousePos].transform.position);
-				GameObject.Destroy(placeObjects[roundedMousePos]);
-				placeObjects.Remove(roundedMousePos);
-				Debug.Log("object Deleted");
+				//find trhe object in the grid dictionary and delete it and remove from said dictionary
+				//Debug.Log(grid.placeObjects[roundedMousePos].transform.position);
+				GameObject.Destroy(grid.placeObjects[roundedMousePos]);
+				grid.placeObjects.Remove(roundedMousePos);
+				//Debug.Log("object Deleted");
 			}
 		}
 
+		// rotate item preview
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-			Rotate();
+			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 90f);
 		}
 	}
 
@@ -67,10 +73,5 @@ public class TileBrush : MonoBehaviour
 	{
 		brushItem = null;
 		itemPreview.sprite = null;
-	}
-
-	public void Rotate()
-	{
-		itemPreview.transform.Rotate(new Vector3(0, 0, 1), 90f);
 	}
 }
