@@ -13,25 +13,30 @@ public class BeltLogic : Placeable
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		grid.placeObjects.TryGetValue((transform.position + transform.right), out frontBelt);
-		grid.placeObjects.TryGetValue((transform.position - transform.right), out backBelt);
 
-		if (frontBelt.GetComponent<BeltLogic>() == null)
+
+		if (grid.placeObjects.TryGetValue((transform.position + transform.right), out frontBelt))
 		{
-			frontBelt = null;
-		}
-		else
-		{
-			frontBelt.GetComponent<BeltLogic>().backBelt = gameObject;
+			if (frontBelt.GetComponent<BeltLogic>() == null)
+			{
+				frontBelt = null;
+			}
+			else
+			{
+				frontBelt.GetComponent<BeltLogic>().backBelt = gameObject;
+			}
 		}
 
-		if (backBelt.GetComponent<BeltLogic>() == null)
+		if (grid.placeObjects.TryGetValue((transform.position - transform.right), out backBelt))
 		{
-			backBelt = null;
-		}
-		else
-		{
-			backBelt.GetComponent<BeltLogic>().frontBelt = gameObject;
+			if (backBelt.GetComponent<BeltLogic>() == null)
+			{
+				backBelt = null;
+			}
+			else
+			{
+				backBelt.GetComponent<BeltLogic>().frontBelt = gameObject;
+			}
 		}
 
 		grid.OnBeltTimerCycle += BeltCycle;

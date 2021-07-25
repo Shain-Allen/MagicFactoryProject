@@ -22,6 +22,7 @@ public class GridControl : MonoBehaviour
 
 		if (beltCycleTimeLeft <= 0)
 		{
+			Debug.Log("Belt pulse");
 			beltCycleTimeLeft = beltCycleTime;
 			OnBeltTimerCycle?.Invoke(this, EventArgs.Empty);
 		}
