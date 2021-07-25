@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,6 +33,8 @@ public class BeltLogic : Placeable
 		{
 			backBelt.GetComponent<BeltLogic>().frontBelt = gameObject;
 		}
+
+		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
 	public void PulseBack()
@@ -42,5 +45,15 @@ public class BeltLogic : Placeable
 	public void CheckForward()
 	{
 
+	}
+
+	public void BeltCycle(object sender, EventArgs e)
+	{
+		Debug.Log("Belt event triggered");
+	}
+
+	private void OnDestroy()
+	{
+		grid.OnBeltTimerCycle -= BeltCycle;
 	}
 }
