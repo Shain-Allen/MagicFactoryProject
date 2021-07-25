@@ -6,36 +6,40 @@ using UnityEngine;
 public class BeltLogic : Placeable
 {
 	GridControl grid;
-	public GameObject frontBelt;
-	public GameObject backBelt;
+	public BeltLogic frontBelt;
+	public BeltLogic backBelt;
 	public GameObject itemSlot;
+
+	public bool hasRecived = false;
 
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
+		GameObject temp = null;
 
-
-		if (grid.placeObjects.TryGetValue((transform.position + transform.right), out frontBelt))
+		if (grid.placeObjects.TryGetValue((transform.position + transform.right), out temp))
 		{
-			if (frontBelt.GetComponent<BeltLogic>() == null)
+			if (temp.GetComponent<BeltLogic>() == null)
 			{
 				frontBelt = null;
 			}
 			else
 			{
-				frontBelt.GetComponent<BeltLogic>().backBelt = gameObject;
+				frontBelt = temp.GetComponent<BeltLogic>();
+				frontBelt.backBelt = this;
 			}
 		}
 
-		if (grid.placeObjects.TryGetValue((transform.position - transform.right), out backBelt))
+		if (grid.placeObjects.TryGetValue((transform.position - transform.right), out temp))
 		{
-			if (backBelt.GetComponent<BeltLogic>() == null)
+			if (temp.GetComponent<BeltLogic>() == null)
 			{
 				backBelt = null;
 			}
 			else
 			{
-				backBelt.GetComponent<BeltLogic>().frontBelt = gameObject;
+				backBelt = temp.GetComponent<BeltLogic>();
+				backBelt.frontBelt = this;
 			}
 		}
 
@@ -44,21 +48,36 @@ public class BeltLogic : Placeable
 
 	public void PulseBack()
 	{
-
+		backBelt.BeltCycle(this, EventArgs.Empty);
 	}
 
-	public void CheckForward()
+	public bool CheckForward()
 	{
-
+		if (itemSlot != null && frontBelt.itemSlot == null && frontBelt.hasRecived == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		Debug.Log("Belt event triggered");
-	}
+		hasRecived = false;
 
-	private void OnDestroy()
-	{
-		grid.OnBeltTimerCycle -= BeltCycle;
+		if (!CheckForward())
+		{
+			return;
+		}
+
+		frontBelt.itemSlot = itemSlot;
+
+		itemSlot.transform.Translate(frontBelt.transform.position);
+
+		itemSlot = null;
+
+		PulseBack();
 	}
 }
