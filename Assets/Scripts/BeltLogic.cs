@@ -10,8 +10,6 @@ public class BeltLogic : Placeable
 	public BeltLogic backBelt;
 	public GameObject itemSlot;
 
-	public bool hasRecived = false;
-
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
@@ -48,55 +46,48 @@ public class BeltLogic : Placeable
 
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		MoveItem();
+		if (frontBelt == null)
+		{
+			MoveItem();
+		}
 	}
 
 	public void MoveItem()
 	{
 		if (frontBelt == null)
 		{
+			if (backBelt != null)
+			{
+				backBelt.MoveItem();
+			}
 			return;
 		}
 
-		hasRecived = false;
-
-		if (!CheckForward())
+		if (itemSlot == null)
 		{
-			PulseBack();
-			frontBelt.hasRecived = true;
+			if (backBelt != null)
+			{
+				backBelt.MoveItem();
+			}
 			return;
 		}
 
-		frontBelt.itemSlot = itemSlot;
+		if (frontBelt.itemSlot != null)
+		{
+			if (backBelt != null)
+			{
+				backBelt.MoveItem();
+			}
+			return;
+		}
 
 		itemSlot.transform.position = frontBelt.transform.position;
-
+		frontBelt.itemSlot = itemSlot;
 		itemSlot = null;
 
-		frontBelt.hasRecived = true;
-
-		Debug.Log("Item Moved");
-
-		PulseBack();
-	}
-
-	public void PulseBack()
-	{
 		if (backBelt != null)
 		{
 			backBelt.MoveItem();
-		}
-	}
-
-	public bool CheckForward()
-	{
-		if (itemSlot != null && frontBelt.itemSlot == null && frontBelt.hasRecived == false)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
 		}
 	}
 }

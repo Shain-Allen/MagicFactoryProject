@@ -8,7 +8,7 @@ public class GridControl : MonoBehaviour
 	public event EventHandler OnBeltTimerCycle;
 	public Dictionary<Vector2, GameObject> placeObjects = new Dictionary<Vector2, GameObject>();
 
-	[SerializeField] float beltCycleTime = 5f;
+	public float beltCycleTime { get; } = 2f;
 	float beltCycleTimeLeft = 0f;
 
 	private void Start()
