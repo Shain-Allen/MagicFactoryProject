@@ -46,14 +46,51 @@ public class BeltLogic : Placeable
 		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
+	public void BeltCycle(object sender, EventArgs e)
+	{
+		MoveItem();
+	}
+
+	public void MoveItem()
+	{
+		if (frontBelt == null)
+		{
+			return;
+		}
+
+		hasRecived = false;
+
+		if (!CheckForward())
+		{
+			PulseBack();
+			frontBelt.hasRecived = true;
+			return;
+		}
+
+		frontBelt.itemSlot = itemSlot;
+
+		itemSlot.transform.position = frontBelt.transform.position;
+
+		itemSlot = null;
+
+		frontBelt.hasRecived = true;
+
+		Debug.Log("Item Moved");
+
+		PulseBack();
+	}
+
 	public void PulseBack()
 	{
-		backBelt.BeltCycle(this, EventArgs.Empty);
+		if (backBelt != null)
+		{
+			backBelt.MoveItem();
+		}
 	}
 
 	public bool CheckForward()
 	{
-		if (itemSlot != null && frontBelt.itemSlot == null && frontBelt.hasRecived == true)
+		if (itemSlot != null && frontBelt.itemSlot == null && frontBelt.hasRecived == false)
 		{
 			return true;
 		}
@@ -61,23 +98,5 @@ public class BeltLogic : Placeable
 		{
 			return false;
 		}
-	}
-
-	public void BeltCycle(object sender, EventArgs e)
-	{
-		hasRecived = false;
-
-		if (!CheckForward())
-		{
-			return;
-		}
-
-		frontBelt.itemSlot = itemSlot;
-
-		itemSlot.transform.Translate(frontBelt.transform.position);
-
-		itemSlot = null;
-
-		PulseBack();
 	}
 }
