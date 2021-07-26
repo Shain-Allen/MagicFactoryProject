@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3391785271467413193}
   - component: {fileID: 6104204943763043666}
   m_Layer: 0
-  m_Name: ArrowBelt
+  m_Name: Belt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
