@@ -11,9 +11,12 @@ public class GridControl : MonoBehaviour
 	public float beltCycleTime { get; } = 2f;
 	float beltCycleTimeLeft = 0f;
 
+	public GameObject oreName;
+
 	private void Start()
 	{
 		beltCycleTimeLeft = beltCycleTime;
+		OreGeneration.GenerateOres(this, oreName, 0, 100, 100);
 	}
 
 	private void Update()
