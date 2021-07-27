@@ -138,7 +138,7 @@ public class BeltLogic : Placeable
 	public override void RemovedAction()
 	{
 		grid.placeObjects.Remove(transform.position);
-		Debug.Log($"{gameObject.name} Deleted from Dictionary");
+		//Debug.Log($"{gameObject.name} Deleted from Dictionary");
 
 		backBelt.AttachBelts();
 		backBelt = null;

@@ -55,9 +55,9 @@ public class TileBrush : MonoBehaviour
 				else
 				{
 					GameObject.Destroy(grid.placeObjects[roundedMousePos]);
-					Debug.Log($"{grid.placeObjects[roundedMousePos]} Destroyed");
+					//Debug.Log($"{grid.placeObjects[roundedMousePos]} Destroyed");
 					grid.placeObjects.Remove(roundedMousePos);
-					Debug.Log("object Deleted");
+					//Debug.Log("object Deleted");
 				}
 
 			}
