@@ -48,10 +48,18 @@ public class TileBrush : MonoBehaviour
 			if (grid.placeObjects.ContainsKey(roundedMousePos))
 			{
 				//find trhe object in the grid dictionary and delete it and remove from said dictionary
-				//Debug.Log(grid.placeObjects[roundedMousePos].transform.position);
-				GameObject.Destroy(grid.placeObjects[roundedMousePos]);
-				grid.placeObjects.Remove(roundedMousePos);
-				//Debug.Log("object Deleted");
+				if (grid.placeObjects[roundedMousePos].GetComponent<Placeable>() != null)
+				{
+					grid.placeObjects[roundedMousePos].GetComponent<Placeable>().RemovedAction();
+				}
+				else
+				{
+					GameObject.Destroy(grid.placeObjects[roundedMousePos]);
+					Debug.Log($"{grid.placeObjects[roundedMousePos]} Destroyed");
+					grid.placeObjects.Remove(roundedMousePos);
+					Debug.Log("object Deleted");
+				}
+
 			}
 		}
 

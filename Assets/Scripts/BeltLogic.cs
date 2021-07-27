@@ -18,10 +18,42 @@ public class BeltLogic : Placeable
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		GameObject temp = null;
 
+		AttachBelts();
+
+		Debug.Log($"BackBelt: {backBelt}");
+		Debug.Log($"FrontBelt: {frontBelt}");
+
+
+		grid.OnBeltTimerCycle += BeltCycle;
+	}
+
+	public void AttachBelts()
+	{
+
+		switch (transform.rotation.eulerAngles.z)
+		{
+			case 0:
+				TryAttachBelts(Vector3.up);
+				break;
+			case 90:
+				TryAttachBelts(Vector3.left);
+				break;
+			case 180:
+				TryAttachBelts(Vector3.down);
+				break;
+			case -90:
+				TryAttachBelts(Vector3.right);
+				break;
+		}
+	}
+
+	// Checks if the back belt exists and is pointing towards this one, then connects them
+	private void TryAttachBelts(Vector3 direction)
+	{
+		GameObject temp = null;
 		// If there is a belt in front of this one, connect them
-		if (grid.placeObjects.TryGetValue((transform.position + transform.right), out temp))
+		if (grid.placeObjects.TryGetValue((transform.position + direction), out temp))
 		{
 			if (temp.GetComponent<BeltLogic>() == null)
 			{
@@ -33,36 +65,26 @@ public class BeltLogic : Placeable
 				frontBelt.backBelt = this;
 			}
 		}
-		
-		backBelt = null;
-		// If there is a belt directly behind this one and points to this, connect them
-		// Tries again for left, then right, if they don't attach
-		if (grid.placeObjects.TryGetValue((transform.position - transform.right), out temp))
+		else
 		{
-			TryToAttachBeltsHelper(temp);
+			frontBelt = null;
 		}
-		if (backBelt == null && grid.placeObjects.TryGetValue((transform.position + transform.up), out temp))
+		// If there is a belt behind this one Connect with it
+		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
 		{
-			TryToAttachBeltsHelper(temp);
+			if (temp.GetComponent<BeltLogic>() == null)
+			{
+				backBelt = null;
+			}
+			else
+			{
+				backBelt = temp.GetComponent<BeltLogic>();
+				backBelt.frontBelt = this;
+			}
 		}
-		if (backBelt == null && grid.placeObjects.TryGetValue((transform.position - transform.up), out temp))
+		else
 		{
-			TryToAttachBeltsHelper(temp);
-		}
-
-		grid.OnBeltTimerCycle += BeltCycle;
-	}
-
-	// Checks if the back belt exists and is pointing towards this one, then connects them
-	private void TryToAttachBeltsHelper(GameObject back)
-	{
-		if (back.GetComponent<BeltLogic>() == null)
-			return;
-		if (back.transform.position + back.transform.right == transform.position)
-		{
-			backBelt = back.GetComponent<BeltLogic>();
-			backBelt.frontBelt = this;
-			return;
+			backBelt = null;
 		}
 	}
 
@@ -111,5 +133,19 @@ public class BeltLogic : Placeable
 		{
 			backBelt.MoveItem();
 		}
+	}
+
+	public override void RemovedAction()
+	{
+		grid.placeObjects.Remove(transform.position);
+		Debug.Log($"{gameObject.name} Deleted from Dictionary");
+
+		backBelt.AttachBelts();
+		backBelt = null;
+		frontBelt.AttachBelts();
+		frontBelt = null;
+		itemSlot = null;
+
+		Destroy(gameObject);
 	}
 }
