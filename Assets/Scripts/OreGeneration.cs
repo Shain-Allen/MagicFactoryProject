@@ -6,7 +6,7 @@ using UnityEngine;
 public class OreGeneration : MonoBehaviour
 {
     // Determines the maximum radial distance of the ores from the spawn center
-    private const int MAX_RADIUS = 3;
+    private const float MAX_RADIUS = 4.5f;
     // Essentially translates to % of all tiles that are the center of an ore vein.
     private const float SPAWN_CHANCE = 0.003f;
 
@@ -36,13 +36,21 @@ public class OreGeneration : MonoBehaviour
         return OreSpawns;
     }
 
-    private static void SpawnVein(GridControl grid, GameObject oreName, Vector3Int center, System.Random randGen, int leftEdge, int rightEdge, int topEdge, int bottomEdge)
+    private static void SpawnVein(GridControl grid, GameObject oreName, Vector3Int center, System.Random randGen, int left, int right, int top, int bottom)
     {
-        for (int x = (center.x - MAX_RADIUS < leftEdge ? leftEdge : center.x - MAX_RADIUS); x <= (center.x + MAX_RADIUS > rightEdge ? rightEdge : center.x + MAX_RADIUS); x++)
-            for (int y = (center.y - MAX_RADIUS < topEdge ? topEdge : center.y - MAX_RADIUS); y <= (center.y + MAX_RADIUS > bottomEdge ? bottomEdge : center.y + MAX_RADIUS); y++)
-                if (Vector3Int.Distance(new Vector3Int(x, y, 0), center) < MAX_RADIUS)
-                {
-                    grid.placeObjects.Add((Vector2Int)center, Instantiate(oreName, center, Quaternion.identity, grid.transform));
-                }
+        double dist;
+        double rad = MAX_RADIUS - (randGen.NextDouble() * 3);
+        int maxRad = (int)Math.Ceiling(rad);
+        GameObject temp;
+
+        // For loops essentially look at the square around the center where MAX_RADIUS is contained, but doesn't go off the edge
+        for (int x = (center.x - maxRad < left ? left : center.x - maxRad); x <= (center.x + maxRad > right ? right : center.x + maxRad); x++)
+            for (int y = (center.y - maxRad < top ? top : center.y - maxRad); y <= (center.y + maxRad > bottom ? bottom : center.y + maxRad); y++)
+            {
+                dist = Math.Sqrt( Math.Pow(x - center.x, 2) + Math.Pow(y - center.y, 2) );
+                bool empty = !grid.placeObjects.TryGetValue((new Vector2(x, y)), out temp);
+                if (dist <= rad && empty)
+                    grid.placeObjects.Add(new Vector2(x, y), Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, grid.transform));
+            }
     }
 }
