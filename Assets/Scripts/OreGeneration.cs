@@ -6,9 +6,9 @@ using UnityEngine;
 public class OreGeneration : MonoBehaviour
 {
     // Determines the maximum radial distance of the ores from the spawn center
-    private const float MAX_RADIUS = 4.5f;
+    private const float MAX_RADIUS = 8.5f;
     // Essentially translates to % of all tiles that are the center of an ore vein.
-    private const float SPAWN_CHANCE = 0.003f;
+    private const float SPAWN_CHANCE = 0.0003f;
     // The size of chunks! Chunks are squares, so this is both the height and the width
     private const int chunkSize = 128;
 
@@ -74,12 +74,12 @@ public class OreGeneration : MonoBehaviour
      */
     private static void SpawnVein(GridControl grid, GameObject oreName, Vector3Int center, System.Random randGen, int left, int right, int top, int bottom)
     {
-        double dist;
-        bool empty;
         // rad will determine the radius of the vein by a random amount up to 3
-        double rad = MAX_RADIUS - (randGen.NextDouble() * 3);
+        double rad = MAX_RADIUS - (randGen.NextDouble() * MAX_RADIUS / 2);
         // maxRad will always encompass all ores for the vein, this is used for the for loops
         int maxRad = (int)Math.Ceiling(rad);
+        double dist, oddsOfOre;
+        bool empty;
         GameObject temp;
 
         // For loops essentially look at the square around the center where MAX_RADIUS is contained, but doesn't go off the edge
@@ -88,7 +88,8 @@ public class OreGeneration : MonoBehaviour
             {
                 dist = Math.Sqrt( Math.Pow(x - center.x, 2) + Math.Pow(y - center.y, 2) );
                 empty = !grid.oreObjects.TryGetValue((new Vector2(x, y)), out temp);
-                if (dist <= rad && empty)
+                oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;   
+                if (randGen.NextDouble() <= oddsOfOre && dist <= rad && empty)
                     grid.oreObjects.Add(new Vector2(x, y), Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, grid.transform));
             }
     }
