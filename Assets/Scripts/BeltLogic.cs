@@ -69,8 +69,33 @@ public class BeltLogic : Placeable
 		{
 			frontBelt = null;
 		}
+
 		// If there is a belt behind this one Connect with it
 		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
+		{
+			if (temp.GetComponent<BeltLogic>() == null)
+			{
+				backBelt = null;
+			}
+			else
+			{
+				backBelt = temp.GetComponent<BeltLogic>();
+				backBelt.frontBelt = this;
+			}
+		}
+		else if (grid.placeObjects.TryGetValue((transform.position + transform.right), out temp))
+		{
+			if (temp.GetComponent<BeltLogic>() == null)
+			{
+				backBelt = null;
+			}
+			else
+			{
+				backBelt = temp.GetComponent<BeltLogic>();
+				backBelt.frontBelt = this;
+			}
+		}
+		else if (grid.placeObjects.TryGetValue((transform.position - transform.right), out temp))
 		{
 			if (temp.GetComponent<BeltLogic>() == null)
 			{
