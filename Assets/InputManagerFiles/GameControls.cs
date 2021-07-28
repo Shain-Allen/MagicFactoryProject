@@ -41,6 +41,14 @@ public class @GameControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ClearBrush"",
+                    ""type"": ""Button"",
+                    ""id"": ""dcb5ec2e-f122-40be-ae28-ea1f72c481a4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -131,6 +139,17 @@ public class @GameControls : IInputActionCollection, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ece3315d-f02c-4043-8c8a-ce74e5130b41"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ClearBrush"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -142,6 +161,7 @@ public class @GameControls : IInputActionCollection, IDisposable
         m_GeneralControls_MouseClicks = m_GeneralControls.FindAction("MouseClicks", throwIfNotFound: true);
         m_GeneralControls_PlayerMovement = m_GeneralControls.FindAction("PlayerMovement", throwIfNotFound: true);
         m_GeneralControls_Rotate = m_GeneralControls.FindAction("Rotate", throwIfNotFound: true);
+        m_GeneralControls_ClearBrush = m_GeneralControls.FindAction("ClearBrush", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -194,6 +214,7 @@ public class @GameControls : IInputActionCollection, IDisposable
     private readonly InputAction m_GeneralControls_MouseClicks;
     private readonly InputAction m_GeneralControls_PlayerMovement;
     private readonly InputAction m_GeneralControls_Rotate;
+    private readonly InputAction m_GeneralControls_ClearBrush;
     public struct GeneralControlsActions
     {
         private @GameControls m_Wrapper;
@@ -201,6 +222,7 @@ public class @GameControls : IInputActionCollection, IDisposable
         public InputAction @MouseClicks => m_Wrapper.m_GeneralControls_MouseClicks;
         public InputAction @PlayerMovement => m_Wrapper.m_GeneralControls_PlayerMovement;
         public InputAction @Rotate => m_Wrapper.m_GeneralControls_Rotate;
+        public InputAction @ClearBrush => m_Wrapper.m_GeneralControls_ClearBrush;
         public InputActionMap Get() { return m_Wrapper.m_GeneralControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -219,6 +241,9 @@ public class @GameControls : IInputActionCollection, IDisposable
                 @Rotate.started -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnRotate;
+                @ClearBrush.started -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnClearBrush;
+                @ClearBrush.performed -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnClearBrush;
+                @ClearBrush.canceled -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnClearBrush;
             }
             m_Wrapper.m_GeneralControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -232,6 +257,9 @@ public class @GameControls : IInputActionCollection, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @ClearBrush.started += instance.OnClearBrush;
+                @ClearBrush.performed += instance.OnClearBrush;
+                @ClearBrush.canceled += instance.OnClearBrush;
             }
         }
     }
@@ -241,5 +269,6 @@ public class @GameControls : IInputActionCollection, IDisposable
         void OnMouseClicks(InputAction.CallbackContext context);
         void OnPlayerMovement(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnClearBrush(InputAction.CallbackContext context);
     }
 }

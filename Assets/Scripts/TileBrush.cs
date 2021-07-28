@@ -42,10 +42,14 @@ public class TileBrush : MonoBehaviour
 		//Delegate with lambda expression to hook up the Method to the C# event for starting the movement of the camera
 		gameControls.GeneralControls.PlayerMovement.performed += ctx => PlayerMovementStart(ctx);
 
+		//Delegate with Lambda expression to hook up the Method to the C# event for reseting moveInput to 0,0 to stop camera movement when WASD is not longer being pressed
 		gameControls.GeneralControls.PlayerMovement.canceled += ctx => PlayerMovementStop();
 
 		//Delegate with Lambda expression to hook up the Method to the C# event for rotating items
 		gameControls.GeneralControls.Rotate.started += ctx => RotateItem();
+
+		//Delegate with Lambda Expression to hook up the Method to the C# event for clearing the brush
+		gameControls.GeneralControls.ClearBrush.started += ctx => EmptyBrushItem();
 	}
 
 	// Update is called once per frame
@@ -96,6 +100,7 @@ public class TileBrush : MonoBehaviour
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed;
 	}
 
+	//Update the brush item to the last clicked item
 	public void ChangeBrushItem(int _itemID)
 	{
 		brushItem = itemDictionary.itemList[_itemID];
@@ -103,22 +108,26 @@ public class TileBrush : MonoBehaviour
 		itemPreview.color = brushItem.GetComponent<SpriteRenderer>().color;
 	}
 
+	//Empty the current item from the Brush
 	public void EmptyBrushItem()
 	{
 		brushItem = null;
 		itemPreview.sprite = null;
 	}
 
+	//this is constantly updating MoveInput to reflect the state of WASD
 	private void PlayerMovementStart(InputAction.CallbackContext context)
 	{
 		moveInput = context.ReadValue<Vector2>();
 	}
 
+	//this resets the MoveInput to 0,0 once WASD is not being pressed anymore to stop camera movement
 	private void PlayerMovementStop()
 	{
 		moveInput = new Vector2(0, 0);
 	}
 
+	//this rotates the item when the rotate key is pressed
 	private void RotateItem()
 	{
 		if (itemPreview)
