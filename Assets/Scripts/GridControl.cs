@@ -7,6 +7,7 @@ public class GridControl : MonoBehaviour
 {
 	public event EventHandler OnBeltTimerCycle;
 	public Dictionary<Vector2, GameObject> placeObjects = new Dictionary<Vector2, GameObject>();
+	public Dictionary<Vector2, GameObject> oreObjects = new Dictionary<Vector2, GameObject>();
 
 	public float beltCycleTime { get; } = 2f;
 	float beltCycleTimeLeft = 0f;
@@ -16,7 +17,11 @@ public class GridControl : MonoBehaviour
 	private void Start()
 	{
 		beltCycleTimeLeft = beltCycleTime;
-		OreGeneration.GenerateOres(this, oreName, 0, 100, 100);
+		for (int x = -2; x <= 2; x++)
+			for (int y = -2; y <= 2; y++)
+			{
+				OreGeneration.GenerateOres(this, oreName, 0, x, y);
+			}
 	}
 
 	private void Update()
