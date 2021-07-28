@@ -1338,6 +1338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e58b957b5a305046b07e5c863774b56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.5
   roundedMousePos: {x: 0, y: 0, z: 0}
   worldGrid: {fileID: 1989458524}
   brushItem: {fileID: 0}
@@ -1388,6 +1389,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 349bf245-e803-445e-9fa0-40da262582b9
     m_ActionName: GeneralControls/MouseClicks[/Mouse/leftButton,/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1613626374}
+        m_TargetAssemblyTypeName: TileBrush, Assembly-CSharp
+        m_MethodName: PlayerMovement
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b4111608-31e8-46b0-913f-e4c946aff0d9
+    m_ActionName: GeneralControls/CameraMovement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: GeneralControls
@@ -1585,6 +1602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfca8bb556c2d334ea2599f6fcef9d68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oreName: {fileID: 7404308695476433443, guid: 07612262c202602469b84c31961d8b33, type: 3}
 --- !u!1 &2095421166
 GameObject:
   m_ObjectHideFlags: 0

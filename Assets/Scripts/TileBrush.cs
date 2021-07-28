@@ -2,9 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class TileBrush : MonoBehaviour
 {
+	//movement input
+	Vector2 moveInput;
+	//movement speed
+	public float moveSpeed = 1f;
+	//camera Reference
+	GameObject cam;
 	//mouse pos stuff
 	Vector3 mousePos;
 	public Vector3 roundedMousePos;
@@ -18,6 +25,12 @@ public class TileBrush : MonoBehaviour
 	public ItemDictionary itemDictionary;
 	//holds a list of where all items are
 	public GridControl grid;
+
+	private void Start()
+	{
+		//get the main camera in the scene
+		cam = Camera.main.gameObject;
+	}
 
 	// Update is called once per frame
 	void Update()
@@ -68,6 +81,9 @@ public class TileBrush : MonoBehaviour
 		{
 			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 90f);
 		}
+
+		//move the camera;
+		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed;
 	}
 
 	public void ChangeBrushItem(int _itemID)
@@ -81,5 +97,10 @@ public class TileBrush : MonoBehaviour
 	{
 		brushItem = null;
 		itemPreview.sprite = null;
+	}
+
+	public void PlayerMovement(InputAction.CallbackContext context)
+	{
+		moveInput = context.ReadValue<Vector2>();
 	}
 }
