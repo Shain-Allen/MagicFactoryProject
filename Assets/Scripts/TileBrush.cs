@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class TileBrush : MonoBehaviour
 {
+	//GameControls Asset for input manager
+	GameControls gameControls;
 	//movement input
 	Vector2 moveInput;
 	//movement speed
@@ -30,6 +32,20 @@ public class TileBrush : MonoBehaviour
 	{
 		//get the main camera in the scene
 		cam = Camera.main.gameObject;
+
+		//set GameControls Variable to new instance
+		gameControls = new GameControls();
+
+		//this needs to happen for input to work
+		gameControls.Enable();
+
+		//Delegate with lambda expression to hook up the Method to the C# event for starting the movement of the camera
+		gameControls.GeneralControls.PlayerMovement.performed += ctx => PlayerMovementStart(ctx);
+
+		gameControls.GeneralControls.PlayerMovement.canceled += ctx => PlayerMovementStop();
+
+		//Delegate with Lambda expression to hook up the Method to the C# event for rotating items
+		gameControls.GeneralControls.Rotate.started += ctx => RotateItem();
 	}
 
 	// Update is called once per frame
@@ -76,12 +92,6 @@ public class TileBrush : MonoBehaviour
 			}
 		}
 
-		// rotate item preview
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 90f);
-		}
-
 		//move the camera;
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed;
 	}
@@ -99,8 +109,21 @@ public class TileBrush : MonoBehaviour
 		itemPreview.sprite = null;
 	}
 
-	public void PlayerMovement(InputAction.CallbackContext context)
+	private void PlayerMovementStart(InputAction.CallbackContext context)
 	{
 		moveInput = context.ReadValue<Vector2>();
+	}
+
+	private void PlayerMovementStop()
+	{
+		moveInput = new Vector2(0, 0);
+	}
+
+	private void RotateItem()
+	{
+		if (itemPreview)
+		{
+			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 90f);
+		}
 	}
 }

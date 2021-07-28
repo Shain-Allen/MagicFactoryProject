@@ -1373,7 +1373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 16ed28175db68ad46909a1d6e81831c0, type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -1405,6 +1405,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: b4111608-31e8-46b0-913f-e4c946aff0d9
     m_ActionName: GeneralControls/CameraMovement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5142d694-8da5-4c36-ad05-7661c0325710
+    m_ActionName: GeneralControls/Rotate[/Keyboard/r]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: GeneralControls
