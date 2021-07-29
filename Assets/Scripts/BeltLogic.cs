@@ -169,9 +169,11 @@ public class BeltLogic : Placeable
 		grid.placeObjects.Remove(transform.position);
 		//Debug.Log($"{gameObject.name} Deleted from Dictionary");
 
-		backBelt.AttachBelts();
+		if (backBelt)
+			backBelt.AttachBelts();
 		backBelt = null;
-		frontBelt.AttachBelts();
+		if (frontBelt)
+			frontBelt.AttachBelts();
 		frontBelt = null;
 		itemSlot = null;
 
