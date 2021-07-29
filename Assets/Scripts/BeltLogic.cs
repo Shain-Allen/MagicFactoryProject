@@ -71,7 +71,7 @@ public class BeltLogic : Placeable
 				backBelt.frontBelt = this;
 			}
 		}
-		else
+		if(backBelt == null)
 		{
 			switch (transform.rotation.eulerAngles.z)
 			{
@@ -94,7 +94,7 @@ public class BeltLogic : Placeable
 	private void TryAttachCorners(Vector3 leftSide, Vector3 rightSide, int connectionAngleLeftSide, int connectionAngleRightSide)
 	{
 		GameObject temp = null;
-		backBelt = null;
+		backBelt = null; // Should be redundant
 
 		if (grid.placeObjects.TryGetValue((transform.position + leftSide), out temp))
 		{
@@ -104,7 +104,7 @@ public class BeltLogic : Placeable
 				backBelt.frontBelt = this;
 			}
 		}
-		else if (grid.placeObjects.TryGetValue((transform.position + rightSide), out temp))
+		if (backBelt == null && grid.placeObjects.TryGetValue((transform.position + rightSide), out temp))
 		{
 			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == connectionAngleRightSide)
 			{
