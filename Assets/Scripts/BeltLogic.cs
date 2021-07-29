@@ -125,11 +125,11 @@ public class BeltLogic : Placeable
 		//Debug.Log($"{gameObject.name} Deleted from Dictionary");
 
 		if (backBelt)
-			backBelt.AttachBelts();
+			backBelt.TryAttachBelts(HelperFunctions.EulerToUnitCircle(backBelt.transform.rotation.eulerAngles.z));
 
 		backBelt = null;
 		if (frontBelt)
-			frontBelt.AttachBelts();
+			frontBelt.TryAttachBelts(HelperFunctions.EulerToUnitCircle(frontBelt.transform.rotation.eulerAngles.z));
 
 		frontBelt = null;
 		itemSlot = null;
