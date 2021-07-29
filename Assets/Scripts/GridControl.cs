@@ -17,8 +17,9 @@ public class GridControl : MonoBehaviour
 	private void Start()
 	{
 		beltCycleTimeLeft = beltCycleTime;
-		for (int x = -5; x <= 5; x++)
-			for (int y = -5; y <= 5; y++)
+		int temp = 5;
+		for (int x = -temp; x <= temp; x++)
+			for (int y = -temp; y <= temp; y++)
 			{
 				OreGeneration.GenerateOres(this, oreName, 0, x, y);
 			}

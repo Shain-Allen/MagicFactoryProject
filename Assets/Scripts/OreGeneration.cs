@@ -28,12 +28,28 @@ public class OreGeneration : MonoBehaviour
     }
 
     /* GetChunkID converts the chunk X and Y into a single Int
-     * PRECONDITIONS: chunkX and chunkY are between INT32MIN/128 and INT32MAX/128
-     * POSTCONDITIONS: Returned int will be between 0 and INT32MAX
+     * PRECONDITIONS: chunkX and chunkY are between -60,000 and 60,000
+     * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
+     * Recommend seeing SpiralChunkIDs.xlsx to better understand chunk IDs
      */
     private static int GetChunkID(int x, int y)
     {
-        return Math.Abs(x * y) % Int32.MaxValue;
+        int sprialLayer = Math.Max(Math.Abs(x), Math.Abs(y));
+        int topLeft = (int)Math.Pow(sprialLayer * 2 + 1, 2) - 1;
+        int diff = Math.Abs(x + y);
+
+        if (x < 0 && -x >= Math.Abs(y))
+            return topLeft - diff;
+
+        int bottomRight = (int)Math.Pow(sprialLayer * 2, 2);
+        if (y < 0 && Math.Abs(y) >= Math.Abs(x))
+            return bottomRight + diff;
+        if (x > y)
+            return bottomRight - diff;
+        
+        int topRight = bottomRight - (topLeft - bottomRight) / 2;
+        diff = Math.Abs(x - y);
+        return topRight - diff;
     }
 
     /* [Repeat Description and PostConditions of the Public GenerateOres Overload]
