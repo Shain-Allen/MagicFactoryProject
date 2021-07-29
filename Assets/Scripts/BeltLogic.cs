@@ -39,6 +39,9 @@ public class BeltLogic : Placeable
 
 	public void AttachBelts()
 	{
+		TryAttachBelts(HelperFunctions.EulerToUnitCircle(transform.rotation.eulerAngles.z));
+
+		/*
 		switch (transform.rotation.eulerAngles.z)
 		{
 			case (int)Direction.UP:
@@ -54,7 +57,7 @@ public class BeltLogic : Placeable
 				TryAttachBelts(Vector3.right);
 				break;
 		}
-
+		*/
 	}
 
 	private void TryAttachBelts(Vector3 direction)
@@ -81,6 +84,12 @@ public class BeltLogic : Placeable
 		}
 		if (backBelt == null)
 		{
+			float angle = transform.rotation.eulerAngles.z;
+			float angleLeft = (angle + 90) % 360;
+			float angleRight = (angle + 270) % 360;
+			TryAttachCorners(HelperFunctions.EulerToUnitCircle(angleLeft), HelperFunctions.EulerToUnitCircle(angleRight), (int)angleRight, (int)angleLeft);
+			
+			/*
 			switch (transform.rotation.eulerAngles.z)
 			{
 				case (int)Direction.UP:
@@ -96,13 +105,13 @@ public class BeltLogic : Placeable
 					TryAttachCorners(Vector3.up, Vector3.down, (int)Direction.DOWN, (int)Direction.UP);
 					break;
 			}
+			*/
 		}
 	}
 
 	private void TryAttachCorners(Vector3 leftSide, Vector3 rightSide, int connectionAngleLeftSide, int connectionAngleRightSide)
 	{
 		GameObject temp = null;
-		backBelt = null; // Should be redundant
 
 		if (grid.placeObjects.TryGetValue((transform.position + leftSide), out temp))
 		{
