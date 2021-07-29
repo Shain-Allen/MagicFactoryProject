@@ -10,7 +10,7 @@ public class OreGeneration : MonoBehaviour
     // Essentially translates to % of all tiles that are the center of an ore vein.
     private const float SPAWN_CHANCE = 0.0003f;
     // The size of chunks! Chunks are squares, so this is both the height and the width
-    private const int chunkSize = 128;
+    private const int chunkSize = 32;
 
     /* GenerateOres procedurally places oreName in a chunk based off of the seed.
      * PRECONDITIONS: chunkX and chunkY are between INT32MIN/128 and INT32MAX/128
