@@ -20,10 +20,12 @@ public class GridControl : MonoBehaviour
 		
 		int temp = 7;
 		for (int x = -temp; x <= temp; x++)
+		{
 			for (int y = -temp; y <= temp; y++)
 			{
 				OreGeneration.GenerateOres(this, oreName, 0, x, y);
 			}
+		}
 	}
 
 	private void Update()
