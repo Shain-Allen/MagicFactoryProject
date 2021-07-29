@@ -8,9 +8,7 @@ public class BeltLogic : Placeable
 	GridControl grid;
 	// Reference to the Belt in front of this one
 	public BeltLogic frontBelt;
-	// Reference to the Belt in behind this one
-	// Note, only stores 1 belt that is pointing to this one
-	// Therefore there must be a priority system for determining which one it gets
+	// Reference to the Belt pointing to this one
 	public BeltLogic backBelt;
 	// Reference to the Item currently in this belt
 	public GameObject itemSlot;
@@ -51,36 +49,23 @@ public class BeltLogic : Placeable
 		}
 	}
 
-	// Checks if the back belt exists and is pointing towards this one, then connects them
 	private void TryAttachBelts(Vector3 direction)
 	{
 		GameObject temp = null;
-		// If there is a belt in front of this one, connect them
+		frontBelt = null;
 		if (grid.placeObjects.TryGetValue((transform.position + direction), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z == (transform.rotation.eulerAngles.z + 180) % 360)
-			{
-				frontBelt = null;
-			}
-			else
+			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z != (transform.rotation.eulerAngles.z + 180) % 360)
 			{
 				frontBelt = temp.GetComponent<BeltLogic>();
 				frontBelt.backBelt = this;
 			}
 		}
-		else
-		{
-			frontBelt = null;
-		}
 
-		// If there is a belt behind this one Connect with it
+		backBelt = null;
 		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != transform.rotation.eulerAngles.z)
-			{
-				backBelt = null;
-			}
-			else
+			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
 			{
 				backBelt = temp.GetComponent<BeltLogic>();
 				backBelt.frontBelt = this;
@@ -109,14 +94,11 @@ public class BeltLogic : Placeable
 	private void TryAttachCorners(Vector3 leftSide, Vector3 rightSide, int connectionAngleLeftSide, int connectionAngleRightSide)
 	{
 		GameObject temp = null;
+		backBelt = null;
 
 		if (grid.placeObjects.TryGetValue((transform.position + leftSide), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != connectionAngleLeftSide)
-			{
-				backBelt = null;
-			}
-			else
+			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == connectionAngleLeftSide)
 			{
 				backBelt = temp.GetComponent<BeltLogic>();
 				backBelt.frontBelt = this;
@@ -124,19 +106,11 @@ public class BeltLogic : Placeable
 		}
 		else if (grid.placeObjects.TryGetValue((transform.position + rightSide), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != connectionAngleRightSide)
-			{
-				backBelt = null;
-			}
-			else
+			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == connectionAngleRightSide)
 			{
 				backBelt = temp.GetComponent<BeltLogic>();
 				backBelt.frontBelt = this;
 			}
-		}
-		else
-		{
-			backBelt = null;
 		}
 	}
 
