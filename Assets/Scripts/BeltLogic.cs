@@ -153,7 +153,6 @@ public class BeltLogic : Placeable
 	{
 		if (frontBelt && itemSlot && !frontBelt.itemSlot)
 		{
-			Debug.Log("Item Movement");
 			itemSlot.transform.position = frontBelt.transform.position;
 			frontBelt.itemSlot = itemSlot;
 			itemSlot = null;
@@ -161,7 +160,6 @@ public class BeltLogic : Placeable
 
 		if (backBelt)
 		{
-			Debug.Log("backBelt triggered");
 			backBelt.MoveItem();
 		}
 	}
