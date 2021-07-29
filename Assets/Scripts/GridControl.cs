@@ -17,7 +17,8 @@ public class GridControl : MonoBehaviour
 	private void Start()
 	{
 		beltCycleTimeLeft = beltCycleTime;
-		int temp = 5;
+		
+		int temp = 7;
 		for (int x = -temp; x <= temp; x++)
 			for (int y = -temp; y <= temp; y++)
 			{
