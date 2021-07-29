@@ -29,12 +29,6 @@ public class BeltLogic : Placeable
 
 		AttachBelts();
 
-		Debug.Log(transform.rotation.eulerAngles.z);
-		Debug.Log(Quaternion.Inverse(transform.rotation).eulerAngles.z);
-
-		Debug.Log(transform.rotation);
-		Debug.Log(Quaternion.Inverse(transform.rotation));
-
 		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
