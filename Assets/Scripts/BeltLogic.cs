@@ -13,9 +13,11 @@ public class BeltLogic : Placeable
 	// Reference to the Item currently in this belt
 	public GameObject itemSlot;
 
+	public Sprite straightBelt;
+
 	public Sprite cornerBelt;
 
-	public SpriteRenderer spriteRenderer;
+	SpriteRenderer spriteRenderer;
 
 	enum Direction
 	{
@@ -52,6 +54,7 @@ public class BeltLogic : Placeable
 				TryAttachBelts(Vector3.right);
 				break;
 		}
+
 	}
 
 	private void TryAttachBelts(Vector3 direction)
@@ -76,7 +79,7 @@ public class BeltLogic : Placeable
 				backBelt.frontBelt = this;
 			}
 		}
-		if(backBelt == null)
+		if (backBelt == null)
 		{
 			switch (transform.rotation.eulerAngles.z)
 			{

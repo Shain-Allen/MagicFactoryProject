@@ -126,3 +126,5 @@ MonoBehaviour:
   frontBelt: {fileID: 0}
   backBelt: {fileID: 0}
   itemSlot: {fileID: 0}
+  straightBelt: {fileID: 21300000, guid: 2dde23474fe9d6f468608c0d147dee3c, type: 3}
+  cornerBelt: {fileID: 21300000, guid: 99a153a65a4e5c640ae227e40cf7547b, type: 3}
