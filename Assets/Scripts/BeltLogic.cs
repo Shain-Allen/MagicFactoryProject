@@ -13,6 +13,10 @@ public class BeltLogic : Placeable
 	// Reference to the Item currently in this belt
 	public GameObject itemSlot;
 
+	public Sprite cornerBelt;
+
+	public SpriteRenderer spriteRenderer;
+
 	enum Direction
 	{
 		UP = 0,
@@ -23,6 +27,7 @@ public class BeltLogic : Placeable
 
 	public override void PlacedAction(GridControl grid_)
 	{
+		spriteRenderer = GetComponent<SpriteRenderer>();
 		grid = grid_;
 
 		AttachBelts();
