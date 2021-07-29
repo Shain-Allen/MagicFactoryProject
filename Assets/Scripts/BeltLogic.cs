@@ -171,9 +171,11 @@ public class BeltLogic : Placeable
 
 		if (backBelt)
 			backBelt.AttachBelts();
+
 		backBelt = null;
 		if (frontBelt)
 			frontBelt.AttachBelts();
+
 		frontBelt = null;
 		itemSlot = null;
 
