@@ -28,7 +28,7 @@ public class OreGeneration : MonoBehaviour
     }
 
     /* GetChunkID converts the chunk X and Y into a single Int
-     * PRECONDITIONS: chunkX and chunkY are between -60,000 and 60,000
+     * PRECONDITIONS: chunkX and chunkY should both be between roughly -30,000 and 30,000 to prevent OverFlows
      * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
      * Recommend seeing SpiralChunkIDs.xlsx to better understand chunk IDs
      */
