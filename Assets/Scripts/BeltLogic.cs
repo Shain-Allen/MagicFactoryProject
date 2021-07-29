@@ -21,8 +21,8 @@ public class BeltLogic : Placeable
 
 		AttachBelts();
 
-		Debug.Log($"BackBelt: {backBelt}");
-		Debug.Log($"FrontBelt: {frontBelt}");
+		//Debug.Log($"BackBelt: {backBelt}");
+		//Debug.Log($"FrontBelt: {frontBelt}");
 
 
 		grid.OnBeltTimerCycle += BeltCycle;
@@ -30,7 +30,6 @@ public class BeltLogic : Placeable
 
 	public void AttachBelts()
 	{
-
 		switch (transform.rotation.eulerAngles.z)
 		{
 			case 0:
@@ -42,7 +41,7 @@ public class BeltLogic : Placeable
 			case 180:
 				TryAttachBelts(Vector3.down);
 				break;
-			case -90:
+			case 270:
 				TryAttachBelts(Vector3.right);
 				break;
 		}
@@ -73,31 +72,7 @@ public class BeltLogic : Placeable
 		// If there is a belt behind this one Connect with it
 		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() == null)
-			{
-				backBelt = null;
-			}
-			else
-			{
-				backBelt = temp.GetComponent<BeltLogic>();
-				backBelt.frontBelt = this;
-			}
-		}
-		else if (grid.placeObjects.TryGetValue((transform.position + transform.right), out temp))
-		{
-			if (temp.GetComponent<BeltLogic>() == null)
-			{
-				backBelt = null;
-			}
-			else
-			{
-				backBelt = temp.GetComponent<BeltLogic>();
-				backBelt.frontBelt = this;
-			}
-		}
-		else if (grid.placeObjects.TryGetValue((transform.position - transform.right), out temp))
-		{
-			if (temp.GetComponent<BeltLogic>() == null)
+			if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != transform.rotation.eulerAngles.z)
 			{
 				backBelt = null;
 			}
@@ -109,7 +84,133 @@ public class BeltLogic : Placeable
 		}
 		else
 		{
-			backBelt = null;
+			switch (transform.rotation.eulerAngles.z)
+			{
+				case 0:
+					//TryAttachBelts(Vector3.up);
+					if (grid.placeObjects.TryGetValue((transform.position + Vector3.left), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 270)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else if (grid.placeObjects.TryGetValue((transform.position + Vector3.right), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 90)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else
+					{
+						backBelt = null;
+					}
+					break;
+				case 90:
+					//TryAttachBelts(Vector3.left);
+					if (grid.placeObjects.TryGetValue((transform.position + Vector3.down), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 0)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else if (grid.placeObjects.TryGetValue((transform.position + Vector3.up), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 180)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else
+					{
+						backBelt = null;
+					}
+					break;
+				case 180:
+					//TryAttachBelts(Vector3.down);
+					if (grid.placeObjects.TryGetValue((transform.position + Vector3.right), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 90)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else if (grid.placeObjects.TryGetValue((transform.position + Vector3.left), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 270)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else
+					{
+						backBelt = null;
+					}
+					break;
+				case 270:
+					//TryAttachBelts(Vector3.right);
+					if (grid.placeObjects.TryGetValue((transform.position + Vector3.up), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 180)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else if (grid.placeObjects.TryGetValue((transform.position + Vector3.down), out temp))
+					{
+						if (temp.GetComponent<BeltLogic>() == null || temp.transform.rotation.eulerAngles.z != 0)
+						{
+							backBelt = null;
+						}
+						else
+						{
+							backBelt = temp.GetComponent<BeltLogic>();
+							backBelt.frontBelt = this;
+						}
+					}
+					else
+					{
+						backBelt = null;
+					}
+					break;
+			}
 		}
 	}
 
@@ -117,45 +218,24 @@ public class BeltLogic : Placeable
 	{
 		if (frontBelt == null)
 		{
+			//Debug.Log("Am Front Belt");
 			MoveItem();
 		}
 	}
 
 	public void MoveItem()
 	{
-		if (frontBelt == null)
+		if (frontBelt && itemSlot && !frontBelt.itemSlot)
 		{
-			if (backBelt != null)
-			{
-				backBelt.MoveItem();
-			}
-			return;
+			Debug.Log("Item Movement");
+			itemSlot.transform.position = frontBelt.transform.position;
+			frontBelt.itemSlot = itemSlot;
+			itemSlot = null;
 		}
 
-		if (itemSlot == null)
+		if (backBelt)
 		{
-			if (backBelt != null)
-			{
-				backBelt.MoveItem();
-			}
-			return;
-		}
-
-		if (frontBelt.itemSlot != null)
-		{
-			if (backBelt != null)
-			{
-				backBelt.MoveItem();
-			}
-			return;
-		}
-
-		itemSlot.transform.position = frontBelt.transform.position;
-		frontBelt.itemSlot = itemSlot;
-		itemSlot = null;
-
-		if (backBelt != null)
-		{
+			Debug.Log("backBelt triggered");
 			backBelt.MoveItem();
 		}
 	}
