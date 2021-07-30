@@ -19,20 +19,12 @@ public class BeltLogic : Placeable
 
 	SpriteRenderer spriteRenderer;
 
-	enum Direction
-	{
-		UP = 0,
-		LEFT = 90,
-		DOWN = 180,
-		RIGHT = 270
-	}
-
 	public override void PlacedAction(GridControl grid_)
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		grid = grid_;
 
-		TryAttachBelts(HelperFunctions.EulerToUnitCircle(transform.rotation.eulerAngles.z));
+		TryAttachBelts(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
 
 		grid.OnBeltTimerCycle += BeltCycle;
 	}
@@ -63,10 +55,9 @@ public class BeltLogic : Placeable
 		}
 		if (backBelt == null)
 		{
-			float angle = transform.rotation.eulerAngles.z;
-			float angleLeft = (angle + 90) % 360;
-			float angleRight = (angle + 270) % 360;
-			TryAttachCorners(HelperFunctions.EulerToUnitCircle(angleLeft), HelperFunctions.EulerToUnitCircle(angleRight), (int)angleRight, (int)angleLeft);
+			int angleLeft = (int)(transform.rotation.eulerAngles.z + 90) % 360;
+			int angleRight = (int)(transform.rotation.eulerAngles.z + 270) % 360;
+			TryAttachCorners(HelpFuncs.EulerToVector(angleLeft), HelpFuncs.EulerToVector(angleRight), angleRight, angleLeft);
 		}
 	}
 
@@ -125,11 +116,11 @@ public class BeltLogic : Placeable
 		//Debug.Log($"{gameObject.name} Deleted from Dictionary");
 
 		if (backBelt)
-			backBelt.TryAttachBelts(HelperFunctions.EulerToUnitCircle(backBelt.transform.rotation.eulerAngles.z));
+			backBelt.TryAttachBelts(HelpFuncs.EulerToVector(backBelt.transform.rotation.eulerAngles.z));
 
 		backBelt = null;
 		if (frontBelt)
-			frontBelt.TryAttachBelts(HelperFunctions.EulerToUnitCircle(frontBelt.transform.rotation.eulerAngles.z));
+			frontBelt.TryAttachBelts(HelpFuncs.EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
 
 		frontBelt = null;
 		itemSlot = null;
