@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class HelpFuncs : MonoBehaviour
 {
@@ -12,7 +9,7 @@ public class HelpFuncs : MonoBehaviour
         return !(x < left || y < bottom || x > right || y > top);
     }
 
-    // Takes an angle in Degrees and converts it to a 2D Vector3, like a unit circle
+    // Takes an angle in Degrees and converts it to a 2D Vector3 of length 1, like a unit circle
     public static Vector3 EulerToVector(float eulerAngle)
     {
         eulerAngle *= -1;
