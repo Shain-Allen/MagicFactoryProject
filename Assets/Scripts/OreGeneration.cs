@@ -120,7 +120,7 @@ public class OreGeneration : MonoBehaviour
                 dist = Math.Sqrt( Math.Pow(x - center.x, 2) + Math.Pow(y - center.y, 2) );
                 empty = !grid.oreObjects.TryGetValue((new Vector2(x, y)), out temp);
                 oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
-                if (randGen.NextDouble() <= oddsOfOre && HelperFunctions.insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
+                if (randGen.NextDouble() <= oddsOfOre && HelpFuncs.insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
                     grid.oreObjects.Add(new Vector2(x, y), Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, grid.transform));
             }
     }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class HelperFunctions : MonoBehaviour
+public class HelpFuncs : MonoBehaviour
 {
     // Simple Function to ensure X and Y are both within the given bounds
     public static bool insideBorder(int x, int y, int left, int right, int bottom, int top)
@@ -13,7 +13,7 @@ public class HelperFunctions : MonoBehaviour
     }
 
     // Takes an angle in Degrees and converts it to a 2D Vector3, like a unit circle
-    public static Vector3 EulerToUnitCircle(float eulerAngle)
+    public static Vector3 EulerToVector(float eulerAngle)
     {
         eulerAngle *= -1;
         float x = (float)Math.Round(Math.Sin(eulerAngle * Math.PI / 180), 3);
