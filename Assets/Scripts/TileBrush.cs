@@ -11,7 +11,7 @@ public class TileBrush : MonoBehaviour
 	//movement input
 	Vector2 moveInput;
 	//movement speed
-	public float moveSpeed = 1f;
+	public float moveSpeed = 25f;
 	//camera Reference
 	GameObject cam;
 	//mouse pos stuff
@@ -97,7 +97,7 @@ public class TileBrush : MonoBehaviour
 		}
 
 		//move the camera;
-		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed;
+		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
 	}
 
 	//Update the brush item to the last clicked item
@@ -132,7 +132,7 @@ public class TileBrush : MonoBehaviour
 	{
 		if (itemPreview)
 		{
-			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 90f);
+			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 270f);
 		}
 	}
 }

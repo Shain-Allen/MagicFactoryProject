@@ -1338,7 +1338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e58b957b5a305046b07e5c863774b56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.5
+  moveSpeed: 25
   roundedMousePos: {x: 0, y: 0, z: 0}
   worldGrid: {fileID: 1989458524}
   brushItem: {fileID: 0}
