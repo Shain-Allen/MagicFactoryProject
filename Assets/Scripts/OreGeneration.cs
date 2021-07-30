@@ -23,15 +23,9 @@ public class OreGeneration : MonoBehaviour
         // 1st  4th  7th (This shows the order of chunk loading, therefore meaning it's the priority order)
         // 2nd [5th] 8th ('5th' is the chunk currently generating)
         // 3rd  6th  9th (Only '5th' will have ores placed in it)
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX-1, chunkY+1);
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX-1, chunkY  );
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX-1, chunkY-1);
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX  , chunkY+1);
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX  , chunkY  );
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX  , chunkY-1);
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX+1, chunkY+1);
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX+1, chunkY  );
-        GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX+1, chunkY-1);
+        for (int x = -1; x <= 1; x++)
+            for (int y = 1; y >= -1; y--)
+                GenerateOresInChunk(grid, oreName, seed, chunkX, chunkY, chunkX+x, chunkY+y);
 
         grid.loadedChunks.Add(new Vector2Int(chunkX, chunkY), true);
     }
@@ -60,7 +54,7 @@ public class OreGeneration : MonoBehaviour
      * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
      * Recommend seeing SpiralChunkIDs.xlsx to better understand chunk IDs
      */
-    private static int GetChunkID(int x, int y)
+    public static int GetChunkID(int x, int y)
     {
         int sprialLayer = Math.Max(Math.Abs(x), Math.Abs(y));
         int topLeft = (int)Math.Pow(sprialLayer * 2 + 1, 2) - 1;
