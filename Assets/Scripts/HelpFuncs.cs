@@ -26,4 +26,10 @@ public class HelpFuncs : MonoBehaviour
             toReturn += 180;
         return (float)Math.Round(toReturn, 1);
     }
+
+    // Pythagorean Theorems two Vector2s
+    public static float GetDistance(Vector2 a, Vector2 b)
+    {
+        return (float)Math.Sqrt( Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2) );
+    }
 }

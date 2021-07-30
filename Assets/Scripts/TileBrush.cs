@@ -98,6 +98,8 @@ public class TileBrush : MonoBehaviour
 
 		//move the camera;
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
+
+		//See if new chunks need to be loaded
 	}
 
 	//Update the brush item to the last clicked item
