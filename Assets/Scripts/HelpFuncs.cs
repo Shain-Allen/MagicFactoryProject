@@ -30,6 +30,20 @@ public class HelpFuncs : MonoBehaviour
     // Pythagorean Theorems two Vector2s
     public static float GetDistance(Vector2 a, Vector2 b)
     {
-        return (float)Math.Sqrt( Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2) );
+        return GetDistance(a.x, b.x, a.y, b.y);
+    }
+    public static float GetDistance(float x1, float x2, float y1, float y2)
+    {
+        return (float)Math.Sqrt( Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2) );
+    }
+
+    // Returns the chunk as a Vector2Int
+    public static Vector2Int GetChunk(Vector2 input)
+    {
+        return GetChunk(input.x, input.y);
+    }
+    public static Vector2Int GetChunk(float x, float y)
+    {
+        return new Vector2Int((int)(x / OreGeneration.chunkSize), (int)(y / OreGeneration.chunkSize));
     }
 }

@@ -100,6 +100,22 @@ public class TileBrush : MonoBehaviour
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
 
 		//See if new chunks need to be loaded
+		Camera camera = cam.GetComponent<Camera>();
+		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
+		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
+		Vector2Int bottomLeftBound = HelpFuncs.GetChunk(botLeft.x, botLeft.y);
+		Vector2Int topRightBound = HelpFuncs.GetChunk(topRight.x, topRight.y);
+		bool isChunkLoaded;
+
+		for(int x = bottomLeftBound.x - 1; x <= topRightBound.x + 1; x++)
+		{
+			for(int y = bottomLeftBound.y - 1; y <= topRightBound.y + 1; y++)
+			{
+				grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded);
+				if(!isChunkLoaded)
+					OreGeneration.LoadChunkOres(grid, grid.oreName, grid.worldSeed, x, y);
+			}
+		}
 	}
 
 	//Update the brush item to the last clicked item

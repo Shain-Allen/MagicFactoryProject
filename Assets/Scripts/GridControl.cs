@@ -7,9 +7,11 @@ public class GridControl : MonoBehaviour
 	public event EventHandler OnBeltTimerCycle;
 	public Dictionary<Vector2, GameObject> placeObjects = new Dictionary<Vector2, GameObject>();
 	public Dictionary<Vector2, GameObject> oreObjects = new Dictionary<Vector2, GameObject>();
+	public Dictionary<Vector2Int, bool> loadedChunks = new Dictionary<Vector2Int, bool>();
 
 	public float beltCycleTime { get; } = 2f;
 	float beltCycleTimeLeft = 0f;
+	public int worldSeed = 0;
 
 	public GameObject oreName;
 
@@ -17,12 +19,12 @@ public class GridControl : MonoBehaviour
 	{
 		beltCycleTimeLeft = beltCycleTime;
 		
-		int temp = 7;
-		for (int x = -temp; x <= temp; x++)
+		int initialChunkSpawningRadius = 5;
+		for (int x = -initialChunkSpawningRadius; x <= initialChunkSpawningRadius; x++)
 		{
-			for (int y = -temp; y <= temp; y++)
+			for (int y = -initialChunkSpawningRadius; y <= initialChunkSpawningRadius; y++)
 			{
-				OreGeneration.GenerateOres(this, oreName, 0, x, y);
+				OreGeneration.LoadChunkOres(this, oreName, worldSeed, x, y);
 			}
 		}
 	}
