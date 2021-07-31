@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BeltLogic : InvSlot
+public class BeltLogic : ItemControl
 {
 	public Sprite straightBelt;
 	public Sprite cornerBelt;
@@ -35,10 +35,10 @@ public class BeltLogic : InvSlot
 		// Attaches frontBelt a belt directly in front of this one if possible
 		// Currently would override that belt's previous backBelt
 		frontBelt = null;
-		InvSlot tempInvSlot;
+		ItemControl tempInvSlot;
 		if (grid.placeObjects.TryGetValue((transform.position + direction), out temp))
 		{
-			tempInvSlot = temp.GetComponent<InvSlot>();
+			tempInvSlot = temp.GetComponent<ItemControl>();
 			if (tempInvSlot != null && (!tempInvSlot.allowFrontBelt || temp.transform.rotation.eulerAngles.z != (transform.rotation.eulerAngles.z + 180) % 360))
 			{
 				if(tempInvSlot.allowBackBelt && tempInvSlot.backBelt == null)
@@ -60,10 +60,10 @@ public class BeltLogic : InvSlot
 
 		// Attaches backBelt to a belt directly behind this one if possible
 		backBelt = null;
-		InvSlot tempInvSlot;
+		ItemControl tempInvSlot;
 		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
 		{
-			tempInvSlot = temp.GetComponent<InvSlot>();
+			tempInvSlot = temp.GetComponent<ItemControl>();
 			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
 			{
 				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)
@@ -92,11 +92,11 @@ public class BeltLogic : InvSlot
 	private void TryAttachCorners(Vector3 leftSide, Vector3 rightSide, int connectionAngleLeftSide, int connectionAngleRightSide)
 	{
 		GameObject temp = null;
-		InvSlot tempInvSlot;
+		ItemControl tempInvSlot;
 
 		if (grid.placeObjects.TryGetValue((transform.position + leftSide), out temp))
 		{
-			tempInvSlot = temp.GetComponent<InvSlot>();
+			tempInvSlot = temp.GetComponent<ItemControl>();
 			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == connectionAngleLeftSide)
 			{
 				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)
@@ -110,7 +110,7 @@ public class BeltLogic : InvSlot
 		}
 		if (backBelt == null && grid.placeObjects.TryGetValue((transform.position + rightSide), out temp))
 		{
-			tempInvSlot = temp.GetComponent<InvSlot>();
+			tempInvSlot = temp.GetComponent<ItemControl>();
 			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == connectionAngleRightSide)
 			{
 				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)

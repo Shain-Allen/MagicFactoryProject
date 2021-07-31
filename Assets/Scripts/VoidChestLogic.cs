@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VoidChestLogic : InvSlot
+public class VoidChestLogic : ItemControl
 {
     /* [Copy Documentation from Parent Class InvSlot.cs] */
     public override void PlacedAction(GridControl grid_)
@@ -45,10 +45,10 @@ public class VoidChestLogic : InvSlot
 
 		// Attaches backBelt to a belt directly behind this one if possible
 		backBelt = null;
-		InvSlot tempInvSlot;
+		ItemControl tempInvSlot;
 		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
 		{
-			tempInvSlot = temp.GetComponent<InvSlot>();
+			tempInvSlot = temp.GetComponent<ItemControl>();
 			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
 			{
 				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)

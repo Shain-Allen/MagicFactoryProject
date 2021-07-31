@@ -23,7 +23,7 @@ public class OreGeneration : MonoBehaviour
         GameObject curChunkParent;
         if(grid.loadedChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
             return;
-        curChunkParent = Instantiate(new GameObject($"({chunkX},{chunkY})"), new Vector3(chunkX, chunkY, 0), Quaternion.identity, grid.transform);
+        curChunkParent = Instantiate(new GameObject($"({chunkX},{chunkY})"), new Vector3(chunkX * chunkSize, chunkY * chunkSize, 0), Quaternion.identity, grid.transform);
                 
         // 1st  4th  7th (This shows the order of chunk loading, therefore meaning it's the priority order)
         // 2nd [5th] 8th ('5th' is the chunk currently generating)

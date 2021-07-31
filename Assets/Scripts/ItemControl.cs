@@ -8,12 +8,12 @@ using UnityEngine;
  * TryAttach Front/Back Belt will try to attach that side, otherwise it will set that belt reference to null
  * MoveItem is necessary so belts can chain together with other InvSlots/Belts so movement can be synced up
  */
-public abstract class InvSlot : Placeable
+public abstract class ItemControl : Placeable
 {
     // frontBelt will be the output belt for this InvSlot
-    public InvSlot frontBelt;
+    public ItemControl frontBelt;
     // backBelt will be the input belt for this InvSlot
-    public InvSlot backBelt;
+    public ItemControl backBelt;
     public GameObject itemSlot;
     public GridControl grid;
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FullChestLogic : InvSlot
+public class FullChestLogic : ItemControl
 {
     public GameObject itemToClone;
 
@@ -35,10 +35,10 @@ public class FullChestLogic : InvSlot
 		// Attaches frontBelt a belt directly in front of this one if possible
 		// Currently would override that belt's previous backBelt
 		frontBelt = null;
-		InvSlot tempInvSlot;
+		ItemControl tempInvSlot;
 		if (grid.placeObjects.TryGetValue((transform.position + direction), out temp))
 		{
-			tempInvSlot = temp.GetComponent<InvSlot>();
+			tempInvSlot = temp.GetComponent<ItemControl>();
 			if (tempInvSlot != null && (!tempInvSlot.allowFrontBelt || temp.transform.rotation.eulerAngles.z != (transform.rotation.eulerAngles.z + 180) % 360))
 			{
 				if(tempInvSlot.allowBackBelt && tempInvSlot.backBelt == null)
