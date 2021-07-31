@@ -96,3 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ba5adda19cf3ab4bbb044ee8cec45eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frontBelt: {fileID: 0}
+  backBelt: {fileID: 0}
+  itemSlot: {fileID: 0}
+  allowBackBelt: 1
+  allowFrontBelt: 1
+  itemToClone: {fileID: 218887673656050057, guid: 69ddc90cffe63ce4ab1cea36be1fba9b, type: 3}

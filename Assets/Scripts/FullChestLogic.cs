@@ -5,6 +5,7 @@ using UnityEngine;
 public class FullChestLogic : InvSlot
 {
     GridControl grid;
+    public GameObject itemToClone;
 
     public override void PlacedAction(GridControl grid_)
     {
@@ -15,23 +16,13 @@ public class FullChestLogic : InvSlot
         allowBackBelt = false;
 
         TryAttachFrontBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
-
-        grid.OnBeltTimerCycle += BeltCycle;
     }
-
-    public void BeltCycle(object sender, EventArgs e)
-	{
-	    if(frontBelt.itemSlot == null)
-            MoveItem();
-	}
 
     public override void MoveItem()
 	{
 		if (frontBelt && !frontBelt.itemSlot)
 		{
-            // Need to make a new item then move it
-			itemSlot.transform.position = frontBelt.transform.position;
-			frontBelt.itemSlot = itemSlot;
+            frontBelt.itemSlot = Instantiate(itemToClone, frontBelt.transform.position, Quaternion.identity, grid.transform);
 		}
 	}
 
