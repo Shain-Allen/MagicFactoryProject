@@ -120,14 +120,19 @@ public class TileBrush : MonoBehaviour
 
 		bottomLeftBound = new Vector2Int(bottomLeftBound.x - 3, bottomLeftBound.y - 3);
 		topRightBound = new Vector2Int(topRightBound.x + 3, topRightBound.y + 3);
-		foreach(Vector2Int loadedChunkPos in grid.loadedChunks.Keys)
+		List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
+		foreach(Vector2Int LoadedChunkPos in grid.loadedChunks.Keys)
+			loadedChunkPositions.Add(LoadedChunkPos);
+
+		Vector2Int loadedChunkPos;
+		for(int i = 0; i < loadedChunkPositions.Count; i++)
 		{
+			loadedChunkPos = loadedChunkPositions[i];
 			if(grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
 			{
 				if(!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
 				{
 					grid.loadedChunks.Remove(loadedChunkPos);
-					Debug.Log($"Unloading Chunk ({loadedChunkPos.x},{loadedChunkPos.y})");
 					Destroy(isChunkLoaded);
 				}
 			}
