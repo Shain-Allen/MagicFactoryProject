@@ -2,17 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BeltLogic : Placeable
+public class BeltLogic : InvSlot
 {
 	GridControl grid;
-	// Reference to the Belt in front of this one
-	public BeltLogic frontBelt;
-	// Reference to the Belt pointing to this one
-	// BackBelt at some point should be changed into a list of up to 3 belts
-	public BeltLogic backBelt;
-	// Reference to the Item currently in this belt
-	public GameObject itemSlot;
-
 	public Sprite straightBelt;
 	public Sprite cornerBelt;
 	SpriteRenderer spriteRenderer;
@@ -37,7 +29,7 @@ public class BeltLogic : Placeable
 	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
 	 * POSTCONDITIONS: Only the belt directly in front of this one will be altered
 	 */
-	public void TryAttachFrontBelt(Vector3 direction)
+	public override void TryAttachFrontBelt(Vector3 direction)
 	{
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
@@ -46,13 +38,15 @@ public class BeltLogic : Placeable
 		// Attaches frontBelt a belt directly in front of this one if possible
 		// Currently would override that belt's previous backBelt
 		frontBelt = null;
+		InvSlot tempInvSlot;
 		if (grid.placeObjects.TryGetValue((transform.position + direction), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z != (transform.rotation.eulerAngles.z + 180) % 360)
+			tempInvSlot = temp.GetComponent<InvSlot>();
+			if (tempInvSlot != null && (!tempInvSlot.allowFrontBelt || temp.transform.rotation.eulerAngles.z != (transform.rotation.eulerAngles.z + 180) % 360))
 			{
-				if(temp.GetComponent<BeltLogic>().backBelt == null)
+				if(tempInvSlot.allowBackBelt && tempInvSlot.backBelt == null)
 				{
-					frontBelt = temp.GetComponent<BeltLogic>();
+					frontBelt = tempInvSlot;
 					frontBelt.backBelt = this;
 					frontBelt.UpdateSprite();
 				}
@@ -65,7 +59,7 @@ public class BeltLogic : Placeable
 	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
 	 * POSTCONDITIONS: Only belts pointing to this one might be altered
 	 */
-	public void TryAttachBackBelt(Vector3 direction)
+	public override void TryAttachBackBelt(Vector3 direction)
 	{
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
@@ -73,13 +67,15 @@ public class BeltLogic : Placeable
 
 		// Attaches backBelt to a belt directly behind this one if possible
 		backBelt = null;
+		InvSlot tempInvSlot;
 		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
+			tempInvSlot = temp.GetComponent<InvSlot>();
+			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
 			{
-				if(temp.GetComponent<BeltLogic>().frontBelt == null)
+				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)
 				{
-					backBelt = temp.GetComponent<BeltLogic>();
+					backBelt = tempInvSlot;
 					backBelt.frontBelt = this;
 					backBelt.UpdateSprite();
 				}
@@ -103,14 +99,16 @@ public class BeltLogic : Placeable
 	private void TryAttachCorners(Vector3 leftSide, Vector3 rightSide, int connectionAngleLeftSide, int connectionAngleRightSide)
 	{
 		GameObject temp = null;
+		InvSlot tempInvSlot;
 
 		if (grid.placeObjects.TryGetValue((transform.position + leftSide), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == connectionAngleLeftSide)
+			tempInvSlot = temp.GetComponent<InvSlot>();
+			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == connectionAngleLeftSide)
 			{
-				if(temp.GetComponent<BeltLogic>().frontBelt == null)
+				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)
 				{
-					backBelt = temp.GetComponent<BeltLogic>();
+					backBelt = tempInvSlot;
 					backBelt.frontBelt = this;
 					backBelt.UpdateSprite();
 					spriteRenderer.sprite = cornerBelt;
@@ -119,11 +117,12 @@ public class BeltLogic : Placeable
 		}
 		if (backBelt == null && grid.placeObjects.TryGetValue((transform.position + rightSide), out temp))
 		{
-			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == connectionAngleRightSide)
+			tempInvSlot = temp.GetComponent<InvSlot>();
+			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == connectionAngleRightSide)
 			{
-				if(temp.GetComponent<BeltLogic>().frontBelt == null)
+				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)
 				{
-					backBelt = temp.GetComponent<BeltLogic>();
+					backBelt = tempInvSlot;
 					backBelt.frontBelt = this;
 					backBelt.UpdateSprite();
 					spriteRenderer.sprite = cornerBelt;
@@ -137,7 +136,7 @@ public class BeltLogic : Placeable
 	 * PRECONDTIONS: The sprites are defined and initialized
 	 * POSTCONDITIONS: Only this belt's sprite will be modified, nothing else
 	 */
-	public void UpdateSprite()
+	public override void UpdateSprite()
 	{
 		// Belts should default to straight when it has no backbelt
 		if(backBelt == null)
@@ -183,7 +182,7 @@ public class BeltLogic : Placeable
 	 * POSTCONDITIONS: Each item will only move forward up to 1 belt per cycle
 	 * cont.: An item will never move if its frontBelt already has an item
 	 */
-	public void MoveItem()
+	public override void MoveItem()
 	{
 		if (frontBelt && itemSlot && !frontBelt.itemSlot)
 		{

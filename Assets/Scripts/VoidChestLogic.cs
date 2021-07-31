@@ -2,16 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VoidChestLogic : Placeable
+public class VoidChestLogic : InvSlot
 {
     GridControl grid;
-    BeltLogic input;
 
     public override void PlacedAction(GridControl grid_)
     {
         grid = grid_;
-        input = null;
+        backBelt = null;
         
+        frontBelt = null;
+        allowFrontBelt = false;
+
         grid.OnBeltTimerCycle += BeltCycle;
     }
 
@@ -20,30 +22,55 @@ public class VoidChestLogic : Placeable
 	    MoveItem();
 	}
 
-    public void MoveItem()
+    public override void MoveItem()
 	{
-		if (input)
+		if (backBelt)
 		{
-            if (input.itemSlot)
+            if (backBelt.itemSlot)
             {
-                Destroy(input.itemSlot);
-                input.itemSlot = null;
+                Destroy(backBelt.itemSlot);
+                backBelt.itemSlot = null;
             }
-            input.MoveItem();
+            backBelt.MoveItem();
 		}
 	}
+
+    public override void TryAttachBackBelt(Vector3 direction)
+    {
+        GameObject temp = null;
+
+		// Attaches backBelt to a belt directly behind this one if possible
+		backBelt = null;
+		InvSlot tempInvSlot;
+		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
+		{
+			tempInvSlot = temp.GetComponent<InvSlot>();
+			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
+			{
+				if(tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)
+				{
+					backBelt = tempInvSlot;
+					backBelt.frontBelt = this;
+					backBelt.UpdateSprite();
+				}
+			}
+		}
+    }
 
 	public override void RemovedAction()
     {
         grid.placeObjects.Remove(transform.position);
         
-        if(input != null)
+        if(backBelt != null)
         {
-            input.frontBelt = null;
-            input.UpdateSprite();
+            backBelt.frontBelt = null;
+            backBelt.UpdateSprite();
         }
-        input = null;
+        backBelt = null;
 
 		Destroy(gameObject);
     }
+
+    public override void UpdateSprite(){}
+    public override void TryAttachFrontBelt(Vector3 direction){}
 }
