@@ -14,6 +14,8 @@ public class VoidChestLogic : InvSlot
         frontBelt = null;
         allowFrontBelt = false;
 
+        TryAttachBackBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
+
         grid.OnBeltTimerCycle += BeltCycle;
     }
 
