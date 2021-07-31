@@ -111,7 +111,7 @@ public class TileBrush : MonoBehaviour
 		{
 			for(int y = bottomLeftBound.y - 1; y <= topRightBound.y + 1; y++)
 			{
-				if(grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) && isChunkLoaded != null)
+				if(!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
 					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
 			}
 		}
