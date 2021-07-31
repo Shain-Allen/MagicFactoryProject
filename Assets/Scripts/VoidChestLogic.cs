@@ -10,7 +10,7 @@ public class VoidChestLogic : InvSlot
     {
         grid = grid_;
         backBelt = null;
-        
+        allowBackBelt = true;
         frontBelt = null;
         allowFrontBelt = false;
 

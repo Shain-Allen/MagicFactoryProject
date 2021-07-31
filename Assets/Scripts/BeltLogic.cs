@@ -19,6 +19,9 @@ public class BeltLogic : InvSlot
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		grid = grid_;
 
+		allowBackBelt = true;
+		allowBackBelt = true;
+
 		TryAttachFrontBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
 		TryAttachBackBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
 

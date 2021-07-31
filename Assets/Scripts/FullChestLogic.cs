@@ -10,6 +10,7 @@ public class FullChestLogic : InvSlot
     {
         grid = grid_;
         frontBelt = null;
+        allowFrontBelt = true;
         backBelt = null;
         allowBackBelt = false;
 
@@ -28,6 +29,7 @@ public class FullChestLogic : InvSlot
 	{
 		if (frontBelt && !frontBelt.itemSlot)
 		{
+            // Need to make a new item then move it
 			itemSlot.transform.position = frontBelt.transform.position;
 			frontBelt.itemSlot = itemSlot;
 		}
