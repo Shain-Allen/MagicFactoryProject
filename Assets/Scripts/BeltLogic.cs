@@ -50,8 +50,11 @@ public class BeltLogic : Placeable
 		{
 			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z != (transform.rotation.eulerAngles.z + 180) % 360)
 			{
-				frontBelt = temp.GetComponent<BeltLogic>();
-				frontBelt.backBelt = this;
+				if(temp.GetComponent<BeltLogic>().backBelt == null)
+				{
+					frontBelt = temp.GetComponent<BeltLogic>();
+					frontBelt.backBelt = this;
+				}
 			}
 		}
 
@@ -61,8 +64,11 @@ public class BeltLogic : Placeable
 		{
 			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
 			{
-				backBelt = temp.GetComponent<BeltLogic>();
-				backBelt.frontBelt = this;
+				if(temp.GetComponent<BeltLogic>().frontBelt == null)
+				{
+					backBelt = temp.GetComponent<BeltLogic>();
+					backBelt.frontBelt = this;
+				}
 			}
 		}
 		// If it can't attach to the one behind it, try its left side, then its right
@@ -88,19 +94,25 @@ public class BeltLogic : Placeable
 		{
 			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == connectionAngleLeftSide)
 			{
-				backBelt = temp.GetComponent<BeltLogic>();
-				backBelt.frontBelt = this;
-				spriteRenderer.sprite = cornerBelt;
+				if(temp.GetComponent<BeltLogic>().frontBelt == null)
+				{
+					backBelt = temp.GetComponent<BeltLogic>();
+					backBelt.frontBelt = this;
+					spriteRenderer.sprite = cornerBelt;
+				}
 			}
 		}
 		if (backBelt == null && grid.placeObjects.TryGetValue((transform.position + rightSide), out temp))
 		{
 			if (temp.GetComponent<BeltLogic>() != null && temp.transform.rotation.eulerAngles.z == connectionAngleRightSide)
 			{
-				backBelt = temp.GetComponent<BeltLogic>();
-				backBelt.frontBelt = this;
-				spriteRenderer.sprite = cornerBelt;
-				spriteRenderer.flipX = true;
+				if(temp.GetComponent<BeltLogic>().frontBelt == null)
+				{
+					backBelt = temp.GetComponent<BeltLogic>();
+					backBelt.frontBelt = this;
+					spriteRenderer.sprite = cornerBelt;
+					spriteRenderer.flipX = true;
+				}
 			}
 		}
 	}
