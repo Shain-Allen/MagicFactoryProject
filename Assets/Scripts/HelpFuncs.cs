@@ -22,12 +22,12 @@ public class HelpFuncs : MonoBehaviour
         float y = (float)Math.Round(Math.Cos(eulerAngle * Math.PI / 180), 3);
         return new Vector3(x, y, 0);
     }
-    
+
     // Takes any Vector3 and turns the X/Y into an Euler Angle
     public static float VectorToEuler(Vector3 input)
     {
         float toReturn = (float)(Math.Atan(input.y / input.x) * 180 / Math.PI) + 90;
-        if(input.x > 0)
+        if (input.x > 0)
             toReturn += 180;
         return (float)Math.Round(toReturn, 1);
     }
@@ -39,7 +39,7 @@ public class HelpFuncs : MonoBehaviour
     }
     public static float GetDistance(float x1, float x2, float y1, float y2)
     {
-        return (float)Math.Sqrt( Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2) );
+        return (float)Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
     }
 
     // Returns the chunk as a Vector2Int

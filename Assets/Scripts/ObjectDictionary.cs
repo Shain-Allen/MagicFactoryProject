@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ObjectDictionary", menuName = "ObjectDictionary")]
 public class ObjectDictionary : ScriptableObject
 {
-	public GameObject[] itemList;
+    public GameObject[] itemList;
 }

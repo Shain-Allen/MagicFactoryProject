@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseOre
 {
-	public string oreType;
-	public GameObject outputItem;
-	public int remainingOre;
+    public string oreType;
+    public GameObject outputItem;
+    public int remainingOre;
 }

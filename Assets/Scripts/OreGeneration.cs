@@ -21,17 +21,17 @@ public class OreGeneration : MonoBehaviour
     public static void LoadChunkOres(GridControl grid, int seed, int chunkX, int chunkY)
     {
         GameObject curChunkParent;
-        if(grid.loadedChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
+        if (grid.loadedChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
             return;
         curChunkParent = Instantiate(new GameObject($"({chunkX},{chunkY})"), new Vector3(chunkX * chunkSize, chunkY * chunkSize, 0), Quaternion.identity, grid.transform);
-                
+
         // 1st  4th  7th (This shows the order of chunk loading, therefore meaning it's the priority order)
         // 2nd [5th] 8th ('5th' is the chunk currently generating)
         // 3rd  6th  9th (Only '5th' will have ores placed in it)
         for (int x = -1; x <= 1; x++)
             for (int y = 1; y >= -1; y--)
-                GenerateOresInChunk(grid, seed, chunkX, chunkY, chunkX+x, chunkY+y, curChunkParent);
-        
+                GenerateOresInChunk(grid, seed, chunkX, chunkY, chunkX + x, chunkY + y, curChunkParent);
+
         grid.loadedChunks.Add(new Vector2Int(chunkX, chunkY), curChunkParent);
     }
 
@@ -50,10 +50,10 @@ public class OreGeneration : MonoBehaviour
         randGen = new System.Random(seed - GetChunkID(chunkX, chunkY));
         int minX = chunkX * chunkSize;
         int minY = chunkY * chunkSize;
-        foreach(Vector3Int oreCenter in oreSpawns)
+        foreach (Vector3Int oreCenter in oreSpawns)
             SpawnVein(grid, grid.oreNames[oreCenter.z], oreCenter, randGen, minX, minX + chunkSize - 1, minY, minY + chunkSize - 1, curChunkParent);
-    } 
-    
+    }
+
     /* GetChunkID converts the chunk X and Y into a single Int
      * PRECONDITIONS: chunkX and chunkY should both be between roughly -30,000 and 30,000 to prevent OverFlows
      * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
@@ -73,7 +73,7 @@ public class OreGeneration : MonoBehaviour
             return bottomRight + diff;
         if (x > y)
             return bottomRight - diff;
-        
+
         int topRight = bottomRight - (topLeft - bottomRight) / 2;
         diff = Math.Abs(x - y);
         return topRight - diff;
@@ -91,7 +91,7 @@ public class OreGeneration : MonoBehaviour
 
         for (int x = minX; x < minX + chunkSize; x++)
             for (int y = minY; y < minY + chunkSize; y++)
-                if(randGen.NextDouble() <= SPAWN_CHANCE)
+                if (randGen.NextDouble() <= SPAWN_CHANCE)
                     OreSpawns.Add(new Vector3Int(x, y, randGen.Next(numTypesOres)));
 
         return OreSpawns;

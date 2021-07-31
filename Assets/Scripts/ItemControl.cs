@@ -56,6 +56,6 @@ public abstract class ItemControl : Placeable
 	 * POSTCONDITIONS: Each item will only move forward up to 1 belt per cycle
 	 * cont.: An item will never move if its frontBelt already has an item
 	 */
-	public abstract void MoveItem();
+    public abstract void MoveItem();
 }
 
