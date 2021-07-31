@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class FullChestLogic : InvSlot
 {
-    GridControl grid;
     public GameObject itemToClone;
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
     public override void PlacedAction(GridControl grid_)
     {
         grid = grid_;
@@ -18,6 +18,7 @@ public class FullChestLogic : InvSlot
         TryAttachFrontBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
     }
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
     public override void MoveItem()
 	{
 		if (frontBelt && !frontBelt.itemSlot)
@@ -26,6 +27,7 @@ public class FullChestLogic : InvSlot
 		}
 	}
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
     public override void TryAttachFrontBelt(Vector3 direction)
     {
         GameObject temp = null;
@@ -49,6 +51,7 @@ public class FullChestLogic : InvSlot
 		}
     }
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void RemovedAction()
     {
         grid.placeObjects.Remove(transform.position);
@@ -64,6 +67,7 @@ public class FullChestLogic : InvSlot
 		Destroy(gameObject);
     }
     
+    /* The remaining methods are left empty on purpose, as they are unncessary for this InvSlot */
     public override void UpdateSprite(){}
     public override void TryAttachBackBelt(Vector3 direction){}
 }

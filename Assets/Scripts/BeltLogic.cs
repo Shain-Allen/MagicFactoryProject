@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class BeltLogic : InvSlot
 {
-	GridControl grid;
 	public Sprite straightBelt;
 	public Sprite cornerBelt;
 	SpriteRenderer spriteRenderer;
 
-	/* PlacedAction initializes the sprite, attaches belt, and subscribes to the BeltCycle
-	 * No special Preconditions
-	 * POSTCONDITIONS: The belt will attach to nearby belts if possible as per the rules
-	 * cont.: Only Belts directly next to this one will be altered in any way
+	/* [Copy Documentation from Parent Class InvSlot.cs]
+	 * For Belts, it also initializes the sprites and subscribes to the BeltCycle
 	 */
 	public override void PlacedAction(GridControl grid_)
 	{
@@ -28,10 +25,7 @@ public class BeltLogic : InvSlot
 		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
-	/* Attaches the currently placing belt the best it can
-	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
-	 * POSTCONDITIONS: Only the belt directly in front of this one will be altered
-	 */
+	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void TryAttachFrontBelt(Vector3 direction)
 	{
 		spriteRenderer.sprite = straightBelt;
@@ -57,11 +51,7 @@ public class BeltLogic : InvSlot
 		}
 	}
 
-	/* Attaches the currently placing belt the best it can
-	 * BackBelt is prioritized to be directly behind it, then its left side, then its right
-	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
-	 * POSTCONDITIONS: Only belts pointing to this one might be altered
-	 */
+	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void TryAttachBackBelt(Vector3 direction)
 	{
 		spriteRenderer.sprite = straightBelt;
@@ -179,12 +169,7 @@ public class BeltLogic : InvSlot
 		}
 	}
 
-	/* Moves the Item in a belt forward one if it can, then calls the belt behind it to do the same
-	 * PRECONDITIONS: This belt chain is not a loop
-	 * cont.: The frontBelt of this one has already done MoveItem, or is null
-	 * POSTCONDITIONS: Each item will only move forward up to 1 belt per cycle
-	 * cont.: An item will never move if its frontBelt already has an item
-	 */
+	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void MoveItem()
 	{
 		if (frontBelt && itemSlot && !frontBelt.itemSlot)
@@ -200,12 +185,7 @@ public class BeltLogic : InvSlot
 		}
 	}
 
-	/* RemovedAction removes this belt, then has its front and back belt Re-TryAttachBelts
-	 * No special Preconditions
-	 * POSTCONDITIONS: The item in this belt is completely destroyed
-	 * cont.: This belt will be removed from the dictionary and the world
-	 * cont.: This belt's front and back belts will try to find their new attachments, which might cause issues potentially
-	 */
+	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void RemovedAction()
 	{
 		grid.placeObjects.Remove(transform.position);

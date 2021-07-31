@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class VoidChestLogic : InvSlot
 {
-    GridControl grid;
-
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
     public override void PlacedAction(GridControl grid_)
     {
         grid = grid_;
@@ -19,11 +18,13 @@ public class VoidChestLogic : InvSlot
         grid.OnBeltTimerCycle += BeltCycle;
     }
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
     public void BeltCycle(object sender, EventArgs e)
 	{
 	    MoveItem();
 	}
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
     public override void MoveItem()
 	{
 		if (backBelt)
@@ -37,6 +38,7 @@ public class VoidChestLogic : InvSlot
 		}
 	}
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
     public override void TryAttachBackBelt(Vector3 direction)
     {
         GameObject temp = null;
@@ -59,6 +61,7 @@ public class VoidChestLogic : InvSlot
 		}
     }
 
+    /* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void RemovedAction()
     {
         grid.placeObjects.Remove(transform.position);
@@ -73,6 +76,7 @@ public class VoidChestLogic : InvSlot
 		Destroy(gameObject);
     }
 
+    /* The remaining methods are left empty on purpose, as they are unncessary for this InvSlot */
     public override void UpdateSprite(){}
     public override void TryAttachFrontBelt(Vector3 direction){}
 }
