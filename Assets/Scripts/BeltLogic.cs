@@ -54,6 +54,7 @@ public class BeltLogic : Placeable
 				{
 					frontBelt = temp.GetComponent<BeltLogic>();
 					frontBelt.backBelt = this;
+					frontBelt.UpdateSprite();
 				}
 			}
 		}
@@ -68,6 +69,7 @@ public class BeltLogic : Placeable
 				{
 					backBelt = temp.GetComponent<BeltLogic>();
 					backBelt.frontBelt = this;
+					backBelt.UpdateSprite();
 				}
 			}
 		}
@@ -98,6 +100,7 @@ public class BeltLogic : Placeable
 				{
 					backBelt = temp.GetComponent<BeltLogic>();
 					backBelt.frontBelt = this;
+					backBelt.UpdateSprite();
 					spriteRenderer.sprite = cornerBelt;
 				}
 			}
@@ -110,11 +113,45 @@ public class BeltLogic : Placeable
 				{
 					backBelt = temp.GetComponent<BeltLogic>();
 					backBelt.frontBelt = this;
+					backBelt.UpdateSprite();
 					spriteRenderer.sprite = cornerBelt;
 					spriteRenderer.flipX = true;
 				}
 			}
 		}
+	}
+
+	/* UpdateSprite will ensure that this belt has the correct sprite for its current connections
+	 * PRECONDTIONS: The sprites are defined and initialized
+	 * POSTCONDITIONS: Only this belt's sprite will be modified, nothing else
+	 */
+	public void UpdateSprite()
+	{
+		// Belts should default to straight when it has no backbelt
+		if(backBelt == null)
+		{
+			spriteRenderer.sprite = straightBelt;
+			spriteRenderer.flipX = false;
+			return;
+		}
+
+		float frontAngle = transform.rotation.eulerAngles.z;
+		float backAngle = backBelt.transform.rotation.eulerAngles.z;
+		
+		// If this belt is facing the exact same way as the one behind it, it's straight
+		if((frontAngle - backAngle + 360) % 360 == 0)
+		{
+			spriteRenderer.sprite = straightBelt;
+			spriteRenderer.flipX = false;
+			return;
+		}
+
+		// Otherwise, it must be a corner belt; if it's turning right, it needs to be flipped
+		spriteRenderer.sprite = cornerBelt;
+		if((frontAngle - backAngle + 360) % 360 == 270)
+			spriteRenderer.flipX = true;
+		else
+			spriteRenderer.flipX = false;
 	}
 
 	/* BeltCycle subscribes to the cycle for belt movement found in GridControl.Update
@@ -160,11 +197,17 @@ public class BeltLogic : Placeable
 		grid.placeObjects.Remove(transform.position);
 
 		if (backBelt)
+		{
 			backBelt.TryAttachBelts(HelpFuncs.EulerToVector(backBelt.transform.rotation.eulerAngles.z));
+			backBelt.UpdateSprite();
+		}
 		backBelt = null;
 
 		if (frontBelt)
+		{
 			frontBelt.TryAttachBelts(HelpFuncs.EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
+			frontBelt.UpdateSprite();
+		}
 		frontBelt = null;
 		itemSlot = null;
 
