@@ -101,4 +101,4 @@ MonoBehaviour:
   itemSlot: {fileID: 0}
   allowBackBelt: 1
   allowFrontBelt: 1
-  itemToClone: {fileID: 218887673656050057, guid: 69ddc90cffe63ce4ab1cea36be1fba9b, type: 3}
+  itemToClone: {fileID: 7404308695476433443, guid: 07612262c202602469b84c31961d8b33, type: 3}
