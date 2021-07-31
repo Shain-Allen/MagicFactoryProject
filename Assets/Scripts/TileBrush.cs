@@ -99,12 +99,14 @@ public class TileBrush : MonoBehaviour
 		//move the camera;
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
 
-		//See if new chunks need to be loaded
+		//See if new chunks need to be loaded or unloaded
 		Camera camera = cam.GetComponent<Camera>();
 		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
 		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
 		Vector2Int bottomLeftBound = HelpFuncs.GetChunk(botLeft.x, botLeft.y);
+		bottomLeftBound = new Vector2Int(bottomLeftBound.x - 1, bottomLeftBound.y - 1);
 		Vector2Int topRightBound = HelpFuncs.GetChunk(topRight.x, topRight.y);
+		
 		GameObject isChunkLoaded;
 
 		for(int x = bottomLeftBound.x - 1; x <= topRightBound.x + 1; x++)
@@ -113,6 +115,21 @@ public class TileBrush : MonoBehaviour
 			{
 				if(!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
 					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
+			}
+		}
+
+		bottomLeftBound = new Vector2Int(bottomLeftBound.x - 3, bottomLeftBound.y - 3);
+		topRightBound = new Vector2Int(topRightBound.x + 3, topRightBound.y + 3);
+		foreach(Vector2Int loadedChunkPos in grid.loadedChunks.Keys)
+		{
+			if(grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
+			{
+				if(!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
+				{
+					grid.loadedChunks.Remove(loadedChunkPos);
+					Debug.Log($"Unloading Chunk ({loadedChunkPos.x},{loadedChunkPos.y})");
+					Destroy(isChunkLoaded);
+				}
 			}
 		}
 	}

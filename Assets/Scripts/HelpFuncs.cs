@@ -4,7 +4,12 @@ using UnityEngine;
 public class HelpFuncs : MonoBehaviour
 {
     // Simple Function to ensure X and Y are both within the given bounds
-    public static bool insideBorder(int x, int y, int left, int right, int bottom, int top)
+    public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
+    {
+        return insideBorder(pos.x, pos.y, bottomLeft.x, topRight.x, bottomLeft.y, topRight.y);
+    }
+    // Simple Function to ensure X and Y are both within the given bounds
+    public static bool insideBorder(float x, float y, float left, float right, float bottom, float top)
     {
         return !(x < left || y < bottom || x > right || y > top);
     }
