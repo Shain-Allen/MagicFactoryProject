@@ -27,17 +27,17 @@ public class BeltLogic : Placeable
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		grid = grid_;
 
-		TryAttachBelts(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
+		TryAttachFrontBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
+		TryAttachBackBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
 
 		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
 	/* Attaches the currently placing belt the best it can
-	 * BackBelt is prioritized to be directly behind it, then its left side, then its right
 	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
-	 * POSTCONDITIONS: Only belts directly next to this belt will be altered
+	 * POSTCONDITIONS: Only the belt directly in front of this one will be altered
 	 */
-	private void TryAttachBelts(Vector3 direction)
+	private void TryAttachFrontBelt(Vector3 direction)
 	{
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
@@ -58,6 +58,18 @@ public class BeltLogic : Placeable
 				}
 			}
 		}
+	}
+
+	/* Attaches the currently placing belt the best it can
+	 * BackBelt is prioritized to be directly behind it, then its left side, then its right
+	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
+	 * POSTCONDITIONS: Only belts pointing to this one might be altered
+	 */
+	private void TryAttachBackBelt(Vector3 direction)
+	{
+		spriteRenderer.sprite = straightBelt;
+		spriteRenderer.flipX = false;
+		GameObject temp = null;
 
 		// Attaches backBelt to a belt directly behind this one if possible
 		backBelt = null;
@@ -198,14 +210,14 @@ public class BeltLogic : Placeable
 
 		if (backBelt)
 		{
-			backBelt.TryAttachBelts(HelpFuncs.EulerToVector(backBelt.transform.rotation.eulerAngles.z));
+			backBelt.TryAttachFrontBelt(HelpFuncs.EulerToVector(backBelt.transform.rotation.eulerAngles.z));
 			backBelt.UpdateSprite();
 		}
 		backBelt = null;
 
 		if (frontBelt)
 		{
-			frontBelt.TryAttachBelts(HelpFuncs.EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
+			frontBelt.TryAttachBackBelt(HelpFuncs.EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
 			frontBelt.UpdateSprite();
 		}
 		frontBelt = null;
