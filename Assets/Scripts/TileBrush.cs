@@ -24,7 +24,7 @@ public class TileBrush : MonoBehaviour
 	//the preview Item for the brush
 	public SpriteRenderer itemPreview;
 	//the thing that holds all the items in the game
-	public ItemDictionary itemDictionary;
+	public ObjectDictionary ObjectDictionary;
 	//holds a list of where all items are
 	public GridControl grid;
 
@@ -106,14 +106,14 @@ public class TileBrush : MonoBehaviour
 		Vector2Int bottomLeftBound = HelpFuncs.GetChunk(botLeft.x, botLeft.y);
 		bottomLeftBound = new Vector2Int(bottomLeftBound.x - 1, bottomLeftBound.y - 1);
 		Vector2Int topRightBound = HelpFuncs.GetChunk(topRight.x, topRight.y);
-		
+
 		GameObject isChunkLoaded;
 
-		for(int x = bottomLeftBound.x - 1; x <= topRightBound.x + 1; x++)
+		for (int x = bottomLeftBound.x - 1; x <= topRightBound.x + 1; x++)
 		{
-			for(int y = bottomLeftBound.y - 1; y <= topRightBound.y + 1; y++)
+			for (int y = bottomLeftBound.y - 1; y <= topRightBound.y + 1; y++)
 			{
-				if(!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
+				if (!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
 					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
 			}
 		}
@@ -121,16 +121,16 @@ public class TileBrush : MonoBehaviour
 		bottomLeftBound = new Vector2Int(bottomLeftBound.x - 3, bottomLeftBound.y - 3);
 		topRightBound = new Vector2Int(topRightBound.x + 3, topRightBound.y + 3);
 		List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
-		foreach(Vector2Int LoadedChunkPos in grid.loadedChunks.Keys)
+		foreach (Vector2Int LoadedChunkPos in grid.loadedChunks.Keys)
 			loadedChunkPositions.Add(LoadedChunkPos);
 
 		Vector2Int loadedChunkPos;
-		for(int i = 0; i < loadedChunkPositions.Count; i++)
+		for (int i = 0; i < loadedChunkPositions.Count; i++)
 		{
 			loadedChunkPos = loadedChunkPositions[i];
-			if(grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
+			if (grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
 			{
-				if(!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
+				if (!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
 				{
 					grid.loadedChunks.Remove(loadedChunkPos);
 					Destroy(isChunkLoaded);
@@ -142,7 +142,7 @@ public class TileBrush : MonoBehaviour
 	//Update the brush item to the last clicked item
 	public void ChangeBrushItem(int _itemID)
 	{
-		brushItem = itemDictionary.itemList[_itemID];
+		brushItem = ObjectDictionary.itemList[_itemID];
 		itemPreview.sprite = brushItem.GetComponent<SpriteRenderer>().sprite;
 		itemPreview.color = brushItem.GetComponent<SpriteRenderer>().color;
 	}
