@@ -2228,6 +2228,8 @@ MonoBehaviour:
   oreNames:
   - {fileID: 218887673656050057, guid: 69ddc90cffe63ce4ab1cea36be1fba9b, type: 3}
   - {fileID: 4683247514604296566, guid: 48b797e732a1c0344ad6d44fb13b0565, type: 3}
+  - {fileID: 4764130239748066233, guid: 9f381c1e3aef1ef4bbe83276e42d6aaf, type: 3}
+  - {fileID: 9210471873482790008, guid: 3d631741766a47945a1ae6a60bb9216d, type: 3}
 --- !u!1 &2095421166
 GameObject:
   m_ObjectHideFlags: 0
