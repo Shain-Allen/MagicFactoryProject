@@ -7,7 +7,8 @@ public class GridControl : MonoBehaviour
 	public event EventHandler OnBeltTimerCycle;
 	public Dictionary<Vector2, GameObject> placeObjects = new Dictionary<Vector2, GameObject>();
 	public Dictionary<Vector2, GameObject> oreObjects = new Dictionary<Vector2, GameObject>();
-	public Dictionary<Vector2Int, bool> loadedChunks = new Dictionary<Vector2Int, bool>();
+	// Vector2Int = Chunk coordinates, and GameObject is an empty object to be the parent of all ores in that chunk
+	public Dictionary<Vector2Int, GameObject> loadedChunks = new Dictionary<Vector2Int, GameObject>();
 
 	public float beltCycleTime { get; } = 2f;
 	float beltCycleTimeLeft = 0f;
@@ -19,7 +20,7 @@ public class GridControl : MonoBehaviour
 	{
 		beltCycleTimeLeft = beltCycleTime;
 		
-		int initialChunkSpawningRadius = 7;
+		int initialChunkSpawningRadius = 2;
 		for (int x = -initialChunkSpawningRadius; x <= initialChunkSpawningRadius; x++)
 		{
 			for (int y = -initialChunkSpawningRadius; y <= initialChunkSpawningRadius; y++)

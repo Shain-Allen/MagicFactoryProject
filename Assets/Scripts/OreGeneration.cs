@@ -20,14 +20,19 @@ public class OreGeneration : MonoBehaviour
      */
     public static void LoadChunkOres(GridControl grid, int seed, int chunkX, int chunkY)
     {
+        GameObject curChunkParent;
+        if(grid.loadedChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
+            return;
+        curChunkParent = Instantiate(new GameObject($"({chunkX},{chunkY})"), new Vector3(chunkX, chunkY, 0), Quaternion.identity, grid.transform);
+                
         // 1st  4th  7th (This shows the order of chunk loading, therefore meaning it's the priority order)
         // 2nd [5th] 8th ('5th' is the chunk currently generating)
         // 3rd  6th  9th (Only '5th' will have ores placed in it)
         for (int x = -1; x <= 1; x++)
             for (int y = 1; y >= -1; y--)
-                GenerateOresInChunk(grid, seed, chunkX, chunkY, chunkX+x, chunkY+y);
-
-        grid.loadedChunks.Add(new Vector2Int(chunkX, chunkY), true);
+                GenerateOresInChunk(grid, seed, chunkX, chunkY, chunkX+x, chunkY+y, curChunkParent);
+        
+        grid.loadedChunks.Add(new Vector2Int(chunkX, chunkY), curChunkParent);
     }
 
     /* Spawns all ores that have a center within fromChunkX/Y chunk but only places the ones inside chunkX/Y
@@ -37,7 +42,7 @@ public class OreGeneration : MonoBehaviour
      * cont.: Edges are always inclusive, meaning for Chunk 0,0 they are 0, 127, 0, 127
      * HELPERS: GetChunkID, GetSpawnLocations, SpawnVein
      */
-    private static void GenerateOresInChunk(GridControl grid, int seed, int chunkX, int chunkY, int fromChunkX, int fromChunkY)
+    private static void GenerateOresInChunk(GridControl grid, int seed, int chunkX, int chunkY, int fromChunkX, int fromChunkY, GameObject curChunkParent)
     {
         System.Random randGen = new System.Random(seed - GetChunkID(fromChunkX, fromChunkY));
         List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * chunkSize, fromChunkY * chunkSize, grid.oreNames.Count);
@@ -46,7 +51,7 @@ public class OreGeneration : MonoBehaviour
         int minX = chunkX * chunkSize;
         int minY = chunkY * chunkSize;
         foreach(Vector3Int oreCenter in oreSpawns)
-            SpawnVein(grid, grid.oreNames[oreCenter.z], oreCenter, randGen, minX, minX + chunkSize - 1, minY, minY + chunkSize - 1);
+            SpawnVein(grid, grid.oreNames[oreCenter.z], oreCenter, randGen, minX, minX + chunkSize - 1, minY, minY + chunkSize - 1, curChunkParent);
     } 
     
     /* GetChunkID converts the chunk X and Y into a single Int
@@ -98,7 +103,7 @@ public class OreGeneration : MonoBehaviour
      * cont.: Ores will never be placed outside of the edges
      * HELPERS: insideBorder
      */
-    private static void SpawnVein(GridControl grid, GameObject oreName, Vector3Int center, System.Random randGen, int left, int right, int bottom, int top)
+    private static void SpawnVein(GridControl grid, GameObject oreName, Vector3Int center, System.Random randGen, int left, int right, int bottom, int top, GameObject curChunkParent)
     {
         // rad will determine the radius of the vein by a random amount up to 3
         double rad = MAX_RADIUS - (randGen.NextDouble() * MAX_RADIUS / 2);
@@ -116,7 +121,7 @@ public class OreGeneration : MonoBehaviour
                 empty = !grid.oreObjects.TryGetValue((new Vector2(x, y)), out temp);
                 oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
                 if (randGen.NextDouble() <= oddsOfOre && HelpFuncs.insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
-                    grid.oreObjects.Add(new Vector2(x, y), Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, grid.transform));
+                    grid.oreObjects.Add(new Vector2(x, y), Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform));
             }
     }
 }

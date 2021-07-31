@@ -105,14 +105,13 @@ public class TileBrush : MonoBehaviour
 		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
 		Vector2Int bottomLeftBound = HelpFuncs.GetChunk(botLeft.x, botLeft.y);
 		Vector2Int topRightBound = HelpFuncs.GetChunk(topRight.x, topRight.y);
-		bool isChunkLoaded;
+		GameObject isChunkLoaded;
 
 		for(int x = bottomLeftBound.x - 1; x <= topRightBound.x + 1; x++)
 		{
 			for(int y = bottomLeftBound.y - 1; y <= topRightBound.y + 1; y++)
 			{
-				grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded);
-				if(!isChunkLoaded)
+				if(grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) && isChunkLoaded != null)
 					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
 			}
 		}
