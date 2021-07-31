@@ -37,7 +37,7 @@ public class BeltLogic : Placeable
 	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
 	 * POSTCONDITIONS: Only the belt directly in front of this one will be altered
 	 */
-	private void TryAttachFrontBelt(Vector3 direction)
+	public void TryAttachFrontBelt(Vector3 direction)
 	{
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
@@ -65,7 +65,7 @@ public class BeltLogic : Placeable
 	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
 	 * POSTCONDITIONS: Only belts pointing to this one might be altered
 	 */
-	private void TryAttachBackBelt(Vector3 direction)
+	public void TryAttachBackBelt(Vector3 direction)
 	{
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
@@ -210,7 +210,7 @@ public class BeltLogic : Placeable
 
 		if (backBelt)
 		{
-			backBelt.TryAttachFrontBelt(HelpFuncs.EulerToVector(backBelt.transform.rotation.eulerAngles.z));
+			backBelt.frontBelt = null;
 			backBelt.UpdateSprite();
 		}
 		backBelt = null;
