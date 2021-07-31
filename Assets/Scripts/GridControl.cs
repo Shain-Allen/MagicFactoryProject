@@ -13,18 +13,18 @@ public class GridControl : MonoBehaviour
 	float beltCycleTimeLeft = 0f;
 	public int worldSeed = 0;
 
-	public GameObject oreName;
+	public List<GameObject> oreNames;
 
 	private void Start()
 	{
 		beltCycleTimeLeft = beltCycleTime;
 		
-		int initialChunkSpawningRadius = 0;
+		int initialChunkSpawningRadius = 7;
 		for (int x = -initialChunkSpawningRadius; x <= initialChunkSpawningRadius; x++)
 		{
 			for (int y = -initialChunkSpawningRadius; y <= initialChunkSpawningRadius; y++)
 			{
-				OreGeneration.LoadChunkOres(this, oreName, worldSeed, x, y);
+				OreGeneration.LoadChunkOres(this, worldSeed, x, y);
 			}
 		}
 	}

@@ -2225,7 +2225,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldSeed: 0
-  oreName: {fileID: 218887673656050057, guid: 69ddc90cffe63ce4ab1cea36be1fba9b, type: 3}
+  oreNames:
+  - {fileID: 218887673656050057, guid: 69ddc90cffe63ce4ab1cea36be1fba9b, type: 3}
+  - {fileID: 4683247514604296566, guid: 48b797e732a1c0344ad6d44fb13b0565, type: 3}
 --- !u!1 &2095421166
 GameObject:
   m_ObjectHideFlags: 0

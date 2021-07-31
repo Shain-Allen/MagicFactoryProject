@@ -113,7 +113,7 @@ public class TileBrush : MonoBehaviour
 			{
 				grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded);
 				if(!isChunkLoaded)
-					OreGeneration.LoadChunkOres(grid, grid.oreName, grid.worldSeed, x, y);
+					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
 			}
 		}
 	}
