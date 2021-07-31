@@ -104,22 +104,34 @@ public class TileBrush : MonoBehaviour
         Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
         Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
         Vector2Int bottomLeftBound = HelpFuncs.GetChunk(botLeft.x, botLeft.y);
-        bottomLeftBound = new Vector2Int(bottomLeftBound.x - 1, bottomLeftBound.y - 1);
         Vector2Int topRightBound = HelpFuncs.GetChunk(topRight.x, topRight.y);
+        int bufferZone = 1; //bufferZone is the extra # of chunks loaded beyond the Camera's view
 
+        LoadChunks(bottomLeftBound, topRightBound, bufferZone);
+        UnloadChunks(bottomLeftBound, topRightBound, bufferZone);
+    }
+
+    private void LoadChunks(Vector2Int bottomLeftBound, Vector2Int topRightBound, int buffer)
+    {
         GameObject isChunkLoaded;
 
-        for (int x = bottomLeftBound.x - 1; x <= topRightBound.x + 1; x++)
+        for (int x = bottomLeftBound.x - buffer; x <= topRightBound.x + buffer; x++)
         {
-            for (int y = bottomLeftBound.y - 1; y <= topRightBound.y + 1; y++)
+            for (int y = bottomLeftBound.y - buffer; y <= topRightBound.y + buffer; y++)
             {
                 if (!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
                     OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
             }
         }
+    }
 
-        bottomLeftBound = new Vector2Int(bottomLeftBound.x - 3, bottomLeftBound.y - 3);
-        topRightBound = new Vector2Int(topRightBound.x + 3, topRightBound.y + 3);
+    private void UnloadChunks(Vector2Int bottomLeftBound, Vector2Int topRightBound, int buffer)
+    {
+        GameObject isChunkLoaded;
+
+        // Get all the Vector2Ints of the loaded chunks, but in a way it doesn't matter that I delete them
+        bottomLeftBound = new Vector2Int(bottomLeftBound.x - buffer, bottomLeftBound.y - buffer);
+        topRightBound = new Vector2Int(topRightBound.x + buffer, topRightBound.y + buffer);
         List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
         foreach (Vector2Int LoadedChunkPos in grid.loadedChunks.Keys)
             loadedChunkPositions.Add(LoadedChunkPos);
@@ -128,6 +140,7 @@ public class TileBrush : MonoBehaviour
         for (int i = 0; i < loadedChunkPositions.Count; i++)
         {
             loadedChunkPos = loadedChunkPositions[i];
+            // If the chunk is outside of the buffer, unload the chunk
             if (grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
             {
                 if (!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))

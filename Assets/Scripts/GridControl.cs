@@ -20,7 +20,7 @@ public class GridControl : MonoBehaviour
     {
         beltCycleTimeLeft = beltCycleTime;
 
-        int initialChunkSpawningRadius = 2;
+        int initialChunkSpawningRadius = 0;
         for (int x = -initialChunkSpawningRadius; x <= initialChunkSpawningRadius; x++)
         {
             for (int y = -initialChunkSpawningRadius; y <= initialChunkSpawningRadius; y++)

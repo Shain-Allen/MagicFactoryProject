@@ -1827,7 +1827,7 @@ MonoBehaviour:
   worldGrid: {fileID: 1989458524}
   brushItem: {fileID: 0}
   itemPreview: {fileID: 630760363}
-  itemDictionary: {fileID: 11400000, guid: 9fae058e7f849f14fb17f1f543257990, type: 2}
+  ObjectDictionary: {fileID: 11400000, guid: 9fae058e7f849f14fb17f1f543257990, type: 2}
   grid: {fileID: 1989458526}
 --- !u!4 &1613626375
 Transform:
