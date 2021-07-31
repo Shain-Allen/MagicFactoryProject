@@ -203,6 +203,9 @@ public class BeltLogic : InvSlot
 			frontBelt.UpdateSprite();
 		}
 		frontBelt = null;
+
+		if (itemSlot)
+			Destroy(itemSlot);
 		itemSlot = null;
 
 		Destroy(gameObject);
