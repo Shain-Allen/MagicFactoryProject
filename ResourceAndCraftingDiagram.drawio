@@ -1,1 +1,37 @@
-<mxfile host="app.diagrams.net" modified="2021-08-01T03:42:01.435Z" agent="5.0 (Windows)" etag="oraMMCw6rXKcLbKMGOcs" version="14.9.3" type="github"><diagram id="dblAvddPHy4zHcdgNZNw" name="Page-1">ddHBDsIgDADQr+HOIBp3xqkXTzt4JqMOErYuDLPp17sF5iTTE/DaUlIIF814drLTV1RgCaNqJPxIGMvonk7LLM8oGc+D1M6oaCuU5gVLadSHUdAniR7RetOlWGHbQuUTk87hkKbd0aZdO1nDBspK2q3ejPI66IHS1S9gah0757sYaOSSG6HXUuHwRbwgXDhEH3bNKMDOw1vGEupOf6Kfdzlo/Y+CabPePR2SH+LFGw==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-08-01T03:55:04.198Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.62" etag="xmk2lx_8UdfCHGTJcimG" version="14.9.3" type="github">
+  <diagram id="dblAvddPHy4zHcdgNZNw" name="Page-1">
+    <mxGraphModel dx="735" dy="745" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="NblPLieoJubLbDfHQmZO-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="NblPLieoJubLbDfHQmZO-1" target="NblPLieoJubLbDfHQmZO-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-1" value="Rubrese" style="ellipse;whiteSpace=wrap;html=1;fontStyle=0;fontSize=18;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="200" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-3" value="Freemal?" style="ellipse;whiteSpace=wrap;html=1;fontStyle=0;fontSize=18;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="840" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="NblPLieoJubLbDfHQmZO-4" target="NblPLieoJubLbDfHQmZO-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-4" value="Thaulite" style="ellipse;whiteSpace=wrap;html=1;fontStyle=0;fontSize=18;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-5" value="Flexisteel" style="ellipse;whiteSpace=wrap;html=1;fontStyle=0;fontSize=18;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="120" y="240" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-6" value="Memoranium" style="ellipse;whiteSpace=wrap;html=1;fontStyle=0;fontSize=18;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="680" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-7" value="Mana Crystal" style="ellipse;whiteSpace=wrap;html=1;fontStyle=0;fontSize=18;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="NblPLieoJubLbDfHQmZO-8" value="Infernium or&lt;br style=&quot;font-size: 18px;&quot;&gt;Infernate" style="ellipse;whiteSpace=wrap;html=1;fontStyle=0;fontSize=18;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="520" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
