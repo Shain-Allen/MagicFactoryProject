@@ -52,7 +52,7 @@ public class OreGeneration : MonoBehaviour
 		int minX = chunkX * chunkSize;
 		int minY = chunkY * chunkSize;
 		foreach (Vector3Int oreCenter in oreSpawns)
-			SpawnVein(grid, grid.oreNames[oreCenter.z], oreCenter, randGen, minX, minX + chunkSize - 1, minY, minY + chunkSize - 1, curChunkParent);
+			SpawnVein(grid, grid.oreNames[oreCenter.z], grid.oreOutputItems[oreCenter.z], oreCenter, randGen, minX, minX + chunkSize - 1, minY, minY + chunkSize - 1, curChunkParent);
 	}
 
 	/* GetChunkID converts the chunk X and Y into a single Int
@@ -104,7 +104,7 @@ public class OreGeneration : MonoBehaviour
      * cont.: Ores will never be placed outside of the edges
      * HELPERS: insideBorder
      */
-	private static void SpawnVein(GridControl grid, GameObject oreName, Vector3Int center, System.Random randGen, int left, int right, int bottom, int top, GameObject curChunkParent)
+	private static void SpawnVein(GridControl grid, GameObject oreName, GameObject oreOutput, Vector3Int center, System.Random randGen, int left, int right, int bottom, int top, GameObject curChunkParent)
 	{
 		// rad will determine the radius of the vein by a random amount up to 3
 		double rad = MAX_RADIUS - (randGen.NextDouble() * MAX_RADIUS / 2);
@@ -112,17 +112,22 @@ public class OreGeneration : MonoBehaviour
 		int maxRad = (int)Math.Ceiling(rad);
 		double dist, oddsOfOre;
 		bool empty;
-		GameObject temp;
+		BaseOre tempOre;
+		GameObject tempObj;
 
 		// For loops essentially look at the square around the center where MAX_RADIUS is contained, but doesn't go off the edge
 		for (int x = center.x - maxRad; x <= center.x + maxRad; x++)
 			for (int y = center.y - maxRad; y <= center.y + maxRad; y++)
 			{
 				dist = HelpFuncs.GetDistance(x, center.x, y, center.y);
-				empty = !grid.oreObjects.TryGetValue((new Vector2(x, y)), out temp);
+				empty = !grid.oreObjects.TryGetValue((new Vector2(x, y)), out tempOre);
 				oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
 				if (randGen.NextDouble() <= oddsOfOre && HelpFuncs.insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
-					grid.oreObjects.Add(new Vector2(x, y), Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform));
+				{
+					tempObj = Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform);
+					tempOre = new BaseOre(tempObj, oreOutput, randGen.Next(50, 200));
+					grid.oreObjects.Add(new Vector2(x, y), tempOre);
+				}
 			}
 	}
 }

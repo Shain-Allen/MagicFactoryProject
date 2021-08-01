@@ -137,6 +137,7 @@ public class TileBrush : MonoBehaviour
 			loadedChunkPositions.Add(LoadedChunkPos);
 
 		Vector2Int loadedChunkPos;
+		BaseOre tempOre;
 		for (int i = 0; i < loadedChunkPositions.Count; i++)
 		{
 			loadedChunkPos = loadedChunkPositions[i];
@@ -145,6 +146,11 @@ public class TileBrush : MonoBehaviour
 			{
 				if (!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
 				{
+					for (int x = loadedChunkPos.x * OreGeneration.chunkSize; x < (loadedChunkPos.x + 1) * OreGeneration.chunkSize; x++)
+						for (int y = loadedChunkPos.y * OreGeneration.chunkSize; y < (loadedChunkPos.y + 1) * OreGeneration.chunkSize; y++)
+							if (grid.oreObjects.TryGetValue(new Vector2(x, y), out tempOre))
+								grid.oreObjects.Remove(new Vector2(x, y));
+
 					grid.loadedChunks.Remove(loadedChunkPos);
 					Destroy(isChunkLoaded);
 				}

@@ -2073,6 +2073,13 @@ MonoBehaviour:
   - {fileID: 8952263602555396841, guid: e4870b7ab0e747c44aaba022e4f306a1, type: 3}
   - {fileID: 4788564465689515745, guid: c2b6c6737ec47fe4f9c0e2f88228e362, type: 3}
   - {fileID: 3322667614181442397, guid: 94af07daebab78f4fbd0a21eca2958e1, type: 3}
+  oreOutputItems:
+  - {fileID: 4770138616933971682, guid: 59667bdab78ec4640b991299f03c860f, type: 3}
+  - {fileID: 2886921171740574537, guid: 6da272cbab76f9341aeecf5ad2b23294, type: 3}
+  - {fileID: 8266811063407499475, guid: 305a73a210d90514690bcbf2ab25e199, type: 3}
+  - {fileID: 8952263602555396841, guid: e4870b7ab0e747c44aaba022e4f306a1, type: 3}
+  - {fileID: 4788564465689515745, guid: c2b6c6737ec47fe4f9c0e2f88228e362, type: 3}
+  - {fileID: 3322667614181442397, guid: 94af07daebab78f4fbd0a21eca2958e1, type: 3}
   chunkParentObject: {fileID: 917065744}
 --- !u!1 &2095421166
 GameObject:
