@@ -51,7 +51,7 @@ TagManager:
   - name: Placeables_Items
     uniqueID: 3895182779
     locked: 0
-  - name: Belt_Items
+  - name: Items
     uniqueID: 2001781337
     locked: 0
   - name: Hand
