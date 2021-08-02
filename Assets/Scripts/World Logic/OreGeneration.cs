@@ -45,39 +45,14 @@ public class OreGeneration : MonoBehaviour
      */
 	private static void GenerateOresInChunk(GridControl grid, int seed, int chunkX, int chunkY, int fromChunkX, int fromChunkY, GameObject curChunkParent)
 	{
-		System.Random randGen = new System.Random(seed - GetChunkID(fromChunkX, fromChunkY));
+		System.Random randGen = new System.Random(seed - HelpFuncs.GetChunkID(fromChunkX, fromChunkY));
 		List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * chunkSize, fromChunkY * chunkSize, grid.oreNames.Count);
 
-		randGen = new System.Random(seed - GetChunkID(chunkX, chunkY));
+		randGen = new System.Random(seed - HelpFuncs.GetChunkID(chunkX, chunkY));
 		int minX = chunkX * chunkSize;
 		int minY = chunkY * chunkSize;
 		foreach (Vector3Int oreCenter in oreSpawns)
 			SpawnVein(grid, grid.oreNames[oreCenter.z], grid.oreOutputItems[oreCenter.z], oreCenter, randGen, minX, minX + chunkSize - 1, minY, minY + chunkSize - 1, curChunkParent);
-	}
-
-	/* GetChunkID converts the chunk X and Y into a single Int
-     * PRECONDITIONS: chunkX and chunkY should both be between roughly -30,000 and 30,000 to prevent OverFlows
-     * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
-     * Recommend seeing SpiralChunkIDs.xlsx to better understand chunk IDs
-     */
-	public static int GetChunkID(int x, int y)
-	{
-		int sprialLayer = Math.Max(Math.Abs(x), Math.Abs(y));
-		int topLeft = (int)Math.Pow(sprialLayer * 2 + 1, 2) - 1;
-		int diff = Math.Abs(x + y);
-
-		if (x < 0 && -x >= Math.Abs(y))
-			return topLeft - diff;
-
-		int bottomRight = (int)Math.Pow(sprialLayer * 2, 2);
-		if (y < 0 && Math.Abs(y) >= Math.Abs(x))
-			return bottomRight + diff;
-		if (x > y)
-			return bottomRight - diff;
-
-		int topRight = bottomRight - (topLeft - bottomRight) / 2;
-		diff = Math.Abs(x - y);
-		return topRight - diff;
 	}
 
 	/* GetSpawnLocations gets the center of each ore vein within the chunk
