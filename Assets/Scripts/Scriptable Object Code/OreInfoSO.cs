@@ -18,6 +18,10 @@ public class OreInfoSO : ScriptableObject
 	private void OnEnable()
 	{
 		itemDictionary = (ObjectDictionary)Resources.Load("Scriptable_Object_Items/ItemDictionary");
+	}
+
+	private void OnValidate()
+	{
 		ObjectDictionary oreDictionary = (ObjectDictionary)Resources.Load("Scriptable_Object_Items/OreDictionary");
 
 		for (int i = 0; i < oreDictionary.itemList.Length; i++)

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6479018843843093416}
   - component: {fileID: 1600278710482038231}
+  - component: {fileID: 5475644296441461053}
   m_Layer: 0
   m_Name: ManaCrystal
   m_TagString: Untagged
@@ -83,3 +84,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5475644296441461053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266811063407499475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47aea3683240837428a1d3e16286ae3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  oreInfo: {fileID: 11400000, guid: c61078f5c3f4fe446abdadb69ef0aca8, type: 2}
+  remainingOre: 0
