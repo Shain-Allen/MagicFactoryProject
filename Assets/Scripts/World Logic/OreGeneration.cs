@@ -100,8 +100,12 @@ public class OreGeneration : MonoBehaviour
 				{
 					tempOre = Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform);
 					//tempOre = new BaseOre(tempObj, oreOutput, randGen.Next(50, 200));
+
 					if (tempOre.GetComponent<BaseOre>())
 						tempOre.GetComponent<BaseOre>().GenerateOre();
+					if (tempOre.GetComponent<BaseGas>())
+						tempOre.GetComponent<BaseGas>().GenerateGas();
+
 					grid.oreObjects.Add(new Vector2(x, y), tempOre);
 				}
 			}
