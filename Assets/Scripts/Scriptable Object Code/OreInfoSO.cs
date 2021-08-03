@@ -17,7 +17,7 @@ public class OreInfoSO : ScriptableObject
 
 		for (int i = 0; i < oreDictionary.itemList.Length; i++)
 		{
-			if (this.name == oreDictionary.itemList[i].name)
+			if (this.name.ToLower() == oreDictionary.itemList[i].name.ToLower())
 			{
 				returnObjectIndex = i;
 			}
