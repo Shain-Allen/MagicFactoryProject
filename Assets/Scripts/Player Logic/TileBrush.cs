@@ -12,6 +12,8 @@ public class TileBrush : MonoBehaviour
 	Vector2 moveInput;
 	//movement speed
 	public float moveSpeed = 25f;
+	public GameObject Player;
+	private Animator animator;
 	//camera Reference
 	GameObject cam;
 	//mouse pos stuff
@@ -50,6 +52,8 @@ public class TileBrush : MonoBehaviour
 
 		//Delegate with Lambda Expression to hook up the Method to the C# event for clearing the brush
 		gameControls.GeneralControls.ClearBrush.started += ctx => EmptyBrushItem();
+
+		animator = Player.GetComponent<Animator>();
 	}
 
 	// Update is called once per frame
@@ -98,6 +102,23 @@ public class TileBrush : MonoBehaviour
 
 		//move the camera;
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
+		bool isWalking = true;
+		int facingDirection = 3;
+		if (moveInput.x == 0 && moveInput.y == 0)
+			isWalking = false;
+		else if (moveInput.x == 0)
+		{
+			if (moveInput.y > 0)
+				facingDirection = 0;
+			else
+				facingDirection = 2;
+		}
+		else if (moveInput.x < 0)
+			facingDirection = 1;
+		else
+			facingDirection = 3;
+		animator.SetBool("isWalking", isWalking);
+		animator.SetInteger("facingDirection", facingDirection);
 
 		//See if new chunks need to be loaded or unloaded
 		Camera camera = cam.GetComponent<Camera>();
