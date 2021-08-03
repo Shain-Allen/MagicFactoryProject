@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49f2c9f46cc02a74eb9d632ec8d03cc0, type: 3}
+  m_Name: GasDictionary
+  m_EditorClassIdentifier: 
+  itemList:
+  - {fileID: 3322667614181442397, guid: 94af07daebab78f4fbd0a21eca2958e1, type: 3}
+  - {fileID: 8952263602555396841, guid: e4870b7ab0e747c44aaba022e4f306a1, type: 3}
+  - {fileID: 4788564465689515745, guid: c2b6c6737ec47fe4f9c0e2f88228e362, type: 3}

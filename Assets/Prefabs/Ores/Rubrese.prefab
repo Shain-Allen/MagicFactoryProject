@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2331071976130696211}
   - component: {fileID: 3504957757326798164}
+  - component: {fileID: 5812439542452600297}
   m_Layer: 0
   m_Name: Rubrese
   m_TagString: Untagged
@@ -83,3 +84,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5812439542452600297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2886921171740574537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47aea3683240837428a1d3e16286ae3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  oreInfo: {fileID: 11400000, guid: 40602680c3cb5b049af2e64f78790f09, type: 2}
+  remainingOre: 0

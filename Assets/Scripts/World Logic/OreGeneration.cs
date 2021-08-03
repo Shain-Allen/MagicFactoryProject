@@ -87,8 +87,7 @@ public class OreGeneration : MonoBehaviour
 		int maxRad = (int)Math.Ceiling(rad);
 		double dist, oddsOfOre;
 		bool empty;
-		BaseOre tempOre;
-		GameObject tempObj;
+		GameObject tempOre;
 
 		// For loops essentially look at the square around the center where MAX_RADIUS is contained, but doesn't go off the edge
 		for (int x = center.x - maxRad; x <= center.x + maxRad; x++)
@@ -99,8 +98,14 @@ public class OreGeneration : MonoBehaviour
 				oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
 				if (randGen.NextDouble() <= oddsOfOre && HelpFuncs.insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
 				{
-					tempObj = Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform);
-					tempOre = new BaseOre(tempObj, oreOutput, randGen.Next(50, 200));
+					tempOre = Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform);
+					//tempOre = new BaseOre(tempObj, oreOutput, randGen.Next(50, 200));
+
+					if (tempOre.GetComponent<BaseOre>())
+						tempOre.GetComponent<BaseOre>().GenerateOre();
+					if (tempOre.GetComponent<BaseGas>())
+						tempOre.GetComponent<BaseGas>().GenerateGas();
+
 					grid.oreObjects.Add(new Vector2(x, y), tempOre);
 				}
 			}
