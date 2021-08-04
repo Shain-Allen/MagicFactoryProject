@@ -16,7 +16,6 @@ public class ItemControlHelpers
 			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
 			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
 			{
-				Debug.Log($"Found an IC at ({itemControlAtPos.transform.position.x}, {itemControlAtPos.transform.position.y})");
 				return itemControlAtPos;
 			}
 		}
@@ -66,7 +65,7 @@ public class ItemControlHelpers
 		if (ICSide != null && ICSide.allowFrontBelt && ICSide.frontBelt == null)
 		{
 			// And if it is pointing to this IC
-			if (ICSide.transform.rotation.eulerAngles.z == connectionAngle)
+			if ((ICSide.transform.rotation.eulerAngles.z + 180) % 360 == connectionAngle)
 			{
 				IC.backBelt = ICSide;
 				IC.backBelt.frontBelt = IC;
