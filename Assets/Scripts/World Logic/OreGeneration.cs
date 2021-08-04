@@ -21,7 +21,7 @@ public class OreGeneration : MonoBehaviour
 		GameObject curChunkParent;
 		if (grid.loadedChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
 			return;
-		curChunkParent = Instantiate(grid.chunkParentObject, new Vector3(chunkX * ChunkManager.chunkSize, chunkY * ChunkManager.chunkSize, 0), Quaternion.identity, grid.transform);
+		curChunkParent = Instantiate(grid.chunkParentObject, new Vector3(chunkX * ChunkManager.CHUNK_SIZE, chunkY * ChunkManager.CHUNK_SIZE, 0), Quaternion.identity, grid.transform);
 		curChunkParent.name = $"({chunkX},{chunkY})";
 
 		// 1st  4th  7th (This shows the order of chunk loading, therefore meaning it's the priority order)
@@ -44,13 +44,13 @@ public class OreGeneration : MonoBehaviour
 	private static void GenerateOresInChunk(GridControl grid, int seed, int chunkX, int chunkY, int fromChunkX, int fromChunkY, GameObject curChunkParent)
 	{
 		System.Random randGen = new System.Random(seed - HelpFuncs.GetChunkID(fromChunkX, fromChunkY));
-		List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * ChunkManager.chunkSize, fromChunkY * ChunkManager.chunkSize, grid.oreNames.Count);
+		List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * ChunkManager.CHUNK_SIZE, fromChunkY * ChunkManager.CHUNK_SIZE, grid.oreNames.Count);
 
 		randGen = new System.Random(seed - HelpFuncs.GetChunkID(chunkX, chunkY));
-		int minX = chunkX * ChunkManager.chunkSize;
-		int minY = chunkY * ChunkManager.chunkSize;
+		int minX = chunkX * ChunkManager.CHUNK_SIZE;
+		int minY = chunkY * ChunkManager.CHUNK_SIZE;
 		foreach (Vector3Int oreCenter in oreSpawns)
-			SpawnVein(grid, grid.oreNames[oreCenter.z], grid.oreOutputItems[oreCenter.z], oreCenter, randGen, minX, minX + ChunkManager.chunkSize - 1, minY, minY + ChunkManager.chunkSize - 1, curChunkParent);
+			SpawnVein(grid, grid.oreNames[oreCenter.z], grid.oreOutputItems[oreCenter.z], oreCenter, randGen, minX, minX + ChunkManager.CHUNK_SIZE - 1, minY, minY + ChunkManager.CHUNK_SIZE - 1, curChunkParent);
 	}
 
 	/* GetSpawnLocations gets the center of each ore vein within the chunk
@@ -63,8 +63,8 @@ public class OreGeneration : MonoBehaviour
 	{
 		List<Vector3Int> OreSpawns = new List<Vector3Int>();
 
-		for (int x = minX; x < minX + ChunkManager.chunkSize; x++)
-			for (int y = minY; y < minY + ChunkManager.chunkSize; y++)
+		for (int x = minX; x < minX + ChunkManager.CHUNK_SIZE; x++)
+			for (int y = minY; y < minY + ChunkManager.CHUNK_SIZE; y++)
 				if (randGen.NextDouble() <= SPAWN_CHANCE)
 					OreSpawns.Add(new Vector3Int(x, y, randGen.Next(numTypesOres)));
 
