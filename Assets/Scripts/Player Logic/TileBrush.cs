@@ -65,8 +65,10 @@ public class TileBrush : MonoBehaviour
 		transform.position = new Vector3(mousePos.x, mousePos.y, 0);
 		roundedMousePos = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
 
-		DetectPlacing();
-		DetectDestroying();
+		if (Input.GetMouseButtonDown(0))
+			DetectPlacing();
+		if (Input.GetMouseButtonDown(1))
+			DetectDestroying();
 
 		// Move the camera and player
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
@@ -82,83 +84,40 @@ public class TileBrush : MonoBehaviour
 	// If the user is left clicks, place their held Placeable
 	private void DetectPlacing()
 	{
-		if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+		if (brushItem != null && !EventSystem.current.IsPointerOverGameObject())
 		{
-			if (brushItem != null)
-			{
-				if (GetPlaceableAt(grid, roundedMousePos) != null)
-					return;
-
-				GameObject temp = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform);
-				temp.GetComponent<Placeable>().PlacedAction(grid);
-			}
-			/*if (brushItem != null && !grid.placeObjects.ContainsKey(roundedMousePos))
-			{
-				GameObject objectPlaceholder;
-				GameObject chunkPlaceholder;
-				//place the object in the world aligned to the grid and add it to the grids dictionary for easy lookup for other things
-				//grid.placeObjects.Add(roundedMousePos, objectPlaceholder = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform));
-
-				objectPlaceholder = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform);
-
-				if (objectPlaceholder.GetComponent<Placeable>() != null)
-				{
-					objectPlaceholder.GetComponent<Placeable>().PlacedAction(grid);
-				}
-				else if (grid.worldChunks.TryGetValue(GetChunk(roundedMousePos), out chunkPlaceholder))
-				{
-					chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(roundedMousePos).x, PosToPosInChunk(roundedMousePos).y] = objectPlaceholder;
-					//grid.placeObjects.Add(roundedMousePos, objectPlaceholder);
-				}
-			}*/
+			if (GetPlaceableAt(grid, roundedMousePos) != null)
+				return;
+			GameObject temp = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform);
+			temp.GetComponent<Placeable>().PlacedAction(grid);
 		}
 	}
 
 	// If the user right clicks, destory the targeted Placeable
 	private void DetectDestroying()
 	{
-		if (Input.GetMouseButtonDown(1))
-		{
-			if (grid.placeObjects.ContainsKey(roundedMousePos))
-			{
-				// Find the object in the grid dictionary, then delete it and remove from the dictionary
-				if (grid.placeObjects[roundedMousePos].GetComponent<Placeable>() != null)
-				{
-					grid.placeObjects[roundedMousePos].GetComponent<Placeable>().RemovedAction();
-				}
-				else
-				{
-					GameObject.Destroy(grid.placeObjects[roundedMousePos]);
-					grid.placeObjects.Remove(roundedMousePos);
-				}
-
-			}
-		}
+		Placeable placeableToRemove = GetPlaceableAt(grid, roundedMousePos);
+		if (placeableToRemove == null)
+			return;
+		placeableToRemove.RemovedAction();
 	}
 
 	// Changes the state of the Player animator so it animates correctly
 	private void UpdatePlayerAnimation()
 	{
-		bool isWalking = true;
-		int facingDirection = 3;
-		if (moveInput.x == 0 && moveInput.y == 0)
-			isWalking = false;
-		else if (moveInput.x == 0)
-		{
-			if (moveInput.y > 0)
-				facingDirection = 0;
-			else
-				facingDirection = 2;
-		}
-		else if (moveInput.x < 0)
-			facingDirection = 1;
-		else
-			facingDirection = 3;
+		bool isWalking = !(moveInput.x == 0 && moveInput.y == 0);
 		animator.SetBool("isWalking", isWalking);
-		animator.SetInteger("facingDirection", facingDirection);
+
+		if (isWalking)
+		{
+			float facingFloat = VectorToEuler(moveInput) / 90;
+			if (facingFloat % 2 != 0)
+				facingFloat = (facingFloat < 2) ? 1 : 3;
+			animator.SetInteger("facingDirection", (int)facingFloat);
+		}
 	}
 
-	//Update the brush item to the last clicked item
+	// Updates the brush item to the last clicked item
 	public void ChangeBrushItem(int _itemID)
 	{
 		brushItem = ObjectDictionary.itemList[_itemID];
@@ -166,31 +125,29 @@ public class TileBrush : MonoBehaviour
 		itemPreview.color = brushItem.GetComponent<SpriteRenderer>().color;
 	}
 
-	//Empty the current item from the Brush
+	// Empties the current item from the brush
 	public void EmptyBrushItem()
 	{
 		brushItem = null;
 		itemPreview.sprite = null;
 	}
 
-	//this is constantly updating MoveInput to reflect the state of WASD
+	// Creates a movespeed based on WASD being pressed
 	private void PlayerMovementStart(InputAction.CallbackContext context)
 	{
 		moveInput = context.ReadValue<Vector2>();
 	}
 
-	//this resets the MoveInput to 0,0 once WASD is not being pressed anymore to stop camera movement
+	// Sets movement to 0,0 when WASD is not being pressed
 	private void PlayerMovementStop()
 	{
-		moveInput = new Vector2(0, 0);
+		moveInput = Vector2.zero;
 	}
 
-	//this rotates the item when the rotate key is pressed
+	// Rotates the brush item 90 degrees clockwise
 	private void RotateItem()
 	{
 		if (itemPreview)
-		{
 			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 270f);
-		}
 	}
 }

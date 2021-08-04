@@ -25,9 +25,10 @@ public class HelpFuncs : MonoBehaviour
 	// Takes any Vector3 and turns the X/Y into an Euler Angle
 	public static float VectorToEuler(Vector3 input)
 	{
-		float toReturn = (float)(Math.Atan(input.y / input.x) * 180 / Math.PI) + 90;
+		float toReturn = (float)(-Math.Atan(input.y / input.x) * 180 / Math.PI) + 90;
 		if (input.x > 0)
 			toReturn += 180;
+		toReturn = Math.Abs(toReturn);
 		return (float)Math.Round(toReturn, 1);
 	}
 
