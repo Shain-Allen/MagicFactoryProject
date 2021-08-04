@@ -86,6 +86,7 @@ public class TileBrush : MonoBehaviour
 			if (brushItem != null && (grid.placeObjects.Count == 0 || !grid.placeObjects.ContainsKey(roundedMousePos)))
 			{
 				GameObject objectPlaceholder;
+				GameObject chunkPlaceholder;
 				//place the object in the world aligned to the grid and add it to the grids dictionary for easy lookup for other things
 				//grid.placeObjects.Add(roundedMousePos, objectPlaceholder = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform));
 
@@ -95,8 +96,9 @@ public class TileBrush : MonoBehaviour
 				{
 					objectPlaceholder.GetComponent<Placeable>().PlacedAction(grid);
 				}
-				else
+				else if (grid.worldChunks.TryGetValue(PosToChunk(roundedMousePos), out chunkPlaceholder))
 				{
+					chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(roundedMousePos).x, PosToPosInChunk(roundedMousePos).y] = objectPlaceholder;
 					//grid.placeObjects.Add(roundedMousePos, objectPlaceholder);
 				}
 			}

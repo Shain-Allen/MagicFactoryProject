@@ -11,6 +11,9 @@ public class FullChestLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
+
+		grid.placeObjects.Add(transform.position, gameObject);
+
 		frontBelt = null;
 		allowFrontBelt = true;
 		backBelt = null;

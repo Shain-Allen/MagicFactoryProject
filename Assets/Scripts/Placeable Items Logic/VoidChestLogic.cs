@@ -9,6 +9,9 @@ public class VoidChestLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
+
+		grid.placeObjects.Add(transform.position, gameObject);
+
 		backBelt = null;
 		allowBackBelt = true;
 		frontBelt = null;

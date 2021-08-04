@@ -17,6 +17,15 @@ public class BeltLogic : ItemControl
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		grid = grid_;
 
+		GameObject chunkPlaceholder;
+
+		if (grid.worldChunks.TryGetValue(PosToChunk(transform.position), out chunkPlaceholder))
+		{
+			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(transform.position).x, PosToPosInChunk(transform.position).y] = gameObject;
+			grid.placeObjects.Add(transform.position, gameObject);
+		}
+
+
 		allowBackBelt = true;
 		allowBackBelt = true;
 
