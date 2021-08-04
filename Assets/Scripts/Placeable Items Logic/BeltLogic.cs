@@ -25,11 +25,15 @@ public class BeltLogic : ItemControl
 		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
+	public override void TryAttachFrontBelt()
+	{
+		TryAttachFrontBeltHelper(grid, this);
+		UpdateSprite();
+	}
+
 	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void TryAttachBackBelt()
 	{
-		backBelt = null;
-
 		// If it can't attach to the one behind it, try its left side, then its right
 		TryAttachBackBeltHelper(grid, this, 180);
 		if (backBelt == null)

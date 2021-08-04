@@ -21,7 +21,6 @@ public class VoidChestLogic : ItemControl
 	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void TryAttachBackBelt()
 	{
-		backBelt = null;
 		TryAttachBackBeltHelper(grid, this, 180);
 	}
 

@@ -20,7 +20,6 @@ public class FullChestLogic : ItemControl
 
 	public override void TryAttachFrontBelt()
 	{
-		frontBelt = null;
 		TryAttachFrontBeltHelper(grid, this);
 	}
 

@@ -16,6 +16,7 @@ public class ItemControlHelpers
 			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
 			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
 			{
+				Debug.Log($"Found an IC at ({itemControlAtPos.transform.position.x}, {itemControlAtPos.transform.position.y})");
 				return itemControlAtPos;
 			}
 		}
@@ -37,8 +38,8 @@ public class ItemControlHelpers
 	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC)
 	{
 		Vector3 direction = EulerToVector(IC.transform.rotation.eulerAngles.z);
-		IC.frontBelt = null;
 		ItemControl ICFront = getICAt(grid, IC.transform.position + direction);
+		IC.frontBelt = null;
 
 		// Make sure the IC in front exists, allows this to attach, and isn't occupied
 		if (ICFront != null && ICFront.allowBackBelt && ICFront.backBelt == null)
@@ -59,6 +60,7 @@ public class ItemControlHelpers
 		int connectionAngle = (int)(IC.transform.rotation.eulerAngles.z + relativeAngle) % 360;
 		Vector3 deltaPos = EulerToVector(connectionAngle);
 		ItemControl ICSide = getICAt(grid, IC.transform.position + deltaPos);
+		IC.backBelt = null;
 
 		// If IC on the given side exists, allows this to attach, and isn't occupied
 		if (ICSide != null && ICSide.allowFrontBelt && ICSide.frontBelt == null)
