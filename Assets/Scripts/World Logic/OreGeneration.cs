@@ -44,10 +44,10 @@ public class OreGeneration : MonoBehaviour
      */
 	private static void GenerateOresInChunk(GridControl grid, int seed, int chunkX, int chunkY, int fromChunkX, int fromChunkY, GameObject curChunkParent)
 	{
-		System.Random randGen = new System.Random(seed - HelpFuncs.GetChunkID(fromChunkX, fromChunkY));
+		System.Random randGen = new System.Random(seed - GetChunkID(fromChunkX, fromChunkY));
 		List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * ChunkManager.CHUNK_SIZE, fromChunkY * ChunkManager.CHUNK_SIZE, grid.oreNames.Count);
 
-		randGen = new System.Random(seed - HelpFuncs.GetChunkID(chunkX, chunkY));
+		randGen = new System.Random(seed - GetChunkID(chunkX, chunkY));
 		int minX = chunkX * ChunkManager.CHUNK_SIZE;
 		int minY = chunkY * ChunkManager.CHUNK_SIZE;
 		foreach (Vector3Int oreCenter in oreSpawns)
