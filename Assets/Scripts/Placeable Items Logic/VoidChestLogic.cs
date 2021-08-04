@@ -9,11 +9,10 @@ public class VoidChestLogic : ItemControl
 	{
 		grid = grid_;
 		allowFrontBelt = false;
+		grid.OnBeltTimerCycle += BeltCycle;
 
 		AddToWorld(grid, this);
 		TryAttachBackBelt();
-
-		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
 	public override void TryAttachBackBelt()

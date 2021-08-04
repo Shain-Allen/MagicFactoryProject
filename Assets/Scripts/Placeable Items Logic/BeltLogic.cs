@@ -13,18 +13,16 @@ public class BeltLogic : ItemControl
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		grid = grid_;
+		grid.OnBeltTimerCycle += BeltCycle;
 
 		AddToWorld(grid, this);
 		TryAttachFrontBelt();
 		TryAttachBackBelt();
-
-		grid.OnBeltTimerCycle += BeltCycle;
 	}
 
 	public override void TryAttachFrontBelt()
 	{
 		TryAttachFrontBeltHelper(grid, this);
-		UpdateSprite();
 	}
 
 	public override void TryAttachBackBelt()
@@ -41,26 +39,19 @@ public class BeltLogic : ItemControl
 
 	public override void UpdateSprite()
 	{
+		// Belts should default to straight when it has no backbelt or backbelt is right behind
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
 
-		// Belts should default to straight when it has no backbelt
 		if (backBelt == null)
 			return;
 
-		float frontAngle = transform.rotation.eulerAngles.z;
-		float backAngle = backBelt.transform.rotation.eulerAngles.z;
-
-		// If this belt is facing the exact same way as the one behind it, it's straight
-		if ((frontAngle - backAngle + 360) % 360 == 0)
+		float angle = (transform.rotation.eulerAngles.z - backBelt.transform.rotation.eulerAngles.z + 360) % 360;
+		if (angle == 0)
 			return;
-
 		// Otherwise, it must be a corner belt; if it's turning right, it needs to be flipped
 		spriteRenderer.sprite = cornerBelt;
-		if ((frontAngle - backAngle + 360) % 360 == 270)
-			spriteRenderer.flipX = true;
-		else
-			spriteRenderer.flipX = false;
+		spriteRenderer.flipX = (angle == 270);
 	}
 
 	public override void MoveItem()
@@ -78,9 +69,7 @@ public class BeltLogic : ItemControl
 			backBelt.MoveItem();
 	}
 
-	/* BeltCycle subscribes to the cycle for belt movement found in GridControl.Update
-	 * Only belts at the front of a line will do anything using this subscription
-	 */
+	// If this belt is in front, start a chain reaction backwards for movement
 	public void BeltCycle(object sender, EventArgs e)
 	{
 		if (frontBelt == null)
