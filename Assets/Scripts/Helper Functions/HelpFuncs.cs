@@ -99,4 +99,17 @@ public class HelpFuncs : MonoBehaviour
 		int y = (int)(chunk.y * OreGeneration.chunkSize);
 		return new Vector2Int(x, y);
 	}
+
+	// Returns a Vector2Int of the pos relative to the bottom left of the chunk
+	public static Vector2Int PosToPosInChunk(float x, float y)
+	{
+		return PosToPosInChunk(new Vector2(x, y));
+	}
+	public static Vector2Int PosToPosInChunk(Vector2 pos)
+	{
+		Vector2Int chunkPos = PosToChunk(pos);
+		int x = (int)(pos.x - chunkPos.x);
+		int y = (int)(pos.y - chunkPos.y);
+		return new Vector2Int(x, y);
+	}
 }
