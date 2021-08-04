@@ -6,9 +6,9 @@ using static HelpFuncs;
 public class ChunkManager : MonoBehaviour
 {
 	// The size of chunks! Chunks are squares, so this is both the height and the width
-	public static int chunkSize = 32;
-	//buffer is the extra # of chunks loaded beyond the Camera's view
-	private static int buffer = 1;
+	public const int CHUNK_SIZE = 32;
+	//BUFFER is the extra # of chunks loaded beyond the Camera's view
+	private const int BUFFER = 1;
 
 	public static Vector2Int getBottomLeftBound(GameObject cam)
 	{
@@ -28,9 +28,9 @@ public class ChunkManager : MonoBehaviour
 	{
 		GameObject isChunkLoaded;
 
-		for (int x = bottomLeftBound.x - buffer; x <= topRightBound.x + buffer; x++)
+		for (int x = bottomLeftBound.x - BUFFER; x <= topRightBound.x + BUFFER; x++)
 		{
-			for (int y = bottomLeftBound.y - buffer; y <= topRightBound.y + buffer; y++)
+			for (int y = bottomLeftBound.y - BUFFER; y <= topRightBound.y + BUFFER; y++)
 			{
 				if (!grid.worldChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
 					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
@@ -43,8 +43,8 @@ public class ChunkManager : MonoBehaviour
 		GameObject isChunkLoaded;
 
 		// Get all the Vector2Ints of the loaded chunks, but in a way it doesn't matter that I delete them
-		bottomLeftBound = new Vector2Int(bottomLeftBound.x - buffer, bottomLeftBound.y - buffer);
-		topRightBound = new Vector2Int(topRightBound.x + buffer, topRightBound.y + buffer);
+		bottomLeftBound = new Vector2Int(bottomLeftBound.x - BUFFER, bottomLeftBound.y - BUFFER);
+		topRightBound = new Vector2Int(topRightBound.x + BUFFER, topRightBound.y + BUFFER);
 		List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
 		foreach (Vector2Int LoadedChunkPos in grid.worldChunks.Keys)
 			loadedChunkPositions.Add(LoadedChunkPos);
@@ -59,8 +59,8 @@ public class ChunkManager : MonoBehaviour
 			{
 				if (!insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
 				{
-					for (int x = loadedChunkPos.x * chunkSize; x < (loadedChunkPos.x + 1) * chunkSize; x++)
-						for (int y = loadedChunkPos.y * chunkSize; y < (loadedChunkPos.y + 1) * chunkSize; y++)
+					for (int x = loadedChunkPos.x * CHUNK_SIZE; x < (loadedChunkPos.x + 1) * CHUNK_SIZE; x++)
+						for (int y = loadedChunkPos.y * CHUNK_SIZE; y < (loadedChunkPos.y + 1) * CHUNK_SIZE; y++)
 							if (grid.oreObjects.TryGetValue(loadedChunkPos, out tempOre))
 								grid.oreObjects.Remove(loadedChunkPos);
 
