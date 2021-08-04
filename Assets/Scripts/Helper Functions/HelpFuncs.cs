@@ -22,7 +22,6 @@ public class HelpFuncs : MonoBehaviour
 		float y = (float)Math.Round(Math.Cos(eulerAngle * Math.PI / 180), 3);
 		return new Vector3(x, y, 0);
 	}
-
 	// Takes any Vector3 and turns the X/Y into an Euler Angle
 	public static float VectorToEuler(Vector3 input)
 	{
@@ -75,5 +74,29 @@ public class HelpFuncs : MonoBehaviour
 		int topRight = bottomRight - (topLeft - bottomRight) / 2;
 		diff = Math.Abs(x - y);
 		return topRight - diff;
+	}
+
+	// Returns a Vector2Int of the the bottom left position (smallest) in the chunk
+	public static Vector2Int PosToChunk(float x, float y)
+	{
+		return PosToChunk(new Vector2(x, y));
+	}
+	public static Vector2Int PosToChunk(Vector2 pos)
+	{
+		int x = (int)(pos.x % OreGeneration.chunkSize);
+		int y = (int)(pos.y % OreGeneration.chunkSize);
+		return new Vector2Int(x, y);
+	}
+
+	// Returns a Vector2Int of the chunk of the position in question
+	public static Vector2Int ChunkToPos(float x, float y)
+	{
+		return ChunkToPos(new Vector2(x, y));
+	}
+	public static Vector2Int ChunkToPos(Vector2 chunk)
+	{
+		int x = (int)(chunk.x * OreGeneration.chunkSize);
+		int y = (int)(chunk.y * OreGeneration.chunkSize);
+		return new Vector2Int(x, y);
 	}
 }
