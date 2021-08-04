@@ -12,7 +12,6 @@ public class FullChestLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		allowFrontBelt = true;
 		allowBackBelt = false;
 
 		AddToWorld(grid, this);

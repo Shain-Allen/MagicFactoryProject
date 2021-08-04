@@ -4,22 +4,6 @@ using UnityEngine;
 
 public class HelpFuncs : MonoBehaviour
 {
-	public static ItemControl getICAt(GridControl grid, Vector2 pos)
-	{
-		GameObject objAtPos, chunkParent;
-		ItemControl itemControlAtPos;
-
-		if (grid.worldChunks.TryGetValue(PosToChunk(pos), out chunkParent))
-		{
-			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
-			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
-			{
-				return itemControlAtPos;
-			}
-		}
-		return null;
-	}
-
 	// Simple Function to ensure X and Y are both within the given bounds
 	public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
 	{
@@ -64,7 +48,11 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int GetChunk(float x, float y)
 	{
-		return new Vector2Int((int)(x / ChunkManager.CHUNK_SIZE), (int)(y / ChunkManager.CHUNK_SIZE));
+		int newX = (int)(x / ChunkManager.CHUNK_SIZE);
+		int newY = (int)(y / ChunkManager.CHUNK_SIZE);
+		newX = (x < 0) ? newX - 1 : newX;
+		newY = (y < 0) ? newY - 1 : newY;
+		return new Vector2Int(newX, newY);
 	}
 
 	/* GetChunkID converts the chunk X and Y into a single Int
@@ -96,18 +84,6 @@ public class HelpFuncs : MonoBehaviour
 		return topRight - diff;
 	}
 
-	// Returns a Vector2Int of the the bottom left position (smallest) in the chunk
-	public static Vector2Int PosToChunk(float x, float y)
-	{
-		return PosToChunk(new Vector2(x, y));
-	}
-	public static Vector2Int PosToChunk(Vector2 pos)
-	{
-		int x = (int)(pos.x % ChunkManager.CHUNK_SIZE);
-		int y = (int)(pos.y % ChunkManager.CHUNK_SIZE);
-		return new Vector2Int(x, y);
-	}
-
 	// Returns a Vector2Int of the chunk of the position in question
 	public static Vector2Int ChunkToPos(float x, float y)
 	{
@@ -127,7 +103,7 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int PosToPosInChunk(Vector2 pos)
 	{
-		Vector2Int chunkPos = PosToChunk(pos);
+		Vector2Int chunkPos = ChunkToPos(GetChunk(pos));
 		int x = (int)(pos.x - chunkPos.x);
 		int y = (int)(pos.y - chunkPos.y);
 		return new Vector2Int(x, y);

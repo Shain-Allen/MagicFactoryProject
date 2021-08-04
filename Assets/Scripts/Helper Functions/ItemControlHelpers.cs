@@ -5,16 +5,35 @@ using static HelpFuncs;
 
 public class ItemControlHelpers
 {
+	// Returns the IC at the provided location, or null if there isn't an IC there
+	public static ItemControl getICAt(GridControl grid, Vector2 pos)
+	{
+		GameObject objAtPos, chunkParent;
+		ItemControl itemControlAtPos;
+
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+		{
+			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
+			{
+				return itemControlAtPos;
+			}
+		}
+		return null;
+	}
+
+	// Places the given IC into the world and the chunk array
 	public static void AddToWorld(GridControl grid, ItemControl IC)
 	{
 		GameObject chunkPlaceholder;
-		if (grid.worldChunks.TryGetValue(PosToChunk(IC.transform.position), out chunkPlaceholder))
+		if (grid.worldChunks.TryGetValue(GetChunk(IC.transform.position), out chunkPlaceholder))
 		{
 			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(IC.transform.position).x, PosToPosInChunk(IC.transform.position).y] = IC.gameObject;
 			grid.placeObjects.Add(IC.transform.position, IC.gameObject);
 		}
 	}
 
+	// Attaches the front belt if possible, copy documentation from ItemControl.cs
 	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC)
 	{
 		Vector3 direction = EulerToVector(IC.transform.rotation.eulerAngles.z);
@@ -34,6 +53,7 @@ public class ItemControlHelpers
 		}
 	}
 
+	// Attaches the back belt if possible from the relative angle, copy documentation from ItemControl.cs
 	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC, int relativeAngle)
 	{
 		int connectionAngle = (int)(IC.transform.rotation.eulerAngles.z + relativeAngle) % 360;

@@ -10,10 +10,6 @@ public class VoidChestLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-
-		backBelt = null;
-		allowBackBelt = true;
-		frontBelt = null;
 		allowFrontBelt = false;
 
 		AddToWorld(grid, this);

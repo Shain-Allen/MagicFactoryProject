@@ -17,8 +17,6 @@ public class BeltLogic : ItemControl
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		grid = grid_;
-		allowFrontBelt = true;
-		allowBackBelt = true;
 
 		AddToWorld(grid, this);
 		TryAttachFrontBelt();

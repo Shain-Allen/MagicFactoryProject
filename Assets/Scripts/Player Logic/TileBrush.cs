@@ -96,7 +96,7 @@ public class TileBrush : MonoBehaviour
 				{
 					objectPlaceholder.GetComponent<Placeable>().PlacedAction(grid);
 				}
-				else if (grid.worldChunks.TryGetValue(PosToChunk(roundedMousePos), out chunkPlaceholder))
+				else if (grid.worldChunks.TryGetValue(GetChunk(roundedMousePos), out chunkPlaceholder))
 				{
 					chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(roundedMousePos).x, PosToPosInChunk(roundedMousePos).y] = objectPlaceholder;
 					//grid.placeObjects.Add(roundedMousePos, objectPlaceholder);
