@@ -9,7 +9,6 @@ public class OreGeneration : MonoBehaviour
 	// Essentially translates to % of all tiles that are the center of an ore vein.
 	private const float SPAWN_CHANCE = 0.0003f;
 	// The size of chunks! Chunks are squares, so this is both the height and the width
-	public const int chunkSize = 32;
 
 	/* GenerateOres procedurally places oreName in a chunk based off of the seed.
      * PRECONDITIONS: chunkX and chunkY are between INT32MIN/128 and INT32MAX/128
@@ -23,7 +22,7 @@ public class OreGeneration : MonoBehaviour
 		GameObject curChunkParent;
 		if (grid.loadedChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
 			return;
-		curChunkParent = Instantiate(grid.chunkParentObject, new Vector3(chunkX * chunkSize, chunkY * chunkSize, 0), Quaternion.identity, grid.transform);
+		curChunkParent = Instantiate(grid.chunkParentObject, new Vector3(chunkX * Chunk.chunkSize, chunkY * Chunk.chunkSize, 0), Quaternion.identity, grid.transform);
 		curChunkParent.name = $"({chunkX},{chunkY})";
 
 		// 1st  4th  7th (This shows the order of chunk loading, therefore meaning it's the priority order)
@@ -46,13 +45,13 @@ public class OreGeneration : MonoBehaviour
 	private static void GenerateOresInChunk(GridControl grid, int seed, int chunkX, int chunkY, int fromChunkX, int fromChunkY, GameObject curChunkParent)
 	{
 		System.Random randGen = new System.Random(seed - HelpFuncs.GetChunkID(fromChunkX, fromChunkY));
-		List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * chunkSize, fromChunkY * chunkSize, grid.oreNames.Count);
+		List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * Chunk.chunkSize, fromChunkY * Chunk.chunkSize, grid.oreNames.Count);
 
 		randGen = new System.Random(seed - HelpFuncs.GetChunkID(chunkX, chunkY));
-		int minX = chunkX * chunkSize;
-		int minY = chunkY * chunkSize;
+		int minX = chunkX * Chunk.chunkSize;
+		int minY = chunkY * Chunk.chunkSize;
 		foreach (Vector3Int oreCenter in oreSpawns)
-			SpawnVein(grid, grid.oreNames[oreCenter.z], grid.oreOutputItems[oreCenter.z], oreCenter, randGen, minX, minX + chunkSize - 1, minY, minY + chunkSize - 1, curChunkParent);
+			SpawnVein(grid, grid.oreNames[oreCenter.z], grid.oreOutputItems[oreCenter.z], oreCenter, randGen, minX, minX + Chunk.chunkSize - 1, minY, minY + Chunk.chunkSize - 1, curChunkParent);
 	}
 
 	/* GetSpawnLocations gets the center of each ore vein within the chunk
@@ -65,8 +64,8 @@ public class OreGeneration : MonoBehaviour
 	{
 		List<Vector3Int> OreSpawns = new List<Vector3Int>();
 
-		for (int x = minX; x < minX + chunkSize; x++)
-			for (int y = minY; y < minY + chunkSize; y++)
+		for (int x = minX; x < minX + Chunk.chunkSize; x++)
+			for (int y = minY; y < minY + Chunk.chunkSize; y++)
 				if (randGen.NextDouble() <= SPAWN_CHANCE)
 					OreSpawns.Add(new Vector3Int(x, y, randGen.Next(numTypesOres)));
 

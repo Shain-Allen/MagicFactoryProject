@@ -167,8 +167,8 @@ public class TileBrush : MonoBehaviour
 			{
 				if (!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
 				{
-					for (int x = loadedChunkPos.x * OreGeneration.chunkSize; x < (loadedChunkPos.x + 1) * OreGeneration.chunkSize; x++)
-						for (int y = loadedChunkPos.y * OreGeneration.chunkSize; y < (loadedChunkPos.y + 1) * OreGeneration.chunkSize; y++)
+					for (int x = loadedChunkPos.x * Chunk.chunkSize; x < (loadedChunkPos.x + 1) * Chunk.chunkSize; x++)
+						for (int y = loadedChunkPos.y * Chunk.chunkSize; y < (loadedChunkPos.y + 1) * Chunk.chunkSize; y++)
 							if (grid.oreObjects.TryGetValue(loadedChunkPos, out tempOre))
 								grid.oreObjects.Remove(loadedChunkPos);
 

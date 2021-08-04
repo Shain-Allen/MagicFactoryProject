@@ -8,7 +8,6 @@ public class HelpFuncs : MonoBehaviour
 	{
 		return insideBorder(pos.x, pos.y, bottomLeft.x, topRight.x, bottomLeft.y, topRight.y);
 	}
-	// Simple Function to ensure X and Y are both within the given bounds
 	public static bool insideBorder(float x, float y, float left, float right, float bottom, float top)
 	{
 		return !(x < left || y < bottom || x > right || y > top);
@@ -48,7 +47,7 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int GetChunk(float x, float y)
 	{
-		return new Vector2Int((int)(x / OreGeneration.chunkSize), (int)(y / OreGeneration.chunkSize));
+		return new Vector2Int((int)(x / Chunk.chunkSize), (int)(y / Chunk.chunkSize));
 	}
 
 	/* GetChunkID converts the chunk X and Y into a single Int
@@ -56,6 +55,10 @@ public class HelpFuncs : MonoBehaviour
 	 * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
 	 * Recommend seeing SpiralChunkIDs.xlsx to better understand chunk IDs
 	 */
+	public static int GetChunkID(Vector2Int pos)
+	{
+		return GetChunkID(pos.x, pos.y);
+	}
 	public static int GetChunkID(int x, int y)
 	{
 		int sprialLayer = Math.Max(Math.Abs(x), Math.Abs(y));
@@ -83,8 +86,8 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int PosToChunk(Vector2 pos)
 	{
-		int x = (int)(pos.x % OreGeneration.chunkSize);
-		int y = (int)(pos.y % OreGeneration.chunkSize);
+		int x = (int)(pos.x % Chunk.chunkSize);
+		int y = (int)(pos.y % Chunk.chunkSize);
 		return new Vector2Int(x, y);
 	}
 
@@ -95,8 +98,8 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int ChunkToPos(Vector2 chunk)
 	{
-		int x = (int)(chunk.x * OreGeneration.chunkSize);
-		int y = (int)(chunk.y * OreGeneration.chunkSize);
+		int x = (int)(chunk.x * Chunk.chunkSize);
+		int y = (int)(chunk.y * Chunk.chunkSize);
 		return new Vector2Int(x, y);
 	}
 
