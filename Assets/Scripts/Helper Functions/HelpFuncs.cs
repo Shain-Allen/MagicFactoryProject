@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class HelpFuncs : MonoBehaviour
 {
+	// Calls Math.Round, but turns it into a float 
+	private static float Round(float input, int degree)
+	{
+		return (float)Math.Round(input, degree);
+	}
+
 	// Simple Function to ensure X and Y are both within the given bounds
 	public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
 	{
@@ -18,18 +24,18 @@ public class HelpFuncs : MonoBehaviour
 	public static Vector3 EulerToVector(float eulerAngle)
 	{
 		eulerAngle *= -1;
-		float x = (float)Math.Round(Math.Sin(eulerAngle * Math.PI / 180), 3);
-		float y = (float)Math.Round(Math.Cos(eulerAngle * Math.PI / 180), 3);
+		float x = Round(Mathf.Sin(eulerAngle * Mathf.PI / 180), 3);
+		float y = Round(Mathf.Cos(eulerAngle * Mathf.PI / 180), 3);
 		return new Vector3(x, y, 0);
 	}
 	// Takes any Vector3 and turns the X/Y into an Euler Angle
 	public static float VectorToEuler(Vector3 input)
 	{
-		float toReturn = (float)(-Math.Atan(input.y / input.x) * 180 / Math.PI) + 90;
+		float toReturn = (-Mathf.Atan(input.y / input.x) * 180 / Mathf.PI) + 90;
 		if (input.x > 0)
 			toReturn += 180;
-		toReturn = Math.Abs(toReturn);
-		return (float)Math.Round(toReturn, 1);
+		toReturn = Mathf.Abs(toReturn);
+		return Round(toReturn, 1);
 	}
 
 	// Pythagorean Theorems two Vector2s
@@ -39,7 +45,7 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static float GetDistance(float x1, float x2, float y1, float y2)
 	{
-		return (float)Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
+		return Mathf.Sqrt(Mathf.Pow(x1 - x2, 2) + Mathf.Pow(y1 - y2, 2));
 	}
 
 	// Returns the chunk as a Vector2Int
@@ -67,21 +73,21 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static int GetChunkID(int x, int y)
 	{
-		int sprialLayer = Math.Max(Math.Abs(x), Math.Abs(y));
-		int topLeft = (int)Math.Pow(sprialLayer * 2 + 1, 2) - 1;
-		int diff = Math.Abs(x + y);
+		int sprialLayer = Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
+		int topLeft = (int)Mathf.Pow(sprialLayer * 2 + 1, 2) - 1;
+		int diff = Mathf.Abs(x + y);
 
-		if (x < 0 && -x >= Math.Abs(y))
+		if (x < 0 && -x >= Mathf.Abs(y))
 			return topLeft - diff;
 
-		int bottomRight = (int)Math.Pow(sprialLayer * 2, 2);
-		if (y < 0 && Math.Abs(y) >= Math.Abs(x))
+		int bottomRight = (int)Mathf.Pow(sprialLayer * 2, 2);
+		if (y < 0 && Mathf.Abs(y) >= Mathf.Abs(x))
 			return bottomRight + diff;
 		if (x > y)
 			return bottomRight - diff;
 
 		int topRight = bottomRight - (topLeft - bottomRight) / 2;
-		diff = Math.Abs(x - y);
+		diff = Mathf.Abs(x - y);
 		return topRight - diff;
 	}
 

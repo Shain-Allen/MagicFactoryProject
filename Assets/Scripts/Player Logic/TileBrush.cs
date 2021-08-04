@@ -8,54 +8,33 @@ using static ItemControlHelpers;
 
 public class TileBrush : MonoBehaviour
 {
-	//GameControls Asset for input manager
 	GameControls gameControls;
-	//movement input
 	Vector2 moveInput;
-	//movement speed
-	public float moveSpeed = 25f;
+	public float moveSpeed;
 	public GameObject Player;
 	private Animator animator;
-	//camera Reference
 	GameObject cam;
-	//mouse pos stuff
 	Vector3 mousePos;
 	public Vector3 roundedMousePos;
-	//the grid
 	public Grid worldGrid;
-	//the test tile
 	public GameObject brushItem;
-	//the preview Item for the brush
 	public SpriteRenderer itemPreview;
-	//the thing that holds all the items in the game
+	// ObjectDicionary holds all items in the game
 	public ObjectDictionary ObjectDictionary;
-	//holds a list of where all items are
 	public GridControl grid;
 
 	private void Start()
 	{
-		//get the main camera in the scene
 		cam = Camera.main.gameObject;
-
-		//set GameControls Variable to new instance
-		gameControls = new GameControls();
-
-		//this needs to happen for input to work
-		gameControls.Enable();
-
-		//Delegate with lambda expression to hook up the Method to the C# event for starting the movement of the camera
-		gameControls.GeneralControls.PlayerMovement.performed += ctx => PlayerMovementStart(ctx);
-
-		//Delegate with Lambda expression to hook up the Method to the C# event for reseting moveInput to 0,0 to stop camera movement when WASD is not longer being pressed
-		gameControls.GeneralControls.PlayerMovement.canceled += ctx => PlayerMovementStop();
-
-		//Delegate with Lambda expression to hook up the Method to the C# event for rotating items
-		gameControls.GeneralControls.Rotate.started += ctx => RotateItem();
-
-		//Delegate with Lambda Expression to hook up the Method to the C# event for clearing the brush
-		gameControls.GeneralControls.ClearBrush.started += ctx => EmptyBrushItem();
-
 		animator = Player.GetComponent<Animator>();
+
+		// Enable and attach inputs
+		gameControls = new GameControls();
+		gameControls.Enable();
+		gameControls.GeneralControls.PlayerMovement.performed += ctx => PlayerMovementStart(ctx);
+		gameControls.GeneralControls.PlayerMovement.canceled += ctx => PlayerMovementStop();
+		gameControls.GeneralControls.Rotate.started += ctx => RotateItem();
+		gameControls.GeneralControls.ClearBrush.started += ctx => EmptyBrushItem();
 	}
 
 	// Update is called once per frame
@@ -66,9 +45,9 @@ public class TileBrush : MonoBehaviour
 		roundedMousePos = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
 
 		if (Input.GetMouseButtonDown(0))
-			DetectPlacing();
+			TryToPlace();
 		if (Input.GetMouseButtonDown(1))
-			DetectDestroying();
+			TryToDestroy();
 
 		// Move the camera and player
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
@@ -82,7 +61,7 @@ public class TileBrush : MonoBehaviour
 	}
 
 	// If the user is left clicks, place their held Placeable
-	private void DetectPlacing()
+	private void TryToPlace()
 	{
 		if (brushItem != null && !EventSystem.current.IsPointerOverGameObject())
 		{
@@ -94,7 +73,7 @@ public class TileBrush : MonoBehaviour
 	}
 
 	// If the user right clicks, destory the targeted Placeable
-	private void DetectDestroying()
+	private void TryToDestroy()
 	{
 		Placeable placeableToRemove = GetPlaceableAt(grid, roundedMousePos);
 		if (placeableToRemove == null)
