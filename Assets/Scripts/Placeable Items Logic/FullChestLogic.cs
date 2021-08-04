@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static HelpFuncs;
+using static ItemControlHelpers;
 
 public class FullChestLogic : ItemControl
 {
@@ -11,15 +12,17 @@ public class FullChestLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-
-		grid.placeObjects.Add(transform.position, gameObject);
-
-		frontBelt = null;
 		allowFrontBelt = true;
-		backBelt = null;
 		allowBackBelt = false;
 
-		TryAttachFrontBelt(EulerToVector(transform.rotation.eulerAngles.z));
+		AddToWorld(grid, this);
+		TryAttachFrontBelt();
+	}
+
+	public override void TryAttachFrontBelt()
+	{
+		frontBelt = null;
+		TryAttachFrontBeltHelper(grid, this);
 	}
 
 	/* [Copy Documentation from Parent Class InvSlot.cs] */
@@ -32,30 +35,6 @@ public class FullChestLogic : ItemControl
 	}
 
 	/* [Copy Documentation from Parent Class InvSlot.cs] */
-	public override void TryAttachFrontBelt(Vector3 direction)
-	{
-		GameObject temp = null;
-
-		// Attaches frontBelt a belt directly in front of this one if possible
-		// Currently would override that belt's previous backBelt
-		frontBelt = null;
-		ItemControl tempInvSlot;
-		if (grid.placeObjects.TryGetValue((transform.position + direction), out temp))
-		{
-			tempInvSlot = temp.GetComponent<ItemControl>();
-			if (tempInvSlot != null && (!tempInvSlot.allowFrontBelt || temp.transform.rotation.eulerAngles.z != (transform.rotation.eulerAngles.z + 180) % 360))
-			{
-				if (tempInvSlot.allowBackBelt && tempInvSlot.backBelt == null)
-				{
-					frontBelt = tempInvSlot;
-					frontBelt.backBelt = this;
-					frontBelt.UpdateSprite();
-				}
-			}
-		}
-	}
-
-	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void RemovedAction()
 	{
 		grid.placeObjects.Remove(transform.position);
@@ -63,15 +42,11 @@ public class FullChestLogic : ItemControl
 		if (frontBelt != null)
 		{
 			frontBelt.backBelt = null;
-			frontBelt.TryAttachBackBelt(EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
+			frontBelt.TryAttachBackBelt();
 			frontBelt.UpdateSprite();
 		}
 		frontBelt = null;
 
 		Destroy(gameObject);
 	}
-
-	/* The remaining methods are left empty on purpose, as they are unncessary for this InvSlot */
-	public override void UpdateSprite() { }
-	public override void TryAttachBackBelt(Vector3 direction) { }
 }

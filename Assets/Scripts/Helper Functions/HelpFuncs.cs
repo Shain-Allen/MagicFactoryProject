@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class HelpFuncs : MonoBehaviour
 {
+	public static ItemControl getICAt(GridControl grid, Vector2 pos)
+	{
+		GameObject objAtPos, chunkParent;
+		ItemControl itemControlAtPos;
+
+		if (grid.worldChunks.TryGetValue(PosToChunk(pos), out chunkParent))
+		{
+			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
+			{
+				return itemControlAtPos;
+			}
+		}
+		return null;
+	}
+
 	// Simple Function to ensure X and Y are both within the given bounds
 	public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
 	{

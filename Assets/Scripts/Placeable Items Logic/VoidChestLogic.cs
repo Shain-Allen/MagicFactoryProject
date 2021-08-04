@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static HelpFuncs;
+using static ItemControlHelpers;
 
 public class VoidChestLogic : ItemControl
 {
@@ -10,16 +11,22 @@ public class VoidChestLogic : ItemControl
 	{
 		grid = grid_;
 
-		grid.placeObjects.Add(transform.position, gameObject);
-
 		backBelt = null;
 		allowBackBelt = true;
 		frontBelt = null;
 		allowFrontBelt = false;
 
-		TryAttachBackBelt(EulerToVector(transform.rotation.eulerAngles.z));
+		AddToWorld(grid, this);
+		TryAttachBackBelt();
 
 		grid.OnBeltTimerCycle += BeltCycle;
+	}
+
+	/* [Copy Documentation from Parent Class InvSlot.cs] */
+	public override void TryAttachBackBelt()
+	{
+		backBelt = null;
+		TryAttachBackBeltHelper(grid, this, 180);
 	}
 
 	/* [Copy Documentation from Parent Class InvSlot.cs] */
@@ -43,29 +50,6 @@ public class VoidChestLogic : ItemControl
 	}
 
 	/* [Copy Documentation from Parent Class InvSlot.cs] */
-	public override void TryAttachBackBelt(Vector3 direction)
-	{
-		GameObject temp = null;
-
-		// Attaches backBelt to a belt directly behind this one if possible
-		backBelt = null;
-		ItemControl tempInvSlot;
-		if (grid.placeObjects.TryGetValue((transform.position - direction), out temp))
-		{
-			tempInvSlot = temp.GetComponent<ItemControl>();
-			if (tempInvSlot != null && temp.transform.rotation.eulerAngles.z == transform.rotation.eulerAngles.z)
-			{
-				if (tempInvSlot.allowFrontBelt && tempInvSlot.frontBelt == null)
-				{
-					backBelt = tempInvSlot;
-					backBelt.frontBelt = this;
-					backBelt.UpdateSprite();
-				}
-			}
-		}
-	}
-
-	/* [Copy Documentation from Parent Class InvSlot.cs] */
 	public override void RemovedAction()
 	{
 		grid.placeObjects.Remove(transform.position);
@@ -79,8 +63,4 @@ public class VoidChestLogic : ItemControl
 
 		Destroy(gameObject);
 	}
-
-	/* The remaining methods are left empty on purpose, as they are unncessary for this InvSlot */
-	public override void UpdateSprite() { }
-	public override void TryAttachFrontBelt(Vector3 direction) { }
 }
