@@ -63,7 +63,23 @@ public class TileBrush : MonoBehaviour
 		transform.position = new Vector3(mousePos.x, mousePos.y, 0);
 		roundedMousePos = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
 
-		//placement
+		DetectPlacing();
+		DetectDestroying();
+
+		// Move the camera and player
+		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
+		UpdatePlayerAnimation();
+
+		//See if new chunks need to be loaded or unloaded
+		Vector2Int bottomLeftBound = ChunkManager.getBottomLeftBound(cam);
+		Vector2Int topRightBound = ChunkManager.getTopRightBound(cam);
+		ChunkManager.LoadChunks(grid, bottomLeftBound, topRightBound);
+		ChunkManager.UnloadChunks(grid, bottomLeftBound, topRightBound);
+	}
+
+	// If the user is left clicks, place their held Placeable
+	private void DetectPlacing()
+	{
 		if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
 			if (brushItem != null && (grid.placeObjects.Count == 0 || !grid.placeObjects.ContainsKey(roundedMousePos)))
@@ -78,13 +94,16 @@ public class TileBrush : MonoBehaviour
 				}
 			}
 		}
+	}
 
-		// deconstruction
+	// If the user right clicks, destory the targeted Placeable
+	private void DetectDestroying()
+	{
 		if (Input.GetMouseButtonDown(1))
 		{
 			if (grid.placeObjects.ContainsKey(roundedMousePos))
 			{
-				//find trhe object in the grid dictionary and delete it and remove from said dictionary
+				// Find the object in the grid dictionary, then delete it and remove from the dictionary
 				if (grid.placeObjects[roundedMousePos].GetComponent<Placeable>() != null)
 				{
 					grid.placeObjects[roundedMousePos].GetComponent<Placeable>().RemovedAction();
@@ -92,16 +111,16 @@ public class TileBrush : MonoBehaviour
 				else
 				{
 					GameObject.Destroy(grid.placeObjects[roundedMousePos]);
-					//Debug.Log($"{grid.placeObjects[roundedMousePos]} Destroyed");
 					grid.placeObjects.Remove(roundedMousePos);
-					//Debug.Log("object Deleted");
 				}
 
 			}
 		}
+	}
 
-		//move the camera;
-		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
+	// Changes the state of the Player animator so it animates correctly
+	private void UpdatePlayerAnimation()
+	{
 		bool isWalking = true;
 		int facingDirection = 3;
 		if (moveInput.x == 0 && moveInput.y == 0)
@@ -119,12 +138,6 @@ public class TileBrush : MonoBehaviour
 			facingDirection = 3;
 		animator.SetBool("isWalking", isWalking);
 		animator.SetInteger("facingDirection", facingDirection);
-
-		//See if new chunks need to be loaded or unloaded
-		Vector2Int bottomLeftBound = ChunkManager.getBottomLeftBound(cam);
-		Vector2Int topRightBound = ChunkManager.getTopRightBound(cam);
-		ChunkManager.LoadChunks(grid, bottomLeftBound, topRightBound);
-		ChunkManager.UnloadChunks(grid, bottomLeftBound, topRightBound);
 	}
 
 	//Update the brush item to the last clicked item
