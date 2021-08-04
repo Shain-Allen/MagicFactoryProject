@@ -5,7 +5,7 @@ using static HelpFuncs;
 public class ItemControlHelpers
 {
 	// Returns the IC at the provided location, or null if there isn't an IC there
-	public static ItemControl getICAt(GridControl grid, Vector2 pos)
+	public static ItemControl GetICAt(GridControl grid, Vector2 pos)
 	{
 		GameObject objAtPos, chunkParent;
 		ItemControl itemControlAtPos;
@@ -21,25 +21,42 @@ public class ItemControlHelpers
 		return null;
 	}
 
+	// Returns the Placeable at the provided location, or null if there isn't a Placeable there
+	public static Placeable GetPlaceableAt(GridControl grid, Vector2 pos)
+	{
+		GameObject objAtPos, chunkParent;
+		Placeable PlaceableAtPos;
+
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+		{
+			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			if (objAtPos != null && (objAtPos.TryGetComponent<Placeable>(out PlaceableAtPos)))
+			{
+				return PlaceableAtPos;
+			}
+		}
+		return null;
+	}
+
 	// Places the given IC into the world and the chunk array
-	public static void AddToWorld(GridControl grid, ItemControl IC)
+	public static void AddToWorld(GridControl grid, Placeable Placeable)
 	{
 		GameObject chunkPlaceholder;
-		if (grid.worldChunks.TryGetValue(GetChunk(IC.transform.position), out chunkPlaceholder))
+		if (grid.worldChunks.TryGetValue(GetChunk(Placeable.transform.position), out chunkPlaceholder))
 		{
-			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(IC.transform.position).x, PosToPosInChunk(IC.transform.position).y] = IC.gameObject;
-			grid.placeObjects.Add(IC.transform.position, IC.gameObject);
+			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = Placeable.gameObject;
+			grid.placeObjects.Add(Placeable.transform.position, Placeable.gameObject);
 		}
 	}
 
 	// Remove the IC from any references to it
-	public static void RemoveFromWorld(GridControl grid, ItemControl IC)
+	public static void RemoveFromWorld(GridControl grid, Placeable Placeable)
 	{
 		GameObject chunkPlaceholder;
-		if (grid.worldChunks.TryGetValue(GetChunk(IC.transform.position), out chunkPlaceholder))
+		if (grid.worldChunks.TryGetValue(GetChunk(Placeable.transform.position), out chunkPlaceholder))
 		{
-			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(IC.transform.position).x, PosToPosInChunk(IC.transform.position).y] = null;
-			grid.placeObjects.Remove(IC.transform.position);
+			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = null;
+			grid.placeObjects.Remove(Placeable.transform.position);
 		}
 	}
 
@@ -47,7 +64,7 @@ public class ItemControlHelpers
 	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC)
 	{
 		Vector3 direction = EulerToVector(IC.transform.rotation.eulerAngles.z);
-		ItemControl ICFront = getICAt(grid, IC.transform.position + direction);
+		ItemControl ICFront = GetICAt(grid, IC.transform.position + direction);
 		IC.frontBelt = null;
 
 		// Make sure the IC in front exists, allows this to attach, and isn't occupied
@@ -68,7 +85,7 @@ public class ItemControlHelpers
 	{
 		int connectionAngle = (int)(IC.transform.rotation.eulerAngles.z + relativeAngle) % 360;
 		Vector3 deltaPos = EulerToVector(connectionAngle);
-		ItemControl ICSide = getICAt(grid, IC.transform.position + deltaPos);
+		ItemControl ICSide = GetICAt(grid, IC.transform.position + deltaPos);
 		IC.backBelt = null;
 
 		// If IC on the given side exists, allows this to attach, and isn't occupied

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using static HelpFuncs;
+using static ItemControlHelpers;
 
 public class TileBrush : MonoBehaviour
 {
@@ -83,7 +84,15 @@ public class TileBrush : MonoBehaviour
 	{
 		if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
-			if (brushItem != null && (grid.placeObjects.Count == 0 || !grid.placeObjects.ContainsKey(roundedMousePos)))
+			if (brushItem != null)
+			{
+				if (GetPlaceableAt(grid, roundedMousePos) != null)
+					return;
+
+				GameObject temp = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform);
+				temp.GetComponent<Placeable>().PlacedAction(grid);
+			}
+			/*if (brushItem != null && !grid.placeObjects.ContainsKey(roundedMousePos))
 			{
 				GameObject objectPlaceholder;
 				GameObject chunkPlaceholder;
@@ -101,7 +110,7 @@ public class TileBrush : MonoBehaviour
 					chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(roundedMousePos).x, PosToPosInChunk(roundedMousePos).y] = objectPlaceholder;
 					//grid.placeObjects.Add(roundedMousePos, objectPlaceholder);
 				}
-			}
+			}*/
 		}
 	}
 
