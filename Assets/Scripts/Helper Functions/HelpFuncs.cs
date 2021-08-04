@@ -47,7 +47,7 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int GetChunk(float x, float y)
 	{
-		return new Vector2Int((int)(x / Chunk.chunkSize), (int)(y / Chunk.chunkSize));
+		return new Vector2Int((int)(x / ChunkManager.chunkSize), (int)(y / ChunkManager.chunkSize));
 	}
 
 	/* GetChunkID converts the chunk X and Y into a single Int
@@ -86,8 +86,8 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int PosToChunk(Vector2 pos)
 	{
-		int x = (int)(pos.x % Chunk.chunkSize);
-		int y = (int)(pos.y % Chunk.chunkSize);
+		int x = (int)(pos.x % ChunkManager.chunkSize);
+		int y = (int)(pos.y % ChunkManager.chunkSize);
 		return new Vector2Int(x, y);
 	}
 
@@ -98,8 +98,8 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int ChunkToPos(Vector2 chunk)
 	{
-		int x = (int)(chunk.x * Chunk.chunkSize);
-		int y = (int)(chunk.y * Chunk.chunkSize);
+		int x = (int)(chunk.x * ChunkManager.chunkSize);
+		int y = (int)(chunk.y * ChunkManager.chunkSize);
 		return new Vector2Int(x, y);
 	}
 
