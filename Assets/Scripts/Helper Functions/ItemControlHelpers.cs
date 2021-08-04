@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using static HelpFuncs;
 
@@ -30,6 +29,17 @@ public class ItemControlHelpers
 		{
 			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(IC.transform.position).x, PosToPosInChunk(IC.transform.position).y] = IC.gameObject;
 			grid.placeObjects.Add(IC.transform.position, IC.gameObject);
+		}
+	}
+
+	// Remove the IC from any references to it
+	public static void RemoveFromWorld(GridControl grid, ItemControl IC)
+	{
+		GameObject chunkPlaceholder;
+		if (grid.worldChunks.TryGetValue(GetChunk(IC.transform.position), out chunkPlaceholder))
+		{
+			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(IC.transform.position).x, PosToPosInChunk(IC.transform.position).y] = null;
+			grid.placeObjects.Remove(IC.transform.position);
 		}
 	}
 

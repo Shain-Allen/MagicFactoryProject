@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Placeable : MonoBehaviour
 {
-	public abstract void PlacedAction(GridControl grid);
+	public abstract void PlacedAction(GridControl grid_);
 
 	public abstract void RemovedAction();
 }

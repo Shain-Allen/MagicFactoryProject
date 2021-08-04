@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using static HelpFuncs;
+using static ItemControlHelpers;
 
 /* An IC currently is an item in the world that has precisely 1 slot for an item in it
  * These slots typically have a frontBelt and/or a backBelt, signalled by allow Front/Back Belt
@@ -11,15 +10,12 @@ using static HelpFuncs;
  */
 public abstract class ItemControl : Placeable
 {
-	// frontBelt will be the output belt for this IC
-	public ItemControl frontBelt = null;
-	// backBelt will be the input belt for this IC
-	public ItemControl backBelt = null;
-	public GameObject itemSlot = null;
-	public GridControl grid;
-
 	public bool allowBackBelt = true;
 	public bool allowFrontBelt = true;
+	public ItemControl frontBelt = null; // output to IC
+	public ItemControl backBelt = null; // input from IC
+	public GameObject itemSlot = null;
+	public GridControl grid;
 
 	/* PlacedAction initializes the variables inside this IC, and attaches to nearby ICs
 	 * No special Preconditions
@@ -34,7 +30,24 @@ public abstract class ItemControl : Placeable
 	 * cont.: This IC will be removed from the dictionary and the world
 	 * cont.: This belt's front and back belts will try to find their new attachments, which might cause issues potentially
 	 */
-	// public abstract void RemovedAction();
+	public override void RemovedAction()
+	{
+		RemoveFromWorld(grid, this);
+
+		if (backBelt)
+			backBelt.TryAttachFrontBelt();
+		backBelt = null;
+
+		if (frontBelt)
+			frontBelt.TryAttachBackBelt();
+		frontBelt = null;
+
+		if (itemSlot)
+			Destroy(itemSlot);
+		itemSlot = null;
+
+		Destroy(gameObject);
+	}
 
 	/* Pairs this IC's frontBelt with the backBelt of the IC in front of it, if possible
 	 * PRECONDITIONS: Direction must be precisely equal to Vector3.UP, .LEFT, .RIGHT, or .DOWN
@@ -50,8 +63,13 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void TryAttachBackBelt() { }
 
-	/* This allows ICs to change sprites based on their connections, mostly affects BeltLogic */
+	/* (Only applies to children that have multiple sprites)
+	 * UpdateSprite will ensure that this sprite has the correct sprite for its current connections
+	 * PRECONDTIONS: The sprites are defined and initialized
+	 * POSTCONDITIONS: Only this IC's sprite will be modified, nothing else
+	 */
 	public virtual void UpdateSprite() { }
+
 	/* Moves the Item in an IC forward one if it can, then calls its BackBelt behind it to do the same
 	 * PRECONDITIONS: There cannot be a loop
 	 * cont.: The frontBelt of this one has already done MoveItem, or is null
