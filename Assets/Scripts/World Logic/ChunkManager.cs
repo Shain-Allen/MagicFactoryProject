@@ -1,0 +1,72 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ChunkManager : MonoBehaviour
+{
+	// The size of chunks! Chunks are squares, so this is both the height and the width
+	public static int chunkSize = 32;
+	//buffer is the extra # of chunks loaded beyond the Camera's view
+	private static int buffer = 1;
+
+	public static Vector2Int getBottomLeftBound(GameObject cam)
+	{
+		Camera camera = cam.GetComponent<Camera>();
+		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
+		return HelpFuncs.GetChunk(botLeft.x, botLeft.y);
+	}
+
+	public static Vector2Int getTopRightBound(GameObject cam)
+	{
+		Camera camera = cam.GetComponent<Camera>();
+		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
+		return HelpFuncs.GetChunk(topRight.x, topRight.y);
+	}
+
+	public static void LoadChunks(GridControl grid, Vector2Int bottomLeftBound, Vector2Int topRightBound)
+	{
+		GameObject isChunkLoaded;
+
+		for (int x = bottomLeftBound.x - buffer; x <= topRightBound.x + buffer; x++)
+		{
+			for (int y = bottomLeftBound.y - buffer; y <= topRightBound.y + buffer; y++)
+			{
+				if (!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
+					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
+			}
+		}
+	}
+
+	public static void UnloadChunks(GridControl grid, Vector2Int bottomLeftBound, Vector2Int topRightBound)
+	{
+		GameObject isChunkLoaded;
+
+		// Get all the Vector2Ints of the loaded chunks, but in a way it doesn't matter that I delete them
+		bottomLeftBound = new Vector2Int(bottomLeftBound.x - buffer, bottomLeftBound.y - buffer);
+		topRightBound = new Vector2Int(topRightBound.x + buffer, topRightBound.y + buffer);
+		List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
+		foreach (Vector2Int LoadedChunkPos in grid.loadedChunks.Keys)
+			loadedChunkPositions.Add(LoadedChunkPos);
+
+		Vector2Int loadedChunkPos;
+		GameObject tempOre;
+		for (int i = 0; i < loadedChunkPositions.Count; i++)
+		{
+			loadedChunkPos = loadedChunkPositions[i];
+			// If the chunk is outside of the buffer, unload the chunk
+			if (grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
+			{
+				if (!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
+				{
+					for (int x = loadedChunkPos.x * chunkSize; x < (loadedChunkPos.x + 1) * chunkSize; x++)
+						for (int y = loadedChunkPos.y * chunkSize; y < (loadedChunkPos.y + 1) * chunkSize; y++)
+							if (grid.oreObjects.TryGetValue(loadedChunkPos, out tempOre))
+								grid.oreObjects.Remove(loadedChunkPos);
+
+					grid.loadedChunks.Remove(loadedChunkPos);
+					Destroy(isChunkLoaded);
+				}
+			}
+		}
+	}
+}

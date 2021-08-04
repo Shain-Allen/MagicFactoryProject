@@ -121,62 +121,10 @@ public class TileBrush : MonoBehaviour
 		animator.SetInteger("facingDirection", facingDirection);
 
 		//See if new chunks need to be loaded or unloaded
-		Camera camera = cam.GetComponent<Camera>();
-		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
-		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
-		Vector2Int bottomLeftBound = HelpFuncs.GetChunk(botLeft.x, botLeft.y);
-		Vector2Int topRightBound = HelpFuncs.GetChunk(topRight.x, topRight.y);
-		int bufferZone = 1; //bufferZone is the extra # of chunks loaded beyond the Camera's view
-
-		LoadChunks(bottomLeftBound, topRightBound, bufferZone);
-		UnloadChunks(bottomLeftBound, topRightBound, bufferZone);
-	}
-
-	private void LoadChunks(Vector2Int bottomLeftBound, Vector2Int topRightBound, int buffer)
-	{
-		GameObject isChunkLoaded;
-
-		for (int x = bottomLeftBound.x - buffer; x <= topRightBound.x + buffer; x++)
-		{
-			for (int y = bottomLeftBound.y - buffer; y <= topRightBound.y + buffer; y++)
-			{
-				if (!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
-					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
-			}
-		}
-	}
-
-	private void UnloadChunks(Vector2Int bottomLeftBound, Vector2Int topRightBound, int buffer)
-	{
-		GameObject isChunkLoaded;
-
-		// Get all the Vector2Ints of the loaded chunks, but in a way it doesn't matter that I delete them
-		bottomLeftBound = new Vector2Int(bottomLeftBound.x - buffer, bottomLeftBound.y - buffer);
-		topRightBound = new Vector2Int(topRightBound.x + buffer, topRightBound.y + buffer);
-		List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
-		foreach (Vector2Int LoadedChunkPos in grid.loadedChunks.Keys)
-			loadedChunkPositions.Add(LoadedChunkPos);
-
-		Vector2Int loadedChunkPos;
-		GameObject tempOre;
-		for (int i = 0; i < loadedChunkPositions.Count; i++)
-		{
-			loadedChunkPos = loadedChunkPositions[i];
-			// If the chunk is outside of the buffer, unload the chunk
-			if (grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
-			{
-				if (!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
-				{
-					for (int x = loadedChunkPos.x * Chunk.chunkSize; x < (loadedChunkPos.x + 1) * Chunk.chunkSize; x++)
-						for (int y = loadedChunkPos.y * Chunk.chunkSize; y < (loadedChunkPos.y + 1) * Chunk.chunkSize; y++)
-							if (grid.oreObjects.TryGetValue(loadedChunkPos, out tempOre))
-								grid.oreObjects.Remove(loadedChunkPos);
-
-					grid.loadedChunks.Remove(loadedChunkPos);
-					Destroy(isChunkLoaded);
-				}
-			}
-		}
+		Vector2Int bottomLeftBound = ChunkManager.getBottomLeftBound(cam);
+		Vector2Int topRightBound = ChunkManager.getTopRightBound(cam);
+		ChunkManager.LoadChunks(grid, bottomLeftBound, topRightBound);
+		ChunkManager.UnloadChunks(grid, bottomLeftBound, topRightBound);
 	}
 
 	//Update the brush item to the last clicked item
