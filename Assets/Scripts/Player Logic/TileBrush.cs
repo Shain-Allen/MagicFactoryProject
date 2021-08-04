@@ -8,19 +8,19 @@ using static ItemControlHelpers;
 
 public class TileBrush : MonoBehaviour
 {
+	// ObjectDicionary holds all items in the game
+	public ObjectDictionary ObjectDictionary;
 	GameControls gameControls;
 	Vector2 moveInput;
 	public float moveSpeed;
 	public GameObject Player;
-	private Animator animator;
+	Animator animator;
 	GameObject cam;
 	Vector3 mousePos;
 	public Vector3 roundedMousePos;
 	public Grid worldGrid;
 	public GameObject brushItem;
 	public SpriteRenderer itemPreview;
-	// ObjectDicionary holds all items in the game
-	public ObjectDictionary ObjectDictionary;
 	public GridControl grid;
 
 	private void Start()
@@ -67,7 +67,7 @@ public class TileBrush : MonoBehaviour
 		{
 			if (GetPlaceableAt(grid, roundedMousePos) != null)
 				return;
-			GameObject temp = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform);
+			GameObject temp = Instantiate(brushItem, roundedMousePos, itemPreview.transform.rotation, worldGrid.transform);
 			temp.GetComponent<Placeable>().PlacedAction(grid);
 		}
 	}

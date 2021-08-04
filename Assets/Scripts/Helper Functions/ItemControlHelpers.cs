@@ -4,23 +4,6 @@ using static HelpFuncs;
 
 public class ItemControlHelpers
 {
-	// Returns the IC at the provided location, or null if there isn't an IC there
-	public static ItemControl GetICAt(GridControl grid, Vector2 pos)
-	{
-		GameObject objAtPos, chunkParent;
-		ItemControl itemControlAtPos;
-
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
-		{
-			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
-			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
-			{
-				return itemControlAtPos;
-			}
-		}
-		return null;
-	}
-
 	// Returns the Placeable at the provided location, or null if there isn't a Placeable there
 	public static Placeable GetPlaceableAt(GridControl grid, Vector2 pos)
 	{
@@ -58,6 +41,23 @@ public class ItemControlHelpers
 			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = null;
 			grid.placeObjects.Remove(Placeable.transform.position);
 		}
+	}
+
+	// Returns the IC at the provided location, or null if there isn't an IC there
+	public static ItemControl GetICAt(GridControl grid, Vector2 pos)
+	{
+		GameObject objAtPos, chunkParent;
+		ItemControl itemControlAtPos;
+
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+		{
+			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
+			{
+				return itemControlAtPos;
+			}
+		}
+		return null;
 	}
 
 	// Attaches the front belt if possible, copy documentation from ItemControl.cs
