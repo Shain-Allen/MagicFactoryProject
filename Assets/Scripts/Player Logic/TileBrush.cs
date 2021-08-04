@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static HelpFuncs;
 
 public class TileBrush : MonoBehaviour
 {
@@ -70,11 +71,17 @@ public class TileBrush : MonoBehaviour
 			{
 				GameObject objectPlaceholder;
 				//place the object in the world aligned to the grid and add it to the grids dictionary for easy lookup for other things
-				grid.placeObjects.Add(roundedMousePos, objectPlaceholder = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform));
+				//grid.placeObjects.Add(roundedMousePos, objectPlaceholder = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform));
+
+				objectPlaceholder = Instantiate(brushItem, worldGrid.CellToWorld(worldGrid.WorldToCell(roundedMousePos)), itemPreview.transform.rotation, worldGrid.transform);
 
 				if (objectPlaceholder.GetComponent<Placeable>() != null)
 				{
 					objectPlaceholder.GetComponent<Placeable>().PlacedAction(grid);
+				}
+				else
+				{
+					//grid.placeObjects.Add(roundedMousePos, objectPlaceholder);
 				}
 			}
 		}

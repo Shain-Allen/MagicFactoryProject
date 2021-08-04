@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static HelpFuncs;
 
 public class BeltLogic : ItemControl
 {
@@ -19,8 +20,8 @@ public class BeltLogic : ItemControl
 		allowBackBelt = true;
 		allowBackBelt = true;
 
-		TryAttachFrontBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
-		TryAttachBackBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
+		TryAttachFrontBelt(EulerToVector(transform.rotation.eulerAngles.z));
+		TryAttachBackBelt(EulerToVector(transform.rotation.eulerAngles.z));
 
 		grid.OnBeltTimerCycle += BeltCycle;
 	}
@@ -79,7 +80,7 @@ public class BeltLogic : ItemControl
 		{
 			int angleLeft = (int)(transform.rotation.eulerAngles.z + 90) % 360;
 			int angleRight = (int)(transform.rotation.eulerAngles.z + 270) % 360;
-			TryAttachCorners(HelpFuncs.EulerToVector(angleLeft), HelpFuncs.EulerToVector(angleRight), angleRight, angleLeft);
+			TryAttachCorners(EulerToVector(angleLeft), EulerToVector(angleRight), angleRight, angleLeft);
 		}
 	}
 
@@ -199,7 +200,7 @@ public class BeltLogic : ItemControl
 
 		if (frontBelt)
 		{
-			frontBelt.TryAttachBackBelt(HelpFuncs.EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
+			frontBelt.TryAttachBackBelt(EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
 			frontBelt.UpdateSprite();
 		}
 		frontBelt = null;

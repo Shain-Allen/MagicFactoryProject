@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static HelpFuncs;
 
 public class FullChestLogic : ItemControl
 {
@@ -15,7 +16,7 @@ public class FullChestLogic : ItemControl
 		backBelt = null;
 		allowBackBelt = false;
 
-		TryAttachFrontBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
+		TryAttachFrontBelt(EulerToVector(transform.rotation.eulerAngles.z));
 	}
 
 	/* [Copy Documentation from Parent Class InvSlot.cs] */
@@ -59,7 +60,7 @@ public class FullChestLogic : ItemControl
 		if (frontBelt != null)
 		{
 			frontBelt.backBelt = null;
-			frontBelt.TryAttachBackBelt(HelpFuncs.EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
+			frontBelt.TryAttachBackBelt(EulerToVector(frontBelt.transform.rotation.eulerAngles.z));
 			frontBelt.UpdateSprite();
 		}
 		frontBelt = null;

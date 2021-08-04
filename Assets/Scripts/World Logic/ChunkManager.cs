@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static HelpFuncs;
 
 public class ChunkManager : MonoBehaviour
 {
@@ -13,14 +14,14 @@ public class ChunkManager : MonoBehaviour
 	{
 		Camera camera = cam.GetComponent<Camera>();
 		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
-		return HelpFuncs.GetChunk(botLeft.x, botLeft.y);
+		return GetChunk(botLeft.x, botLeft.y);
 	}
 
 	public static Vector2Int getTopRightBound(GameObject cam)
 	{
 		Camera camera = cam.GetComponent<Camera>();
 		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
-		return HelpFuncs.GetChunk(topRight.x, topRight.y);
+		return GetChunk(topRight.x, topRight.y);
 	}
 
 	public static void LoadChunks(GridControl grid, Vector2Int bottomLeftBound, Vector2Int topRightBound)
@@ -31,7 +32,7 @@ public class ChunkManager : MonoBehaviour
 		{
 			for (int y = bottomLeftBound.y - buffer; y <= topRightBound.y + buffer; y++)
 			{
-				if (!grid.loadedChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
+				if (!grid.worldChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
 					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
 			}
 		}
@@ -45,7 +46,7 @@ public class ChunkManager : MonoBehaviour
 		bottomLeftBound = new Vector2Int(bottomLeftBound.x - buffer, bottomLeftBound.y - buffer);
 		topRightBound = new Vector2Int(topRightBound.x + buffer, topRightBound.y + buffer);
 		List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
-		foreach (Vector2Int LoadedChunkPos in grid.loadedChunks.Keys)
+		foreach (Vector2Int LoadedChunkPos in grid.worldChunks.Keys)
 			loadedChunkPositions.Add(LoadedChunkPos);
 
 		Vector2Int loadedChunkPos;
@@ -54,16 +55,16 @@ public class ChunkManager : MonoBehaviour
 		{
 			loadedChunkPos = loadedChunkPositions[i];
 			// If the chunk is outside of the buffer, unload the chunk
-			if (grid.loadedChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
+			if (grid.worldChunks.TryGetValue(loadedChunkPos, out isChunkLoaded) && isChunkLoaded != null)
 			{
-				if (!HelpFuncs.insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
+				if (!insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
 				{
 					for (int x = loadedChunkPos.x * chunkSize; x < (loadedChunkPos.x + 1) * chunkSize; x++)
 						for (int y = loadedChunkPos.y * chunkSize; y < (loadedChunkPos.y + 1) * chunkSize; y++)
 							if (grid.oreObjects.TryGetValue(loadedChunkPos, out tempOre))
 								grid.oreObjects.Remove(loadedChunkPos);
 
-					grid.loadedChunks.Remove(loadedChunkPos);
+					grid.worldChunks.Remove(loadedChunkPos);
 					Destroy(isChunkLoaded);
 				}
 			}

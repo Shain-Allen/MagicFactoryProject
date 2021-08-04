@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static HelpFuncs;
 
 public class VoidChestLogic : ItemControl
 {
@@ -13,7 +14,7 @@ public class VoidChestLogic : ItemControl
 		frontBelt = null;
 		allowFrontBelt = false;
 
-		TryAttachBackBelt(HelpFuncs.EulerToVector(transform.rotation.eulerAngles.z));
+		TryAttachBackBelt(EulerToVector(transform.rotation.eulerAngles.z));
 
 		grid.OnBeltTimerCycle += BeltCycle;
 	}

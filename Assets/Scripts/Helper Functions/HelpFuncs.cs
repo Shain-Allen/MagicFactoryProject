@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+
 public class HelpFuncs : MonoBehaviour
 {
 	// Simple Function to ensure X and Y are both within the given bounds

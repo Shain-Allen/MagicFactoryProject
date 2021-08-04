@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static HelpFuncs;
 
 public class OreGeneration : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class OreGeneration : MonoBehaviour
 	public static void LoadChunkOres(GridControl grid, int seed, int chunkX, int chunkY)
 	{
 		GameObject curChunkParent;
-		if (grid.loadedChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
+		if (grid.worldChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
 			return;
 		curChunkParent = Instantiate(grid.chunkParentObject, new Vector3(chunkX * ChunkManager.chunkSize, chunkY * ChunkManager.chunkSize, 0), Quaternion.identity, grid.transform);
 		curChunkParent.name = $"({chunkX},{chunkY})";
@@ -31,7 +32,7 @@ public class OreGeneration : MonoBehaviour
 			for (int y = 1; y >= -1; y--)
 				GenerateOresInChunk(grid, seed, chunkX, chunkY, chunkX + x, chunkY + y, curChunkParent);
 
-		grid.loadedChunks.Add(new Vector2Int(chunkX, chunkY), curChunkParent);
+		grid.worldChunks.Add(new Vector2Int(chunkX, chunkY), curChunkParent);
 	}
 
 	/* Spawns all ores that have a center within fromChunkX/Y chunk but only places the ones inside chunkX/Y
@@ -43,10 +44,10 @@ public class OreGeneration : MonoBehaviour
      */
 	private static void GenerateOresInChunk(GridControl grid, int seed, int chunkX, int chunkY, int fromChunkX, int fromChunkY, GameObject curChunkParent)
 	{
-		System.Random randGen = new System.Random(seed - HelpFuncs.GetChunkID(fromChunkX, fromChunkY));
+		System.Random randGen = new System.Random(seed - GetChunkID(fromChunkX, fromChunkY));
 		List<Vector3Int> oreSpawns = GetSpawnLocations(randGen, fromChunkX * ChunkManager.chunkSize, fromChunkY * ChunkManager.chunkSize, grid.oreNames.Count);
 
-		randGen = new System.Random(seed - HelpFuncs.GetChunkID(chunkX, chunkY));
+		randGen = new System.Random(seed - GetChunkID(chunkX, chunkY));
 		int minX = chunkX * ChunkManager.chunkSize;
 		int minY = chunkY * ChunkManager.chunkSize;
 		foreach (Vector3Int oreCenter in oreSpawns)
@@ -91,10 +92,10 @@ public class OreGeneration : MonoBehaviour
 		for (int x = center.x - maxRad; x <= center.x + maxRad; x++)
 			for (int y = center.y - maxRad; y <= center.y + maxRad; y++)
 			{
-				dist = HelpFuncs.GetDistance(x, center.x, y, center.y);
+				dist = GetDistance(x, center.x, y, center.y);
 				empty = !grid.oreObjects.TryGetValue((new Vector2(x, y)), out tempOre);
 				oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
-				if (randGen.NextDouble() <= oddsOfOre && HelpFuncs.insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
+				if (randGen.NextDouble() <= oddsOfOre && insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
 				{
 					tempOre = Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform);
 					//tempOre = new BaseOre(tempObj, oreOutput, randGen.Next(50, 200));
