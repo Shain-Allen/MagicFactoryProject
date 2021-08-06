@@ -60,10 +60,10 @@ public class PlaceableHelpers
 		IC.setFrontBelt(null);
 
 		// Make sure the IC in front exists, allows this to attach, and isn't occupied
-		if (ICFront != null && ICFront.allowBackBelt && ICFront.getBackBelt() == null)
+		if (ICFront != null && ICFront.getAllowBackBelt() && ICFront.getBackBelt() == null)
 		{
 			// Prevent a situation where they point right at each other |>>| |<<|
-			if (!ICFront.allowFrontBelt || ICFront.transform.rotation.eulerAngles.z != (IC.transform.rotation.eulerAngles.z + 180) % 360)
+			if (!ICFront.getAllowFrontBelt() || ICFront.transform.rotation.eulerAngles.z != (IC.transform.rotation.eulerAngles.z + 180) % 360)
 			{
 				IC.setFrontBelt(ICFront);
 				IC.getFrontBelt().setBackBelt(IC);
@@ -81,7 +81,7 @@ public class PlaceableHelpers
 		IC.setBackBelt(null);
 
 		// If IC on the given side exists, allows this to attach, and isn't occupied
-		if (ICSide != null && ICSide.allowFrontBelt && ICSide.getFrontBelt() == null)
+		if (ICSide != null && ICSide.getAllowFrontBelt() && ICSide.getFrontBelt() == null)
 		{
 			// And if it is pointing to this IC
 			if ((ICSide.transform.rotation.eulerAngles.z + 180) % 360 == connectionAngle)

@@ -10,13 +10,15 @@ using static PlaceableHelpers;
  */
 public abstract class ItemControl : Placeable
 {
-	public bool allowBackBelt = true;
-	public bool allowFrontBelt = true;
+	protected bool allowBackBelt = true;
+	protected bool allowFrontBelt = true;
 	protected ItemControl frontBelt = null; // output to IC
 	protected ItemControl backBelt = null; // input from IC
 	protected GameObject itemSlot = null;
 	protected GridControl grid;
 
+	public bool getAllowFrontBelt() { return allowFrontBelt; }
+	public bool getAllowBackBelt() { return allowBackBelt; }
 	public virtual ItemControl getFrontBelt() { return frontBelt; }
 	public virtual ItemControl getBackBelt() { return backBelt; }
 	public virtual GameObject getItemSlot() { return itemSlot; }
