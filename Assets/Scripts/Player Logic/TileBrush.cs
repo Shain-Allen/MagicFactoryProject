@@ -67,10 +67,9 @@ public class TileBrush : MonoBehaviour
 		{
 			if (GetPlaceableAt(grid, roundedMousePos) != null)
 				return;
-			GameObject tempChunkParent;
-			grid.worldChunks.TryGetValue(GetChunk(roundedMousePos), out tempChunkParent);
-			GameObject temp = Instantiate(brushItem, roundedMousePos, itemPreview.transform.rotation, tempChunkParent.transform);
-			temp.GetComponent<Placeable>().PlacedAction(grid);
+			GameObject tempChunkParent = GetChunkParentByPos(grid, roundedMousePos);
+			GameObject tempPlaceable = Instantiate(brushItem, roundedMousePos, itemPreview.transform.rotation, tempChunkParent.transform);
+			tempPlaceable.GetComponent<Placeable>().PlacedAction(grid);
 		}
 	}
 

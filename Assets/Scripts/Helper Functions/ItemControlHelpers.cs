@@ -14,9 +14,7 @@ public class ItemControlHelpers
 		{
 			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
 			if (objAtPos != null && (objAtPos.TryGetComponent<Placeable>(out PlaceableAtPos)))
-			{
 				return PlaceableAtPos;
-			}
 		}
 		return null;
 	}
@@ -26,10 +24,7 @@ public class ItemControlHelpers
 	{
 		GameObject chunkPlaceholder;
 		if (grid.worldChunks.TryGetValue(GetChunk(Placeable.transform.position), out chunkPlaceholder))
-		{
 			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = Placeable.gameObject;
-			grid.placeObjects.Add(Placeable.transform.position, Placeable.gameObject);
-		}
 	}
 
 	// Remove the IC from any references to it
@@ -37,10 +32,7 @@ public class ItemControlHelpers
 	{
 		GameObject chunkPlaceholder;
 		if (grid.worldChunks.TryGetValue(GetChunk(Placeable.transform.position), out chunkPlaceholder))
-		{
 			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = null;
-			grid.placeObjects.Remove(Placeable.transform.position);
-		}
 	}
 
 	// Returns the IC at the provided location, or null if there isn't an IC there

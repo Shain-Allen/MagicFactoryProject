@@ -5,8 +5,6 @@ using UnityEngine;
 public class GridControl : MonoBehaviour
 {
 	public event EventHandler OnBeltTimerCycle;
-	public Dictionary<Vector2, GameObject> placeObjects = new Dictionary<Vector2, GameObject>();
-	public Dictionary<Vector2, GameObject> oreObjects = new Dictionary<Vector2, GameObject>();
 	// Vector2Int = Chunk coordinates, and GameObject is an empty object to be the parent of all ores in that chunk
 	public Dictionary<Vector2Int, GameObject> worldChunks = new Dictionary<Vector2Int, GameObject>();
 

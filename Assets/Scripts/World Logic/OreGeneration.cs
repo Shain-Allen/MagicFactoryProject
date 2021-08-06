@@ -19,13 +19,13 @@ public class OreGeneration : MonoBehaviour
      */
 	public static void LoadChunkOres(GridControl grid, int seed, int chunkX, int chunkY)
 	{
-		GameObject curChunkParent;
-		if (grid.worldChunks.TryGetValue(new Vector2Int(chunkX, chunkY), out curChunkParent))
+		GameObject curChunkParent = GetChunkParentByChunk(grid, new Vector2Int(chunkX, chunkY));
+		if (curChunkParent)
 			return;
 		curChunkParent = Instantiate(grid.chunkParentObject, new Vector3(chunkX * ChunkManager.CHUNK_SIZE, chunkY * ChunkManager.CHUNK_SIZE, 0), Quaternion.identity, grid.transform);
 		curChunkParent.name = $"({chunkX},{chunkY})";
 
-		// 1st  4th  7th (This shows the order of chunk loading, therefore meaning it's the priority order)
+		// 1st  4th  7th (This shows the order of chunk loading == priority order)
 		// 2nd [5th] 8th ('5th' is the chunk currently generating)
 		// 3rd  6th  9th (Only '5th' will have ores placed in it)
 		for (int x = -1; x <= 1; x++)
@@ -93,20 +93,39 @@ public class OreGeneration : MonoBehaviour
 			for (int y = center.y - maxRad; y <= center.y + maxRad; y++)
 			{
 				dist = GetDistance(x, center.x, y, center.y);
-				empty = !grid.oreObjects.TryGetValue((new Vector2(x, y)), out tempOre);
+				empty = !GetOreAt(grid, new Vector2Int(x, y));
 				oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
 				if (randGen.NextDouble() <= oddsOfOre && insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
 				{
 					tempOre = Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform);
-					//tempOre = new BaseOre(tempObj, oreOutput, randGen.Next(50, 200));
 
 					if (tempOre.GetComponent<BaseOre>())
 						tempOre.GetComponent<BaseOre>().GenerateOre();
 					if (tempOre.GetComponent<BaseGas>())
 						tempOre.GetComponent<BaseGas>().GenerateGas();
 
-					grid.oreObjects.Add(new Vector2(x, y), tempOre);
+					AddOreToWorld(grid, new Vector2Int(x, y), tempOre);
 				}
 			}
+	}
+
+	/* Returns the GameObject found at any position in the oreObjects array, meaning it's an ore of some sort
+	 * The chunk doesn't have to be generated for this to work, as it'll return null
+	 */
+	public static GameObject GetOreAt(GridControl grid, Vector2Int pos)
+	{
+		GameObject chunkParent;
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+			return chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+		return null;
+	}
+
+	/* Gets the chunk that the ore needs to be parented to, then adds it into the world
+	 */
+	public static void AddOreToWorld(GridControl grid, Vector2Int pos, GameObject tempOre)
+	{
+		GameObject chunkParent;
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+			chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y] = tempOre;
 	}
 }

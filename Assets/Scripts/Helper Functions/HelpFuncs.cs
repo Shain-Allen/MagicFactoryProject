@@ -1,9 +1,21 @@
 using System;
 using UnityEngine;
 
-
 public class HelpFuncs : MonoBehaviour
 {
+	// Gets the parent GameObject for a chunk given any X, Y value
+	public static GameObject GetChunkParentByPos(GridControl grid, Vector2 pos)
+	{
+		return GetChunkParentByChunk(grid, GetChunk(pos));
+	}
+	public static GameObject GetChunkParentByChunk(GridControl grid, Vector2Int chunkPos)
+	{
+		GameObject tempChunkParent;
+		if (!grid.worldChunks.TryGetValue(chunkPos, out tempChunkParent))
+			return null;
+		return tempChunkParent;
+	}
+
 	// Calls Math.Round, but turns it into a float 
 	private static float Round(float input, int degree)
 	{
@@ -55,11 +67,12 @@ public class HelpFuncs : MonoBehaviour
 	}
 	public static Vector2Int GetChunk(float x, float y)
 	{
-		int newX = (int)(x / ChunkManager.CHUNK_SIZE);
-		int newY = (int)(y / ChunkManager.CHUNK_SIZE);
-		newX = (x < 0) ? newX - 1 : newX;
-		newY = (y < 0) ? newY - 1 : newY;
-		return new Vector2Int(newX, newY);
+		// Due to rounding issues, negative values of x and y need to be adjusted
+		x = (x < 0) ? x - 31 : x;
+		y = (y < 0) ? y - 31 : y;
+		int chunkX = ((int)x / ChunkManager.CHUNK_SIZE);
+		int chunkY = ((int)y / ChunkManager.CHUNK_SIZE);
+		return new Vector2Int(chunkX, chunkY);
 	}
 
 	/* GetChunkID converts the chunk X and Y into a single Int
