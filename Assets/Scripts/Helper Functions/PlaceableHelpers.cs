@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using static HelpFuncs;
 
-public class ItemControlHelpers
+public class PlaceableHelpers
 {
 	// Returns the Placeable at the provided location, or null if there isn't a Placeable there
 	public static Placeable GetPlaceableAt(GridControl grid, Vector2 pos)

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using static HelpFuncs;
-using static ItemControlHelpers;
+using static PlaceableHelpers;
 
 public class TileBrush : MonoBehaviour
 {
