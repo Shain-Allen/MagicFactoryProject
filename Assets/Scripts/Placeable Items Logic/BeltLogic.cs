@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using static ItemControlHelpers;
 
@@ -74,5 +75,11 @@ public class BeltLogic : ItemControl
 	{
 		if (frontBelt == null)
 			MoveItem();
+	}
+
+	IEnumerator SmoothMove(GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
+	{
+
+		yield return null;
 	}
 }
