@@ -23,7 +23,7 @@ public class FullChestLogic : ItemControl
 
 	public override void MoveItem()
 	{
-		if (frontBelt && !frontBelt.itemSlot)
-			frontBelt.itemSlot = Instantiate(itemToClone, frontBelt.transform.position, Quaternion.identity, grid.transform);
+		if (frontBelt && !frontBelt.getItemSlot())
+			frontBelt.setItemSlot(Instantiate(itemToClone, frontBelt.transform.position, Quaternion.identity, grid.transform));
 	}
 }

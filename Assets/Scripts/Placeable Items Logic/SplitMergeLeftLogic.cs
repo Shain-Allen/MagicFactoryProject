@@ -50,10 +50,10 @@ public class SplitMergeLeftLogic : ItemControl
 		bool leftFrontBelt, rightFrontBelt;
 		ItemControl moveItemFromSM, outputBelt;
 
-		while (itemSlot || rightPair.itemSlot)
+		while (itemSlot || rightPair.getItemSlot())
 		{
 			// Chooses a random elible side of the SM to move an item from
-			if (itemSlot && rightPair.itemSlot)
+			if (itemSlot && rightPair.getItemSlot())
 			{
 				if (randgen.NextDouble() < .5)
 					moveItemFromSM = this;
@@ -69,39 +69,39 @@ public class SplitMergeLeftLogic : ItemControl
 			}
 
 			// Chooses a random elible front belt to move to
-			leftFrontBelt = frontBelt && !frontBelt.itemSlot;
-			rightFrontBelt = rightPair.frontBelt && !rightPair.frontBelt.itemSlot;
+			leftFrontBelt = frontBelt && !frontBelt.getItemSlot();
+			rightFrontBelt = rightPair.getFrontBelt() && !rightPair.getFrontBelt().getItemSlot();
 			if (leftFrontBelt && rightFrontBelt)
 			{
 				if (randgen.NextDouble() < .5)
 					outputBelt = frontBelt;
 				else
-					outputBelt = rightPair.frontBelt;
+					outputBelt = rightPair.getFrontBelt();
 			}
 			else if (leftFrontBelt)
 				outputBelt = frontBelt;
 			else if (rightFrontBelt)
-				outputBelt = rightPair.frontBelt;
+				outputBelt = rightPair.getFrontBelt();
 			else
 				break;
 
 			// Move the item
-			moveItemFromSM.itemSlot.transform.position = outputBelt.transform.position;
-			outputBelt.itemSlot = moveItemFromSM.itemSlot;
-			moveItemFromSM.itemSlot = null;
+			moveItemFromSM.getItemSlot().transform.position = outputBelt.transform.position;
+			outputBelt.setItemSlot(moveItemFromSM.getItemSlot());
+			moveItemFromSM.setItemSlot(null);
 		}
 
 		// Chain reaction backwards
 		if (backBelt)
 			backBelt.MoveItem();
-		if (rightPair.backBelt)
-			rightPair.backBelt.MoveItem();
+		if (rightPair.getBackBelt())
+			rightPair.getBackBelt().MoveItem();
 	}
 
 	// If this belt is in front, start a chain reaction backwards for movement
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		if (frontBelt == null || rightPair.frontBelt == null)
+		if (frontBelt == null || rightPair.getFrontBelt() == null)
 			MoveItem();
 	}
 

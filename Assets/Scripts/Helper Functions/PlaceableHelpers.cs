@@ -57,17 +57,17 @@ public class PlaceableHelpers
 	{
 		Vector3 direction = EulerToVector(IC.transform.rotation.eulerAngles.z);
 		ItemControl ICFront = GetICAt(grid, IC.transform.position + direction);
-		IC.frontBelt = null;
+		IC.setFrontBelt(null);
 
 		// Make sure the IC in front exists, allows this to attach, and isn't occupied
-		if (ICFront != null && ICFront.allowBackBelt && ICFront.backBelt == null)
+		if (ICFront != null && ICFront.allowBackBelt && ICFront.getBackBelt() == null)
 		{
 			// Prevent a situation where they point right at each other |>>| |<<|
 			if (!ICFront.allowFrontBelt || ICFront.transform.rotation.eulerAngles.z != (IC.transform.rotation.eulerAngles.z + 180) % 360)
 			{
-				IC.frontBelt = ICFront;
-				IC.frontBelt.backBelt = IC;
-				IC.frontBelt.UpdateSprite();
+				IC.setFrontBelt(ICFront);
+				IC.getFrontBelt().setBackBelt(IC);
+				IC.getFrontBelt().UpdateSprite();
 			}
 		}
 	}
@@ -78,17 +78,17 @@ public class PlaceableHelpers
 		int connectionAngle = (int)(IC.transform.rotation.eulerAngles.z + relativeAngle) % 360;
 		Vector3 deltaPos = EulerToVector(connectionAngle);
 		ItemControl ICSide = GetICAt(grid, IC.transform.position + deltaPos);
-		IC.backBelt = null;
+		IC.setBackBelt(null);
 
 		// If IC on the given side exists, allows this to attach, and isn't occupied
-		if (ICSide != null && ICSide.allowFrontBelt && ICSide.frontBelt == null)
+		if (ICSide != null && ICSide.allowFrontBelt && ICSide.getFrontBelt() == null)
 		{
 			// And if it is pointing to this IC
 			if ((ICSide.transform.rotation.eulerAngles.z + 180) % 360 == connectionAngle)
 			{
-				IC.backBelt = ICSide;
-				IC.backBelt.frontBelt = IC;
-				IC.backBelt.UpdateSprite();
+				IC.setBackBelt(ICSide);
+				IC.getBackBelt().setFrontBelt(IC);
+				IC.getBackBelt().UpdateSprite();
 			}
 		}
 	}

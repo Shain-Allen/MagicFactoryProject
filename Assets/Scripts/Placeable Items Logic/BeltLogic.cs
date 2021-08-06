@@ -58,10 +58,10 @@ public class BeltLogic : ItemControl
 	public override void MoveItem()
 	{
 		// If this belt can move its item forward legally and immediately
-		if (frontBelt && itemSlot && !frontBelt.itemSlot)
+		if (frontBelt && itemSlot && !frontBelt.getItemSlot())
 		{
 			itemSlot.transform.position = frontBelt.transform.position;
-			frontBelt.itemSlot = itemSlot;
+			frontBelt.setItemSlot(itemSlot);
 			itemSlot = null;
 		}
 
@@ -79,7 +79,6 @@ public class BeltLogic : ItemControl
 
 	IEnumerator SmoothMove(GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
 	{
-
 		yield return null;
 	}
 }

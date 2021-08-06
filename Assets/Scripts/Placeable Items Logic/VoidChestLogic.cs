@@ -24,10 +24,10 @@ public class VoidChestLogic : ItemControl
 	{
 		if (backBelt)
 		{
-			if (backBelt.itemSlot)
+			if (backBelt.getItemSlot())
 			{
-				Destroy(backBelt.itemSlot);
-				backBelt.itemSlot = null;
+				Destroy(backBelt.getItemSlot());
+				backBelt.setItemSlot(null);
 			}
 			backBelt.MoveItem();
 		}
