@@ -11,23 +11,26 @@ public class SplitMergeLeftLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		grid.OnBeltTimerCycle += BeltCycle;
-
-		AddToWorld(grid, this);
-		TryAttachFrontBelt();
-		TryAttachBackBelt();
 
 		// Needs to create and pair with SplitMergeRightLogic
 		float rightSide = (transform.rotation.eulerAngles.z + 270) % 360;
 		Vector3 pairPosition = transform.position + EulerToVector(rightSide);
-		if (GetPlaceableAt(grid, pairPosition) == null)
+		if (GetPlaceableAt(grid, pairPosition) != null)
 		{
-			GameObject tempChunkParent = GetChunkParentByPos(grid, pairPosition);
-			GameObject tempPlaceable = Instantiate(rightToClone, pairPosition, transform.rotation, tempChunkParent.transform);
-			rightPair = tempPlaceable.GetComponent<SplitMergeRightLogic>();
-			rightPair.PlacedAction(grid);
-			rightPair.leftPair = this;
+			base.RemovedAction();
+			return;
 		}
+
+		GameObject tempChunkParent = GetChunkParentByPos(grid, pairPosition);
+		GameObject tempPlaceable = Instantiate(rightToClone, pairPosition, transform.rotation, tempChunkParent.transform);
+		rightPair = tempPlaceable.GetComponent<SplitMergeRightLogic>();
+		rightPair.PlacedAction(grid);
+		rightPair.leftPair = this;
+
+		grid.OnBeltTimerCycle += BeltCycle;
+		AddToWorld(grid, this);
+		TryAttachFrontBelt();
+		TryAttachBackBelt();
 	}
 
 	public override void TryAttachFrontBelt()
