@@ -22,6 +22,11 @@ public class VoidChestLogic : ItemControl
 
 	public override void MoveItem()
 	{
+		if (itemSlot)
+		{
+			Destroy(itemSlot);
+			itemSlot = null;
+		}
 		if (backBelt)
 		{
 			if (backBelt.getItemSlot())

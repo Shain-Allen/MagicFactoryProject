@@ -7,6 +7,7 @@ public class SplitMergeLeftLogic : ItemControl
 {
 	public GameObject rightToClone;
 	SplitMergeRightLogic rightPair;
+	bool nextOutputLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
 	{
@@ -47,8 +48,8 @@ public class SplitMergeLeftLogic : ItemControl
 	public override void MoveItem()
 	{
 		System.Random randgen = new System.Random();
-		bool leftFrontBelt, rightFrontBelt;
-		ItemControl moveItemFromSM, outputBelt;
+		bool leftOutputFree, rightOutputFree;
+		ItemControl sideToMoveFrom, outputBelt;
 
 		while (itemSlot || rightPair.getItemSlot())
 		{
@@ -56,39 +57,55 @@ public class SplitMergeLeftLogic : ItemControl
 			if (itemSlot && rightPair.getItemSlot())
 			{
 				if (randgen.NextDouble() < .5)
-					moveItemFromSM = this;
+					sideToMoveFrom = this;
 				else
-					moveItemFromSM = rightPair;
+					sideToMoveFrom = rightPair;
 			}
 			else
 			{
 				if (itemSlot)
-					moveItemFromSM = this;
+					sideToMoveFrom = this;
 				else
-					moveItemFromSM = rightPair;
+					sideToMoveFrom = rightPair;
 			}
 
 			// Chooses a random elible front belt to move to
-			leftFrontBelt = frontBelt && !frontBelt.getItemSlot();
-			rightFrontBelt = rightPair.getFrontBelt() && !rightPair.getFrontBelt().getItemSlot();
-			if (leftFrontBelt && rightFrontBelt)
+			outputBelt = null;
+			leftOutputFree = frontBelt && !frontBelt.getItemSlot();
+			rightOutputFree = rightPair.getFrontBelt() && !rightPair.getFrontBelt().getItemSlot();
+
+			// If it's left's turn and left is free, choose it
+			if (nextOutputLeft && leftOutputFree)
 			{
-				if (randgen.NextDouble() < .5)
-					outputBelt = frontBelt;
-				else
-					outputBelt = rightPair.getFrontBelt();
-			}
-			else if (leftFrontBelt)
 				outputBelt = frontBelt;
-			else if (rightFrontBelt)
+				nextOutputLeft = false;
+			}
+			// But if it's right's turn and right is free, choose it
+			else if (!nextOutputLeft && rightOutputFree)
+			{
 				outputBelt = rightPair.getFrontBelt();
+				nextOutputLeft = true;
+			}
+			// If it's right's turn but left is free, choose it
+			else if (leftOutputFree)
+			{
+				outputBelt = frontBelt;
+				nextOutputLeft = false;
+			}
+			// If it's left's turn but right is free, choose it
+			else if (rightOutputFree)
+			{
+				outputBelt = rightPair.getFrontBelt();
+				nextOutputLeft = true;
+			}
+			// If neither are free, stop!
 			else
 				break;
 
 			// Move the item
-			moveItemFromSM.getItemSlot().transform.position = outputBelt.transform.position;
-			outputBelt.setItemSlot(moveItemFromSM.getItemSlot());
-			moveItemFromSM.setItemSlot(null);
+			StartCoroutine(SmoothMove(grid, sideToMoveFrom.getItemSlot(), sideToMoveFrom.getItemSlot().transform.position, outputBelt.transform.position));
+			outputBelt.setItemSlot(sideToMoveFrom.getItemSlot());
+			sideToMoveFrom.setItemSlot(null);
 		}
 
 		// Chain reaction backwards

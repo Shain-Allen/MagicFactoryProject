@@ -61,7 +61,7 @@ public class BeltLogic : ItemControl
 		if (frontBelt && itemSlot && !frontBelt.getItemSlot())
 		{
 			//itemSlot.transform.position = frontBelt.transform.position;
-			StartCoroutine(SmoothMove(itemSlot, itemSlot.transform.position, frontBelt.transform.position));
+			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, frontBelt.transform.position));
 			frontBelt.setItemSlot(itemSlot);
 			itemSlot = null;
 		}
@@ -76,21 +76,5 @@ public class BeltLogic : ItemControl
 	{
 		if (frontBelt == null)
 			MoveItem();
-	}
-
-	IEnumerator SmoothMove(GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
-	{
-		float timeElapsed = 0;
-
-		while (timeElapsed < grid.beltCycleTime)
-		{
-			Item.transform.position = Vector3.Lerp(startingPOS, EndingPOS, timeElapsed / grid.beltCycleTime);
-			timeElapsed += Time.deltaTime;
-
-
-			yield return null;
-		}
-
-		Item.transform.position = EndingPOS;
 	}
 }

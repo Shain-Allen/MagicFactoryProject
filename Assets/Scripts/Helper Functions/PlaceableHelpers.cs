@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using static HelpFuncs;
 
@@ -91,5 +92,21 @@ public class PlaceableHelpers
 				IC.getBackBelt().UpdateSprite();
 			}
 		}
+	}
+
+	// Smoothly moves the item from slot one to slot two
+	public static IEnumerator SmoothMove(GridControl grid, GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
+	{
+		float timeElapsed = 0;
+
+		while (timeElapsed < grid.beltCycleTime)
+		{
+			Item.transform.position = Vector3.Lerp(startingPOS, EndingPOS, timeElapsed / grid.beltCycleTime);
+			timeElapsed += Time.deltaTime;
+
+			yield return null;
+		}
+
+		Item.transform.position = EndingPOS;
 	}
 }
