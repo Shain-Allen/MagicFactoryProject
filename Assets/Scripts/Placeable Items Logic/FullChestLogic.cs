@@ -5,6 +5,8 @@ using static PlaceableHelpers;
 /* For all overriding methods without documentation, check ItemControl.cs */
 public class FullChestLogic : ItemControl
 {
+	[SerializeField]
+	private ItemSpawnerMenu FullChestMenu;
 	public GameObject itemToClone;
 
 	public override void PlacedAction(GridControl grid_)
@@ -14,6 +16,8 @@ public class FullChestLogic : ItemControl
 
 		AddToWorld(grid, this);
 		TryAttachFrontBelt();
+
+		FullChestMenu = GameObject.FindGameObjectWithTag("ItemSpawnerMenu").GetComponent<ItemSpawnerMenu>();
 	}
 
 	public override void TryAttachFrontBelt()
@@ -25,5 +29,11 @@ public class FullChestLogic : ItemControl
 	{
 		if (frontBelt && !frontBelt.getItemSlot())
 			frontBelt.setItemSlot(Instantiate(itemToClone, frontBelt.transform.position, Quaternion.identity, grid.transform));
+	}
+
+	public void OpenMenu()
+	{
+		FullChestMenu.transform.GetChild(0).gameObject.SetActive(true);
+		FullChestMenu.SetCurrentItem(itemToClone.GetComponent<SpriteRenderer>().sprite);
 	}
 }

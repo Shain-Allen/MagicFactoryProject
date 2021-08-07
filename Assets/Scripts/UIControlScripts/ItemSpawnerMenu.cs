@@ -14,6 +14,9 @@ public class ItemSpawnerMenu : MonoBehaviour
 	[SerializeField]
 	private GameObject selectionPanel;
 
+	[SerializeField]
+	private GameObject CurrentItem;
+
 	private void Start()
 	{
 		for (int i = 0; i < itemDictionary.itemList.Length; i++)
@@ -24,5 +27,10 @@ public class ItemSpawnerMenu : MonoBehaviour
 			newButton.GetComponent<Image>().color = itemDictionary.itemList[i].GetComponent<SpriteRenderer>().color;
 			newButton.transform.GetChild(0).GetChild(0).GetComponent<TMPro.TMP_Text>().text = itemDictionary.itemList[i].name;
 		}
+	}
+
+	public void SetCurrentItem(Sprite item)
+	{
+		CurrentItem.GetComponent<SpriteRenderer>().sprite = item;
 	}
 }

@@ -2239,7 +2239,7 @@ GameObject:
   - component: {fileID: 2116410521}
   m_Layer: 5
   m_Name: ItemSpawnerMenuCanvas
-  m_TagString: Untagged
+  m_TagString: ItemSpawnerMenu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2340,6 +2340,7 @@ MonoBehaviour:
   itemDictionary: {fileID: 11400000, guid: a19275364c4f3dd40a2a5de1dbdda8f2, type: 2}
   newItemButtonPrefab: {fileID: 3574794508308848980, guid: 7fb2b414ef5df824a9e86487b0c20f67, type: 3}
   selectionPanel: {fileID: 1926445717}
+  CurrentItem: {fileID: 140147596}
 --- !u!1 &2127960555
 GameObject:
   m_ObjectHideFlags: 0
