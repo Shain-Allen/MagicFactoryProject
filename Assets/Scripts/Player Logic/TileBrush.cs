@@ -35,6 +35,8 @@ public class TileBrush : MonoBehaviour
 		gameControls.GeneralControls.PlayerMovement.canceled += ctx => PlayerMovementStop();
 		gameControls.GeneralControls.Rotate.started += ctx => RotateItem();
 		gameControls.GeneralControls.ClearBrush.started += ctx => EmptyBrushItem();
+		gameControls.GeneralControls.LeftClick.started += ctx => LeftClickStart();
+		gameControls.GeneralControls.RightClick.started += ctx => RightClickStart();
 	}
 
 	// Update is called once per frame
@@ -43,11 +45,6 @@ public class TileBrush : MonoBehaviour
 		mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		transform.position = new Vector3(mousePos.x, mousePos.y, 0);
 		roundedMousePos = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
-
-		if (Input.GetMouseButtonDown(0))
-			TryToPlace();
-		if (Input.GetMouseButtonDown(1))
-			TryToDestroy();
 
 		// Move the camera and player
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
@@ -61,16 +58,18 @@ public class TileBrush : MonoBehaviour
 	}
 
 	// If the user is left clicks, place their held Placeable
-	private void TryToPlace()
+	private bool TryToPlace()
 	{
 		if (brushItem != null && !EventSystem.current.IsPointerOverGameObject())
 		{
 			if (GetPlaceableAt(grid, roundedMousePos) != null)
-				return;
+				return false;
 			GameObject tempChunkParent = GetChunkParentByPos(grid, roundedMousePos);
 			GameObject tempPlaceable = Instantiate(brushItem, roundedMousePos, itemPreview.transform.rotation, tempChunkParent.transform);
 			tempPlaceable.GetComponent<Placeable>().PlacedAction(grid);
+			return true;
 		}
+		return false;
 	}
 
 	// If the user right clicks, destory the targeted Placeable
@@ -129,5 +128,15 @@ public class TileBrush : MonoBehaviour
 	{
 		if (itemPreview)
 			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 270f);
+	}
+
+	private void LeftClickStart()
+	{
+		TryToPlace();
+	}
+
+	private void RightClickStart()
+	{
+		TryToDestroy();
 	}
 }

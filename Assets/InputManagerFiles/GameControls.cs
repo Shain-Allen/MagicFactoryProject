@@ -19,9 +19,17 @@ public class @GameControls : IInputActionCollection, IDisposable
             ""id"": ""7a02c4ba-4f01-4eb8-934d-eb029619f802"",
             ""actions"": [
                 {
-                    ""name"": ""MouseClicks"",
+                    ""name"": ""Left Click"",
                     ""type"": ""Button"",
                     ""id"": ""349bf245-e803-445e-9fa0-40da262582b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Right Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""52658700-929c-409c-898d-a225baec6d39"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -59,18 +67,7 @@ public class @GameControls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseClicks"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8cccea26-2451-4a8e-9130-5b59b489514e"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MouseClicks"",
+                    ""action"": ""Left Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -150,6 +147,17 @@ public class @GameControls : IInputActionCollection, IDisposable
                     ""action"": ""ClearBrush"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""245a7c24-1f15-468c-8b50-8697a6a7976b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Right Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -158,7 +166,8 @@ public class @GameControls : IInputActionCollection, IDisposable
 }");
         // GeneralControls
         m_GeneralControls = asset.FindActionMap("GeneralControls", throwIfNotFound: true);
-        m_GeneralControls_MouseClicks = m_GeneralControls.FindAction("MouseClicks", throwIfNotFound: true);
+        m_GeneralControls_LeftClick = m_GeneralControls.FindAction("Left Click", throwIfNotFound: true);
+        m_GeneralControls_RightClick = m_GeneralControls.FindAction("Right Click", throwIfNotFound: true);
         m_GeneralControls_PlayerMovement = m_GeneralControls.FindAction("PlayerMovement", throwIfNotFound: true);
         m_GeneralControls_Rotate = m_GeneralControls.FindAction("Rotate", throwIfNotFound: true);
         m_GeneralControls_ClearBrush = m_GeneralControls.FindAction("ClearBrush", throwIfNotFound: true);
@@ -211,7 +220,8 @@ public class @GameControls : IInputActionCollection, IDisposable
     // GeneralControls
     private readonly InputActionMap m_GeneralControls;
     private IGeneralControlsActions m_GeneralControlsActionsCallbackInterface;
-    private readonly InputAction m_GeneralControls_MouseClicks;
+    private readonly InputAction m_GeneralControls_LeftClick;
+    private readonly InputAction m_GeneralControls_RightClick;
     private readonly InputAction m_GeneralControls_PlayerMovement;
     private readonly InputAction m_GeneralControls_Rotate;
     private readonly InputAction m_GeneralControls_ClearBrush;
@@ -219,7 +229,8 @@ public class @GameControls : IInputActionCollection, IDisposable
     {
         private @GameControls m_Wrapper;
         public GeneralControlsActions(@GameControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MouseClicks => m_Wrapper.m_GeneralControls_MouseClicks;
+        public InputAction @LeftClick => m_Wrapper.m_GeneralControls_LeftClick;
+        public InputAction @RightClick => m_Wrapper.m_GeneralControls_RightClick;
         public InputAction @PlayerMovement => m_Wrapper.m_GeneralControls_PlayerMovement;
         public InputAction @Rotate => m_Wrapper.m_GeneralControls_Rotate;
         public InputAction @ClearBrush => m_Wrapper.m_GeneralControls_ClearBrush;
@@ -232,9 +243,12 @@ public class @GameControls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_GeneralControlsActionsCallbackInterface != null)
             {
-                @MouseClicks.started -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnMouseClicks;
-                @MouseClicks.performed -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnMouseClicks;
-                @MouseClicks.canceled -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnMouseClicks;
+                @LeftClick.started -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnLeftClick;
+                @LeftClick.performed -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnLeftClick;
+                @LeftClick.canceled -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnLeftClick;
+                @RightClick.started -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnRightClick;
+                @RightClick.performed -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnRightClick;
+                @RightClick.canceled -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnRightClick;
                 @PlayerMovement.started -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnPlayerMovement;
                 @PlayerMovement.performed -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnPlayerMovement;
                 @PlayerMovement.canceled -= m_Wrapper.m_GeneralControlsActionsCallbackInterface.OnPlayerMovement;
@@ -248,9 +262,12 @@ public class @GameControls : IInputActionCollection, IDisposable
             m_Wrapper.m_GeneralControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @MouseClicks.started += instance.OnMouseClicks;
-                @MouseClicks.performed += instance.OnMouseClicks;
-                @MouseClicks.canceled += instance.OnMouseClicks;
+                @LeftClick.started += instance.OnLeftClick;
+                @LeftClick.performed += instance.OnLeftClick;
+                @LeftClick.canceled += instance.OnLeftClick;
+                @RightClick.started += instance.OnRightClick;
+                @RightClick.performed += instance.OnRightClick;
+                @RightClick.canceled += instance.OnRightClick;
                 @PlayerMovement.started += instance.OnPlayerMovement;
                 @PlayerMovement.performed += instance.OnPlayerMovement;
                 @PlayerMovement.canceled += instance.OnPlayerMovement;
@@ -266,7 +283,8 @@ public class @GameControls : IInputActionCollection, IDisposable
     public GeneralControlsActions @GeneralControls => new GeneralControlsActions(this);
     public interface IGeneralControlsActions
     {
-        void OnMouseClicks(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
         void OnPlayerMovement(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnClearBrush(InputAction.CallbackContext context);
