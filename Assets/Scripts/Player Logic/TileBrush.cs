@@ -60,7 +60,7 @@ public class TileBrush : MonoBehaviour
 	// If the user is left clicks, place their held Placeable
 	private bool TryToPlace()
 	{
-		if (brushItem != null && !EventSystem.current.IsPointerOverGameObject())
+		if (brushItem && !EventSystem.current.IsPointerOverGameObject())
 		{
 			if (GetPlaceableAt(grid, roundedMousePos) != null)
 				return false;
@@ -132,7 +132,14 @@ public class TileBrush : MonoBehaviour
 
 	private void LeftClickStart()
 	{
-		TryToPlace();
+		if (!TryToPlace())
+		{
+			IOpenMenu placeable;
+			if ((placeable = GetPlaceableAt(grid, roundedMousePos) as IOpenMenu) != null && !brushItem)
+			{
+				placeable.OpenMenu();
+			}
+		}
 	}
 
 	private void RightClickStart()

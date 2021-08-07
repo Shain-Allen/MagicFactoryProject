@@ -34,6 +34,6 @@ public class FullChestLogic : ItemControl, IOpenMenu
 	public void OpenMenu()
 	{
 		FullChestMenu.transform.GetChild(0).gameObject.SetActive(true);
-		FullChestMenu.SetCurrentItem(itemToClone.GetComponent<SpriteRenderer>().sprite);
+		FullChestMenu.SetCurrentItem(itemToClone.GetComponent<SpriteRenderer>().sprite, itemToClone.GetComponent<SpriteRenderer>().color);
 	}
 }

@@ -29,8 +29,9 @@ public class ItemSpawnerMenu : MonoBehaviour
 		}
 	}
 
-	public void SetCurrentItem(Sprite item)
+	public void SetCurrentItem(Sprite item, Color color)
 	{
-		CurrentItem.GetComponent<SpriteRenderer>().sprite = item;
+		CurrentItem.GetComponent<Image>().sprite = item;
+		CurrentItem.GetComponent<Image>().color = color;
 	}
 }
