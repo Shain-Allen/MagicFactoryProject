@@ -3,7 +3,7 @@ using UnityEngine;
 using static PlaceableHelpers;
 
 /* For all overriding methods without documentation, check ItemControl.cs */
-public class FullChestLogic : ItemControl
+public class FullChestLogic : ItemControl, IOpenMenu
 {
 	[SerializeField]
 	private ItemSpawnerMenu FullChestMenu;
