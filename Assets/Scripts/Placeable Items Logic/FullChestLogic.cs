@@ -27,13 +27,20 @@ public class FullChestLogic : ItemControl, IOpenMenu
 
 	public override void MoveItem()
 	{
-		if (frontBelt && !frontBelt.getItemSlot())
+		if (frontBelt && !frontBelt.getItemSlot() && itemToClone)
 			frontBelt.setItemSlot(Instantiate(itemToClone, frontBelt.transform.position, Quaternion.identity, grid.transform));
 	}
 
 	public void OpenMenu()
 	{
 		FullChestMenu.transform.GetChild(0).gameObject.SetActive(true);
+		FullChestMenu.SetCurrentItem(itemToClone.GetComponent<SpriteRenderer>().sprite, itemToClone.GetComponent<SpriteRenderer>().color);
+		FullChestMenu.ConnectMenu(gameObject);
+	}
+
+	public void SetSpawnItem(GameObject item)
+	{
+		itemToClone = item;
 		FullChestMenu.SetCurrentItem(itemToClone.GetComponent<SpriteRenderer>().sprite, itemToClone.GetComponent<SpriteRenderer>().color);
 	}
 }

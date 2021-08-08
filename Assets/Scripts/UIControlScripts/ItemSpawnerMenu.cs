@@ -34,4 +34,26 @@ public class ItemSpawnerMenu : MonoBehaviour
 		CurrentItem.GetComponent<Image>().sprite = item;
 		CurrentItem.GetComponent<Image>().color = color;
 	}
+
+	public void disconnectMenu()
+	{
+		if (selectionPanel.transform.childCount == 0)
+			return;
+
+		for (int i = 0; i < selectionPanel.transform.childCount; i++)
+		{
+			selectionPanel.transform.GetChild(i).GetComponent<Button>().onClick.RemoveAllListeners();
+		}
+	}
+
+	public void ConnectMenu(GameObject fullchest)
+	{
+		if (selectionPanel.transform.childCount == 0)
+			return;
+
+		for (int i = 0; i < selectionPanel.transform.childCount; i++)
+		{
+			selectionPanel.transform.GetChild(i).GetComponent<Button>().onClick.AddListener(() => fullchest.GetComponent<FullChestLogic>().SetSpawnItem(itemDictionary.itemList[i]));
+		}
+	}
 }
