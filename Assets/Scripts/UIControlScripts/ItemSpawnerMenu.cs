@@ -53,7 +53,8 @@ public class ItemSpawnerMenu : MonoBehaviour
 
 		for (int i = 0; i < selectionPanel.transform.childCount; i++)
 		{
-			selectionPanel.transform.GetChild(i).GetComponent<Button>().onClick.AddListener(() => fullchest.GetComponent<FullChestLogic>().SetSpawnItem(itemDictionary.itemList[i]));
+			GameObject item = itemDictionary.itemList[i];
+			selectionPanel.transform.GetChild(i).GetComponent<Button>().onClick.AddListener(() => fullchest.GetComponent<FullChestLogic>().SetSpawnItem(item));
 		}
 	}
 }
