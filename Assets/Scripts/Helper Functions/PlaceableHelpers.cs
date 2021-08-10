@@ -101,12 +101,16 @@ public class PlaceableHelpers
 
 		while (timeElapsed < grid.beltCycleTime)
 		{
+			if (!Item)
+				continue;
+
 			Item.transform.position = Vector3.Lerp(startingPOS, EndingPOS, timeElapsed / grid.beltCycleTime);
 			timeElapsed += Time.deltaTime;
 
 			yield return null;
 		}
 
-		Item.transform.position = EndingPOS;
+		if (Item)
+			Item.transform.position = EndingPOS;
 	}
 }
