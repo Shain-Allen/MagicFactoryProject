@@ -96,4 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e22dce631e37d94aa212ad57690fdce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftPair: {fileID: 0}
+  rightToClone: {fileID: 8874810180213168627, guid: 17527ac7dcb89a941952a35abf7e871a, type: 3}
