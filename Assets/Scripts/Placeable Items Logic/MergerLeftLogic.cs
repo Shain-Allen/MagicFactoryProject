@@ -3,10 +3,10 @@ using UnityEngine;
 using static HelpFuncs;
 using static PlaceableHelpers;
 
-public class SplitMergeLeftLogic : ItemControl
+public class MergerLeftLogic : ItemControl
 {
 	public GameObject rightToClone;
-	SplitMergeRightLogic rightPair;
+	MergerRightLogic rightPair;
 	bool sideToMoveFromLeft = true;
 	bool nextOutputLeft = true;
 
@@ -25,7 +25,7 @@ public class SplitMergeLeftLogic : ItemControl
 
 		GameObject tempChunkParent = GetChunkParentByPos(grid, pairPosition);
 		GameObject tempPlaceable = Instantiate(rightToClone, pairPosition, transform.rotation, tempChunkParent.transform);
-		rightPair = tempPlaceable.GetComponent<SplitMergeRightLogic>();
+		rightPair = tempPlaceable.GetComponent<MergerRightLogic>();
 		rightPair.PlacedAction(grid);
 		rightPair.leftPair = this;
 

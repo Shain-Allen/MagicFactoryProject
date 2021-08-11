@@ -2,9 +2,9 @@ using System;
 using UnityEngine;
 using static PlaceableHelpers;
 
-public class SplitMergeRightLogic : ItemControl
+public class MergerRightLogic : ItemControl
 {
-	public SplitMergeLeftLogic leftPair;
+	public MergerLeftLogic leftPair;
 
 	public override void PlacedAction(GridControl grid_)
 	{
