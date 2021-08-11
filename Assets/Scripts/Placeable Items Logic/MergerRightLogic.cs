@@ -9,15 +9,10 @@ public class MergerRightLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
+		allowFrontBelt = false;
 
 		AddToWorld(grid, this);
-		TryAttachFrontBelt();
 		TryAttachBackBelt();
-	}
-
-	public override void TryAttachFrontBelt()
-	{
-		TryAttachFrontBeltHelper(grid, this);
 	}
 
 	public override void TryAttachBackBelt()
@@ -27,7 +22,7 @@ public class MergerRightLogic : ItemControl
 
 	public override void MoveItem()
 	{
-		leftPair.MoveItem();
+		// This should never be called
 	}
 
 	public override void RemovedAction()
