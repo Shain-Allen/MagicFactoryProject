@@ -60,7 +60,6 @@ public class BeltLogic : ItemControl
 		// If this belt can move its item forward legally and immediately
 		if (frontBelt && itemSlot && !frontBelt.getItemSlot())
 		{
-			//itemSlot.transform.position = frontBelt.transform.position;
 			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, frontBelt.transform.position));
 			frontBelt.setItemSlot(itemSlot);
 			itemSlot = null;
@@ -69,6 +68,14 @@ public class BeltLogic : ItemControl
 		// Chain reaction backwards
 		if (backBelt)
 			backBelt.MoveItem();
+	}
+
+	public override bool AllowBackBeltFrom(ItemControl askingIC)
+	{
+		int relativeAngle = getRelativeAngle(this, askingIC);
+		if (backBelt || relativeAngle < 90 || relativeAngle > 270)
+			return false;
+		return true;
 	}
 
 	// If this belt is in front, start a chain reaction backwards for movement
