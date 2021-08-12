@@ -28,14 +28,7 @@ public class VoidChestLogic : ItemControl
 			itemSlot = null;
 		}
 		if (backBelt)
-		{
-			if (backBelt.getItemSlot())
-			{
-				Destroy(backBelt.getItemSlot());
-				backBelt.setItemSlot(null);
-			}
 			backBelt.MoveItem();
-		}
 	}
 
 	// This is always a front belt, so always start a chain with this
