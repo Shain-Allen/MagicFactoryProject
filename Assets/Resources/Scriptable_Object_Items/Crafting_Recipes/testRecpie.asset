@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d598267cd3302419df898ca1f3d65c, type: 3}
   m_Name: testRecpie
   m_EditorClassIdentifier: 
-  machineType: 
-  baseIngredients: []
-  baseIngredientsQuanty: 
-  outputItems: []
+  itemCategory: 0
+  machineType: 00000000
+  handCraftable: 0
+  baseIngredients:
+  - {fileID: 0}
+  baseIngredientsQuanty: 00000000
+  outputItems:
+  - {fileID: 0}
+  OutputItemsQuanty: 00000000
