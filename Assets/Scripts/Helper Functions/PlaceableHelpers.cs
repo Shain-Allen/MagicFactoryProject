@@ -102,7 +102,7 @@ public class PlaceableHelpers
 		while (timeElapsed < grid.beltCycleTime)
 		{
 			if (!Item)
-				continue;
+				yield break;
 
 			Item.transform.position = Vector3.Lerp(startingPOS, EndingPOS, timeElapsed / grid.beltCycleTime);
 			timeElapsed += Time.deltaTime;
