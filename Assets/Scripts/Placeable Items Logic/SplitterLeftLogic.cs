@@ -7,7 +7,6 @@ public class SplitterLeftLogic : ItemControl
 {
 	public GameObject rightToClone;
 	SplitterRightLogic rightPair;
-	bool sideToMoveFromLeft = true;
 	bool nextOutputLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
@@ -48,20 +47,13 @@ public class SplitterLeftLogic : ItemControl
 	// This is the part that needs to get reworked
 	public override void MoveItem()
 	{
-		ItemControl sideToMoveFrom, outputBelt;
-
-		// This shouldn't be able to happen more than twice
-		for (int i = 0; i < 2; i++)
+		ItemControl outputBelt = chooseOutputBelt();
+		// Try to move the item
+		if (itemSlot && outputBelt)
 		{
-			sideToMoveFrom = chooseSideToMoveFrom();
-			outputBelt = chooseOutputBelt();
-			if (!sideToMoveFrom || !outputBelt)
-				break;
-
-			// Move the item
-			StartCoroutine(SmoothMove(grid, sideToMoveFrom.getItemSlot(), sideToMoveFrom.getItemSlot().transform.position, outputBelt.transform.position));
-			outputBelt.setItemSlot(sideToMoveFrom.getItemSlot());
-			sideToMoveFrom.setItemSlot(null);
+			StartCoroutine(SmoothMove(grid, getItemSlot(), getItemSlot().transform.position, outputBelt.transform.position));
+			outputBelt.setItemSlot(getItemSlot());
+			setItemSlot(null);
 		}
 
 		// Chain reaction backwards
@@ -69,37 +61,6 @@ public class SplitterLeftLogic : ItemControl
 			backBelt.MoveItem();
 		if (rightPair.getBackBelt())
 			rightPair.getBackBelt().MoveItem();
-	}
-
-	// Chooses a random elible side of the SM to move an item from
-	private ItemControl chooseSideToMoveFrom()
-	{
-		ItemControl sideToMoveFrom = null;
-		if (sideToMoveFromLeft && itemSlot)
-		{
-			sideToMoveFrom = this;
-			sideToMoveFromLeft = false;
-			Debug.Log("A 1");
-		}
-		else if (!sideToMoveFromLeft && rightPair.getItemSlot())
-		{
-			sideToMoveFrom = rightPair;
-			sideToMoveFromLeft = true;
-			Debug.Log("B 1");
-		}
-		else if (itemSlot)
-		{
-			sideToMoveFrom = this;
-			sideToMoveFromLeft = false;
-			Debug.Log("A 2");
-		}
-		else if (rightPair.getItemSlot())
-		{
-			sideToMoveFrom = rightPair;
-			sideToMoveFromLeft = true;
-			Debug.Log("B 2");
-		}
-		return sideToMoveFrom;
 	}
 
 	// Tries to switch back and forth each time, if possible
@@ -140,7 +101,7 @@ public class SplitterLeftLogic : ItemControl
 	// If this belt is in front, start a chain reaction backwards for movement
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		if (frontBelt == null || rightPair.getFrontBelt() == null)
+		if (frontBelt == null)
 			MoveItem();
 	}
 

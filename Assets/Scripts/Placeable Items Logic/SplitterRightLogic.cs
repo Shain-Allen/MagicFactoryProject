@@ -9,10 +9,10 @@ public class SplitterRightLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
+		allowBackBelt = false;
 
 		AddToWorld(grid, this);
 		TryAttachFrontBelt();
-		TryAttachBackBelt();
 	}
 
 	public override void TryAttachFrontBelt()
@@ -20,14 +20,9 @@ public class SplitterRightLogic : ItemControl
 		TryAttachFrontBeltHelper(grid, this);
 	}
 
-	public override void TryAttachBackBelt()
-	{
-		TryAttachBackBeltHelper(grid, this, 180);
-	}
-
 	public override void MoveItem()
 	{
-		leftPair.MoveItem();
+		// Don't do anything to prevent the backBelt from being pulled forward twice
 	}
 
 	public override void RemovedAction()
