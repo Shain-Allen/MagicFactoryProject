@@ -94,6 +94,15 @@ public class PlaceableHelpers
 		}
 	}
 
+	// Returns the relative angle of MainIC's facing direction to the angle of AskingIC
+	public static int getRelativeAngle(ItemControl CenterIC, ItemControl deltaIC)
+	{
+		Vector3 deltaPos = deltaIC.transform.position - CenterIC.transform.position;
+		float absoluteAngle = VectorToEuler(deltaPos);
+		float relativeAngle = (CenterIC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
+		return (int)Mathf.Round(relativeAngle);
+	}
+
 	// Smoothly moves the item from slot one to slot two
 	public static IEnumerator SmoothMove(GridControl grid, GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
 	{
@@ -102,7 +111,7 @@ public class PlaceableHelpers
 		while (timeElapsed < grid.beltCycleTime)
 		{
 			if (!Item)
-				continue;
+				yield break;
 
 			Item.transform.position = Vector3.Lerp(startingPOS, EndingPOS, timeElapsed / grid.beltCycleTime);
 			timeElapsed += Time.deltaTime;

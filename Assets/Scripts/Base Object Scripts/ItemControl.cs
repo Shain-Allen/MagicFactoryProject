@@ -12,8 +12,8 @@ public abstract class ItemControl : Placeable
 {
 	protected bool allowBackBelt = true;
 	protected bool allowFrontBelt = true;
-	protected ItemControl frontBelt = null; // output to IC
-	protected ItemControl backBelt = null; // input from IC
+	public ItemControl frontBelt = null; // output to IC
+	public ItemControl backBelt = null; // input from IC
 	protected GameObject itemSlot = null;
 	protected GridControl grid;
 
@@ -87,5 +87,21 @@ public abstract class ItemControl : Placeable
 	 * cont.: An item will never move if its frontBelt already has an item
 	 */
 	public abstract void MoveItem();
+
+	// Takes a EulerAngle for the side this is being asked from
+	public virtual bool AllowFrontBeltFrom(ItemControl askingIC)
+	{
+		int relativeAngle = getRelativeAngle(this, askingIC);
+		if (!allowFrontBelt || frontBelt || relativeAngle != 0)
+			return false;
+		return true;
+	}
+	public virtual bool AllowBackBeltFrom(ItemControl askingIC)
+	{
+		int relativeAngle = getRelativeAngle(this, askingIC);
+		if (!allowBackBelt || backBelt || relativeAngle != 180)
+			return false;
+		return true;
+	}
 }
 
