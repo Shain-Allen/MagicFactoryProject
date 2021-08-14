@@ -27,6 +27,8 @@ public class MysticDrillLogic : Placeable
 		RemoveFromWorld(grid, this, Vector3.left); RemoveFromWorld(grid, this); RemoveFromWorld(grid, this, Vector3.right);
 		RemoveFromWorld(grid, this, Vector3.down + Vector3.left); RemoveFromWorld(grid, this, Vector3.down); RemoveFromWorld(grid, this, Vector3.down + Vector3.right);
 
+		grid.Tick -= TryMineOre;
+
 		Destroy(gameObject);
 	}
 
