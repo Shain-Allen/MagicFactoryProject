@@ -17,6 +17,8 @@ public class MysticDrillLogic : Placeable
 		grid = _grid;
 		outputLocation = transform.up * 2;
 
+		Debug.Log(gameObject.transform.position + outputLocation);
+
 		AddToWorld(grid, this, Vector3.up + Vector3.left); AddToWorld(grid, this, Vector3.up); AddToWorld(grid, this, Vector3.up + Vector3.right);
 		AddToWorld(grid, this, Vector3.left); AddToWorld(grid, this); AddToWorld(grid, this, Vector3.right);
 		AddToWorld(grid, this, Vector3.down + Vector3.left); AddToWorld(grid, this, Vector3.down); AddToWorld(grid, this, Vector3.down + Vector3.right);
@@ -37,11 +39,13 @@ public class MysticDrillLogic : Placeable
 
 	public void TryMineOre(object sender, EventArgs e)
 	{
+		//Debug.Log("Event triggered");
 		if (!isMining)
 		{
 			GameObject outputOre = null;
 			while (!outputOre)
 			{
+				Debug.Log("Attempt to find ore");
 				Vector2 orePos = new Vector2(UnityEngine.Random.Range(-1, 2) + transform.position.x, UnityEngine.Random.Range(-1, 2) + transform.position.y);
 				GameObject chunkParent;
 				if (grid.worldChunks.TryGetValue(GetChunk(transform.position), out chunkParent))
@@ -53,6 +57,7 @@ public class MysticDrillLogic : Placeable
 
 	private IEnumerator Mining(MysticDrillLogic drill, GameObject outputOre)
 	{
+		Debug.Log("IEnumerator Triggered");
 		drill.isMining = true;
 
 		float timeElapsed = 0;

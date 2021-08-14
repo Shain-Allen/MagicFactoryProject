@@ -25,11 +25,11 @@ public class OreInfoSO : ScriptableObject
 		if (this.name == "OreInfo")
 			return;
 
-		ObjectDictionary oreDictionary = (ObjectDictionary)Resources.Load("Scriptable_Object_Items/OreDictionary");
+		//ObjectDictionary oreDictionary = (ObjectDictionary)Resources.Load("Scriptable_Object_Items/OreDictionary");
 
-		for (int i = 0; i < oreDictionary.itemList.Length; i++)
+		for (int i = 0; i < itemDictionary.itemList.Length; i++)
 		{
-			if (this.name.ToLower() == oreDictionary.itemList[i].name.ToLower())
+			if (this.name.ToLower() == itemDictionary.itemList[i].name.ToLower())
 			{
 				returnObjectIndex = i;
 			}
