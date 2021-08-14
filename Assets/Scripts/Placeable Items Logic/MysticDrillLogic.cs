@@ -1,13 +1,16 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using static PlaceableHelpers;
+using static HelpFuncs;
 
 public class MysticDrillLogic : Placeable
 {
 	private GridControl grid;
 
-	private Vector2 outputLocation;
+	private Vector3 outputLocation;
+
+	public bool isMining = false;
 
 	public override void PlacedAction(GridControl _grid)
 	{
@@ -34,6 +37,44 @@ public class MysticDrillLogic : Placeable
 
 	public void TryMineOre(object sender, EventArgs e)
 	{
+		if (!isMining)
+		{
+			GameObject outputOre = null;
+			while (!outputOre)
+			{
+				Vector2 orePos = new Vector2(UnityEngine.Random.Range(-1, 2) + transform.position.x, UnityEngine.Random.Range(-1, 2) + transform.position.y);
+				GameObject chunkParent;
+				if (grid.worldChunks.TryGetValue(GetChunk(transform.position), out chunkParent))
+					chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(orePos).x, PosToPosInChunk(orePos).y].GetComponent<BaseOre>().MineOre(out outputOre);
+			}
+			StartCoroutine(Mining(this, outputOre));
+		}
+	}
 
+	private IEnumerator Mining(MysticDrillLogic drill, GameObject outputOre)
+	{
+		drill.isMining = true;
+
+		float timeElapsed = 0;
+
+		while (timeElapsed <= grid.beltCycleTime * 4)
+		{
+			timeElapsed += Time.deltaTime;
+		}
+
+		GameObject chunkParent;
+		BeltLogic outputBelt;
+		if (grid.worldChunks.TryGetValue(GetChunk(drill.transform.position + drill.outputLocation), out chunkParent))
+			if (chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(drill.transform.position).x, PosToPosInChunk(drill.transform.position).y].TryGetComponent<BeltLogic>(out outputBelt))
+				if (outputBelt.getItemSlot())
+				{
+					GameObject itemSlot = outputBelt.getItemSlot();
+					itemSlot = Instantiate(outputOre, outputBelt.transform.position, Quaternion.identity, chunkParent.transform);
+					Debug.Log("Item mined");
+				}
+
+
+		drill.isMining = false;
+		yield return null;
 	}
 }
