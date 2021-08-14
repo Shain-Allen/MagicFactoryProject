@@ -23,7 +23,10 @@ public class MysticDrillLogic : Placeable
 
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this);
+		RemoveFromWorld(grid, this, Vector3.up + Vector3.left); RemoveFromWorld(grid, this, Vector3.up); RemoveFromWorld(grid, this, Vector3.up + Vector3.right);
+		RemoveFromWorld(grid, this, Vector3.left); RemoveFromWorld(grid, this); RemoveFromWorld(grid, this, Vector3.right);
+		RemoveFromWorld(grid, this, Vector3.down + Vector3.left); RemoveFromWorld(grid, this, Vector3.down); RemoveFromWorld(grid, this, Vector3.down + Vector3.right);
+
 		Destroy(gameObject);
 	}
 
