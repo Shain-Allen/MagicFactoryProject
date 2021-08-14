@@ -28,6 +28,14 @@ public class PlaceableHelpers
 			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = Placeable.gameObject;
 	}
 
+	// to enable placement of objects that are larger then a 1x1 grid or a custom shape
+	public static void AddToWorld(GridControl grid, Placeable placeable, Vector3 posOffSet)
+	{
+		GameObject chunkPlaceholder;
+		if (grid.worldChunks.TryGetValue(GetChunk(placeable.transform.position + posOffSet), out chunkPlaceholder))
+			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = placeable.gameObject;
+	}
+
 	// Remove the IC from any references to it
 	public static void RemoveFromWorld(GridControl grid, Placeable Placeable)
 	{

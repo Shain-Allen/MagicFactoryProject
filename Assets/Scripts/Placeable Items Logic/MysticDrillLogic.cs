@@ -14,7 +14,9 @@ public class MysticDrillLogic : Placeable
 		grid = _grid;
 		outputLocation = transform.up * 2;
 
-		AddToWorld(grid, this);
+		AddToWorld(grid, this, Vector3.up + Vector3.left); AddToWorld(grid, this, Vector3.up); AddToWorld(grid, this, Vector3.up + Vector3.right);
+		AddToWorld(grid, this, Vector3.left); AddToWorld(grid, this); AddToWorld(grid, this, Vector3.right);
+		AddToWorld(grid, this, Vector3.down + Vector3.left); AddToWorld(grid, this, Vector3.down); AddToWorld(grid, this, Vector3.down + Vector3.right);
 
 		grid.Tick += TryMineOre;
 	}
