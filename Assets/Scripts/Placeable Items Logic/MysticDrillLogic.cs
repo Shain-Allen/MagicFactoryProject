@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static PlaceableHelpers;
 using static HelpFuncs;
@@ -10,7 +11,7 @@ public class MysticDrillLogic : Placeable
 
 	private Vector3 outputLocation;
 
-	public bool isMining = false;
+	private bool isMining = false;
 
 	public override void PlacedAction(GridControl _grid)
 	{
@@ -42,15 +43,20 @@ public class MysticDrillLogic : Placeable
 		//Debug.Log("Event triggered");
 		if (!isMining)
 		{
+			List<GameObject> ores = new List<GameObject>();
 			GameObject outputOre = null;
-			while (!outputOre)
-			{
-				Debug.Log("Attempt to find ore");
-				Vector2 orePos = new Vector2(UnityEngine.Random.Range(-1, 2) + transform.position.x, UnityEngine.Random.Range(-1, 2) + transform.position.y);
-				GameObject chunkParent;
-				if (grid.worldChunks.TryGetValue(GetChunk(transform.position), out chunkParent))
-					chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(orePos).x, PosToPosInChunk(orePos).y].GetComponent<BaseOre>().MineOre(out outputOre);
-			}
+
+			GameObject chunkParent;
+			for (int x = -1; x < 2; x++)
+				for (int y = 1; y > -2; y--)
+				{
+					if (grid.worldChunks.TryGetValue(GetChunk(transform.position + new Vector3(x, y)), out chunkParent))
+					{
+						if (chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y])
+							ores.Add(chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y]);
+					}
+				}
+
 			StartCoroutine(Mining(this, outputOre));
 		}
 	}

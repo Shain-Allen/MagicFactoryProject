@@ -15,6 +15,12 @@ public class BaseOre : MonoBehaviour
 	{
 		remainingOre = Mathf.RoundToInt(oreInfo.baseOreAmount * oreInfo.DistanceMultiplier);
 		grid = _grid;
+
+		GameObject chunkParent;
+
+		if (grid.worldChunks.TryGetValue(GetChunk(transform.position), out chunkParent))
+			if (!chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position).x, PosToPosInChunk(transform.position).y])
+				chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position).x, PosToPosInChunk(transform.position).y] = gameObject;
 	}
 
 	public void MineOre(out GameObject returnOre)
