@@ -86,16 +86,16 @@ public class MysticDrillLogic : Placeable
 		BeltLogic outputBelt;
 		if (grid.worldChunks.TryGetValue(GetChunk(drill.transform.position + drill.outputLocation), out chunkParent))
 		{
-			Debug.Log($"Chunk name {chunkParent.name}");
+			//Debug.Log($"Chunk name {chunkParent.name}");
 			if (chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(drill.transform.position + drill.outputLocation).x, PosToPosInChunk(drill.transform.position + drill.outputLocation).y].TryGetComponent<BeltLogic>(out outputBelt))
 			{
-				Debug.Log($"belt should be here {outputBelt.transform.position}\n belt is here {drill.transform.position + drill.outputLocation}");
+				//Debug.Log($"belt should be here {outputBelt.transform.position}\n belt is here {drill.transform.position + drill.outputLocation}");
 				if (!outputBelt.getItemSlot())
 				{
 					GameObject returnOre;
 					outputOre.GetComponent<BaseOre>().MineOre(out returnOre);
 					outputBelt.InsertItem(returnOre);
-					Debug.Log("Item mined");
+					//Debug.Log("Item mined");
 				}
 			}
 		}
