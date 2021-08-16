@@ -52,6 +52,39 @@ public class PlaceableHelpers
 			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = null;
 	}
 
+	// Returns the Ore or Gas at the provided location, or null if there isn't an anything there
+	public static T GetResourceAt<T>(GridControl grid, Vector2 pos) where T : BaseResource
+	{
+		GameObject objAtPos, chunkParent;
+		T oreAtPos;
+
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+		{
+			objAtPos = chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out oreAtPos)))
+			{
+				return oreAtPos;
+			}
+		}
+		return default(T);
+	}
+
+	public static T GetPlaceableAt<T>(GridControl grid, Vector2 pos) where T : Placeable
+	{
+		GameObject objAtPos, chunkParent;
+		T placeableAtPos;
+
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+		{
+			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out placeableAtPos)))
+			{
+				return placeableAtPos;
+			}
+		}
+		return default(T);
+	}
+
 	// Returns the IC at the provided location, or null if there isn't an IC there
 	public static ItemControl GetICAt(GridControl grid, Vector2 pos)
 	{

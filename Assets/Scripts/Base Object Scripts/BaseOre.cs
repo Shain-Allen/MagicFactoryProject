@@ -4,7 +4,7 @@ using UnityEngine;
 using static PlaceableHelpers;
 using static HelpFuncs;
 
-public class BaseOre : MonoBehaviour
+public class BaseOre : BaseResource
 {
 	public OreInfoSO oreInfo;
 	public int remainingOre;

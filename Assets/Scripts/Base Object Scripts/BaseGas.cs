@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseGas : MonoBehaviour
+public class BaseGas : BaseResource
 {
 	public GasInfoSO gasInfo;
 	public int remainingGas;

@@ -40,22 +40,19 @@ public class MysticDrillLogic : Placeable
 
 	public void TryMineOre(object sender, EventArgs e)
 	{
-		//Debug.Log("Event triggered");
 		if (!isMining)
 		{
 			List<GameObject> ores = new List<GameObject>();
 			GameObject outputOre = null;
 
 			GameObject chunkParent;
-			for (int x = -1; x < 2; x++)
+			for (int x = -2; x <= 2; x++)
 			{
-				for (int y = 1; y > -2; y--)
+				for (int y = 2; y >= -2; y--)
 				{
-					if (grid.worldChunks.TryGetValue(GetChunk(transform.position + new Vector3(x, y)), out chunkParent))
+					chunkParent = GetChunkParentByPos(grid, transform.position + new Vector3(x, y));
+					if (chunkParent)
 					{
-						//Debug.Log(transform.position);
-						//Debug.Log(transform.position + new Vector3(x, y));
-						//Debug.Log(chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y].name);
 						if (chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y])
 						{
 							ores.Add(chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y]);
@@ -75,37 +72,23 @@ public class MysticDrillLogic : Placeable
 
 	private IEnumerator Mining(MysticDrillLogic drill, GameObject outputOre)
 	{
-		//Debug.Log("IEnumerator Triggered");
 		drill.isMining = true;
-
-		//float timeElapsed = 0;
-		/*
-		while (timeElapsed <= grid.beltCycleTime * 4 * 10)
-		{
-			timeElapsed += Time.deltaTime;
-		}*/
-
 		yield return new WaitForSeconds(grid.beltCycleTime * 4);
 
-		GameObject chunkParent;
 		BeltLogic outputBelt;
-		if (grid.worldChunks.TryGetValue(GetChunk(drill.transform.position + drill.outputLocation), out chunkParent))
+		GameObject chunkParent = GetChunkParentByPos(grid, drill.transform.position + drill.outputLocation);
+		if (chunkParent && GetICAt(grid, drill.transform.position + drill.outputLocation).TryGetComponent<BeltLogic>(out outputBelt))
 		{
-			//Debug.Log($"Chunk name {chunkParent.name}");
-			if (chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(drill.transform.position + drill.outputLocation).x, PosToPosInChunk(drill.transform.position + drill.outputLocation).y].TryGetComponent<BeltLogic>(out outputBelt))
+			yield return new WaitWhile(() => outputBelt.getItemSlot());
+
+			// This should never be false, but it's just in case because this is a coroutine
+			if (!outputBelt.getItemSlot())
 			{
-
-				yield return new WaitWhile(() => outputBelt.getItemSlot());
-
-				//Debug.Log($"belt should be here {outputBelt.transform.position}\n belt is here {drill.transform.position + drill.outputLocation}");
-				if (!outputBelt.getItemSlot())
-				{
-					GameObject returnOre;
-					outputOre.GetComponent<BaseOre>().MineOre(out returnOre);
-					outputBelt.InsertItem(returnOre);
-					//Debug.Log("Item mined");
-				}
+				GameObject returnOre;
+				outputOre.GetComponent<BaseOre>().MineOre(out returnOre);
+				outputBelt.InsertItem(returnOre);
 			}
+
 		}
 
 		drill.isMining = false;
