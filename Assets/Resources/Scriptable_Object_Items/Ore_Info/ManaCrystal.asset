@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073ebd50c55f5504e9b1d3eb9fa1383a, type: 3}
   m_Name: ManaCrystal
   m_EditorClassIdentifier: 
-  baseOreAmount: 1
-  DistanceMultiplier: 1
-  returnObjectIndex: 0
+  baseOreAmount: 10
+  DistanceMultiplier: 1.1
+  returnObjectIndex: 1
   itemDictionary: {fileID: 11400000, guid: a19275364c4f3dd40a2a5de1dbdda8f2, type: 2}
