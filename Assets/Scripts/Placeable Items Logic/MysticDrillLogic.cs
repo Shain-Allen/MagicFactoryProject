@@ -64,9 +64,12 @@ public class MysticDrillLogic : Placeable
 				}
 			}
 
-			outputOre = ores[UnityEngine.Random.Range(0, ores.Count)];
+			if (ores.Count != 0)
+			{
+				outputOre = ores[UnityEngine.Random.Range(0, ores.Count)];
 
-			StartCoroutine(Mining(this, outputOre));
+				StartCoroutine(Mining(this, outputOre));
+			}
 		}
 	}
 
@@ -75,12 +78,14 @@ public class MysticDrillLogic : Placeable
 		//Debug.Log("IEnumerator Triggered");
 		drill.isMining = true;
 
-		float timeElapsed = 0;
-
-		while (timeElapsed <= grid.beltCycleTime * 4)
+		//float timeElapsed = 0;
+		/*
+		while (timeElapsed <= grid.beltCycleTime * 4 * 10)
 		{
 			timeElapsed += Time.deltaTime;
-		}
+		}*/
+
+		yield return new WaitForSeconds(grid.beltCycleTime * 4);
 
 		GameObject chunkParent;
 		BeltLogic outputBelt;
@@ -89,6 +94,9 @@ public class MysticDrillLogic : Placeable
 			//Debug.Log($"Chunk name {chunkParent.name}");
 			if (chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(drill.transform.position + drill.outputLocation).x, PosToPosInChunk(drill.transform.position + drill.outputLocation).y].TryGetComponent<BeltLogic>(out outputBelt))
 			{
+
+				//yield return new WaitWhile(() => outputBelt.getItemSlot());
+
 				//Debug.Log($"belt should be here {outputBelt.transform.position}\n belt is here {drill.transform.position + drill.outputLocation}");
 				if (!outputBelt.getItemSlot())
 				{
