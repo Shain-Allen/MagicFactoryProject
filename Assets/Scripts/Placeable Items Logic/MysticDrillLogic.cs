@@ -18,7 +18,7 @@ public class MysticDrillLogic : Placeable
 		grid = _grid;
 		outputLocation = transform.up * 2;
 
-		Debug.Log(gameObject.transform.position + outputLocation);
+		//Debug.Log(gameObject.transform.position + outputLocation);
 
 		AddToWorld(grid, this, Vector3.up + Vector3.left); AddToWorld(grid, this, Vector3.up); AddToWorld(grid, this, Vector3.up + Vector3.right);
 		AddToWorld(grid, this, Vector3.left); AddToWorld(grid, this); AddToWorld(grid, this, Vector3.right);
@@ -48,14 +48,23 @@ public class MysticDrillLogic : Placeable
 
 			GameObject chunkParent;
 			for (int x = -1; x < 2; x++)
+			{
 				for (int y = 1; y > -2; y--)
 				{
 					if (grid.worldChunks.TryGetValue(GetChunk(transform.position + new Vector3(x, y)), out chunkParent))
 					{
+						//Debug.Log(transform.position);
+						//Debug.Log(transform.position + new Vector3(x, y));
+						//Debug.Log(chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y].name);
 						if (chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y])
+						{
 							ores.Add(chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y]);
+						}
 					}
 				}
+			}
+
+			outputOre = ores[UnityEngine.Random.Range(0, ores.Count)];
 
 			StartCoroutine(Mining(this, outputOre));
 		}
@@ -63,7 +72,7 @@ public class MysticDrillLogic : Placeable
 
 	private IEnumerator Mining(MysticDrillLogic drill, GameObject outputOre)
 	{
-		Debug.Log("IEnumerator Triggered");
+		//Debug.Log("IEnumerator Triggered");
 		drill.isMining = true;
 
 		float timeElapsed = 0;
