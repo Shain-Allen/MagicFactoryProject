@@ -16,7 +16,7 @@ public class MergerLeftLogic : ItemControl
 		// Needs to create and pair with SplitMergeRightLogic
 		float rightSide = (transform.rotation.eulerAngles.z + 270) % 360;
 		Vector3 pairPosition = transform.position + EulerToVector(rightSide);
-		if (GetPlaceableAt(grid, pairPosition) != null)
+		if (GetPlaceableAt<Placeable>(grid, pairPosition) != null)
 		{
 			base.RemovedAction();
 			return;

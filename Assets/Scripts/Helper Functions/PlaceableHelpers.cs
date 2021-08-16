@@ -5,21 +5,6 @@ using static HelpFuncs;
 
 public class PlaceableHelpers
 {
-	// Returns the Placeable at the provided location, or null if there isn't a Placeable there
-	public static Placeable GetPlaceableAt(GridControl grid, Vector2 pos)
-	{
-		GameObject objAtPos, chunkParent;
-		Placeable PlaceableAtPos;
-
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
-		{
-			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
-			if (objAtPos != null && (objAtPos.TryGetComponent<Placeable>(out PlaceableAtPos)))
-				return PlaceableAtPos;
-		}
-		return null;
-	}
-
 	// Places the given IC into the world and the chunk array
 	public static void AddToWorld(GridControl grid, Placeable Placeable)
 	{
@@ -85,28 +70,11 @@ public class PlaceableHelpers
 		return default(T);
 	}
 
-	// Returns the IC at the provided location, or null if there isn't an IC there
-	public static ItemControl GetICAt(GridControl grid, Vector2 pos)
-	{
-		GameObject objAtPos, chunkParent;
-		ItemControl itemControlAtPos;
-
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
-		{
-			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
-			if (objAtPos != null && (objAtPos.TryGetComponent<ItemControl>(out itemControlAtPos)))
-			{
-				return itemControlAtPos;
-			}
-		}
-		return null;
-	}
-
 	// Attaches the front belt if possible, copy documentation from ItemControl.cs
 	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC)
 	{
 		Vector3 direction = EulerToVector(IC.transform.rotation.eulerAngles.z);
-		ItemControl ICFront = GetICAt(grid, IC.transform.position + direction);
+		ItemControl ICFront = GetPlaceableAt<ItemControl>(grid, IC.transform.position + direction);
 		IC.setFrontBelt(null);
 
 		// Make sure the IC in front exists, allows this to attach, and isn't occupied
@@ -127,7 +95,7 @@ public class PlaceableHelpers
 	{
 		int connectionAngle = (int)(IC.transform.rotation.eulerAngles.z + relativeAngle) % 360;
 		Vector3 deltaPos = EulerToVector(connectionAngle);
-		ItemControl ICSide = GetICAt(grid, IC.transform.position + deltaPos);
+		ItemControl ICSide = GetPlaceableAt<ItemControl>(grid, IC.transform.position + deltaPos);
 		IC.setBackBelt(null);
 
 		// If IC on the given side exists, allows this to attach, and isn't occupied

@@ -62,7 +62,7 @@ public class TileBrush : MonoBehaviour
 	{
 		if (brushItem && !EventSystem.current.IsPointerOverGameObject())
 		{
-			if (GetPlaceableAt(grid, roundedMousePos) != null)
+			if (GetPlaceableAt<Placeable>(grid, roundedMousePos) != null)
 				return false;
 			GameObject tempChunkParent = GetChunkParentByPos(grid, roundedMousePos);
 			GameObject tempPlaceable = Instantiate(brushItem, roundedMousePos, itemPreview.transform.rotation, tempChunkParent.transform);
@@ -75,7 +75,7 @@ public class TileBrush : MonoBehaviour
 	// If the user right clicks, destory the targeted Placeable
 	private void TryToDestroy()
 	{
-		Placeable placeableToRemove = GetPlaceableAt(grid, roundedMousePos);
+		Placeable placeableToRemove = GetPlaceableAt<Placeable>(grid, roundedMousePos);
 		if (placeableToRemove == null)
 			return;
 		placeableToRemove.RemovedAction();
@@ -135,7 +135,7 @@ public class TileBrush : MonoBehaviour
 		if (!TryToPlace())
 		{
 			IOpenMenu placeable;
-			if ((placeable = GetPlaceableAt(grid, roundedMousePos) as IOpenMenu) != null && !brushItem)
+			if ((placeable = GetPlaceableAt<Placeable>(grid, roundedMousePos) as IOpenMenu) != null && !brushItem)
 			{
 				placeable.OpenMenu();
 			}

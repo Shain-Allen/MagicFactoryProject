@@ -77,7 +77,7 @@ public class MysticDrillLogic : Placeable
 
 		BeltLogic outputBelt;
 		GameObject chunkParent = GetChunkParentByPos(grid, drill.transform.position + drill.outputLocation);
-		if (chunkParent && GetICAt(grid, drill.transform.position + drill.outputLocation).TryGetComponent<BeltLogic>(out outputBelt))
+		if (chunkParent && GetPlaceableAt<ItemControl>(grid, drill.transform.position + drill.outputLocation).TryGetComponent<BeltLogic>(out outputBelt))
 		{
 			yield return new WaitWhile(() => outputBelt.getItemSlot());
 
