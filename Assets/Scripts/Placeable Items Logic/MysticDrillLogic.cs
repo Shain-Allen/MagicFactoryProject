@@ -95,7 +95,7 @@ public class MysticDrillLogic : Placeable
 			if (chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(drill.transform.position + drill.outputLocation).x, PosToPosInChunk(drill.transform.position + drill.outputLocation).y].TryGetComponent<BeltLogic>(out outputBelt))
 			{
 
-				//yield return new WaitWhile(() => outputBelt.getItemSlot());
+				yield return new WaitWhile(() => outputBelt.getItemSlot());
 
 				//Debug.Log($"belt should be here {outputBelt.transform.position}\n belt is here {drill.transform.position + drill.outputLocation}");
 				if (!outputBelt.getItemSlot())
