@@ -84,4 +84,12 @@ public class BeltLogic : ItemControl
 		if (frontBelt == null)
 			MoveItem();
 	}
+
+	public void InsertItem(GameObject newItem)
+	{
+		if (itemSlot)
+			return;
+
+		itemSlot = Instantiate(newItem, transform.position, Quaternion.identity, transform.parent);
+	}
 }
