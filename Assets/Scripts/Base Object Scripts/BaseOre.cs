@@ -13,7 +13,7 @@ public class BaseOre : BaseResource
 
 	public void GenerateOre(GridControl _grid, GameObject chunkParent)
 	{
-		remainingOre = Mathf.RoundToInt(oreInfo.baseOreAmount * oreInfo.DistanceMultiplier);
+		remainingOre = Mathf.RoundToInt(oreInfo.baseOreAmount + oreInfo.DistanceMultiplier * Vector3.Distance(transform.position, Vector3.zero));
 		grid = _grid;
 
 		chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position).x, PosToPosInChunk(transform.position).y] = gameObject;
