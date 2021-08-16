@@ -5,37 +5,48 @@ using static HelpFuncs;
 
 public class PlaceableHelpers
 {
-	// Places the given IC into the world and the chunk array
-	public static void AddToWorld(GridControl grid, Placeable Placeable)
+	// Returns the Placeable of type T at the provided location, or null if there isn't anything there
+	public static T GetPlaceableAt<T>(GridControl grid, Vector2 pos) where T : Placeable
 	{
-		GameObject chunkPlaceholder;
-		if (grid.worldChunks.TryGetValue(GetChunk(Placeable.transform.position), out chunkPlaceholder))
-			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = Placeable.gameObject;
+		GameObject objAtPos, chunkParent;
+		T placeableAtPos;
+
+		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+		{
+			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out placeableAtPos)))
+			{
+				return placeableAtPos;
+			}
+		}
+		return default(T);
 	}
 
-	// to enable placement of objects that are larger then a 1x1 grid or a custom shape
+	// Places the given Placeable into the world and the chunk array. PosOffSet alters the position of the placeable, used for large placeables
+	public static void AddToWorld(GridControl grid, Placeable placeable)
+	{
+		AddToWorld(grid, placeable, Vector3.zero);
+	}
 	public static void AddToWorld(GridControl grid, Placeable placeable, Vector3 posOffSet)
 	{
-		GameObject chunkPlaceholder;
-		if (grid.worldChunks.TryGetValue(GetChunk(placeable.transform.position + posOffSet), out chunkPlaceholder))
-			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = placeable.gameObject;
+		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
+		if (chunkParent)
+			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = placeable.gameObject;
 	}
 
-	// Remove the IC from any references to it
-	public static void RemoveFromWorld(GridControl grid, Placeable Placeable)
+	// Remove the Placeable from any references to it. PosOffSet alters the position of the placeable, used for large placeables
+	public static void RemoveFromWorld(GridControl grid, Placeable placeable)
 	{
-		GameObject chunkPlaceholder;
-		if (grid.worldChunks.TryGetValue(GetChunk(Placeable.transform.position), out chunkPlaceholder))
-			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(Placeable.transform.position).x, PosToPosInChunk(Placeable.transform.position).y] = null;
+		RemoveFromWorld(grid, placeable, Vector3.zero);
 	}
-
-	// to enable placement of objects that are larger then a 1x1 grid or a custom shape
 	public static void RemoveFromWorld(GridControl grid, Placeable placeable, Vector3 posOffSet)
 	{
-		GameObject chunkPlaceholder;
-		if (grid.worldChunks.TryGetValue(GetChunk(placeable.transform.position + posOffSet), out chunkPlaceholder))
-			chunkPlaceholder.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = null;
+		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
+		if (chunkParent)
+			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = null;
 	}
+
+	/* The Below Function Belongs in its own ResourceHelpers.cs */
 
 	// Returns the Ore or Gas at the provided location, or null if there isn't an anything there
 	public static T GetResourceAt<T>(GridControl grid, Vector2 pos) where T : BaseResource
@@ -54,21 +65,7 @@ public class PlaceableHelpers
 		return default(T);
 	}
 
-	public static T GetPlaceableAt<T>(GridControl grid, Vector2 pos) where T : Placeable
-	{
-		GameObject objAtPos, chunkParent;
-		T placeableAtPos;
-
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
-		{
-			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
-			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out placeableAtPos)))
-			{
-				return placeableAtPos;
-			}
-		}
-		return default(T);
-	}
+	/* Everything Below Belongs in an ItemControlHelpers.cs */
 
 	// Attaches the front belt if possible, copy documentation from ItemControl.cs
 	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC)

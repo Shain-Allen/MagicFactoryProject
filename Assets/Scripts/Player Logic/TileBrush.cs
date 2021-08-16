@@ -54,7 +54,7 @@ public class TileBrush : MonoBehaviour
 		Vector2Int bottomLeftBound = ChunkManager.getBottomLeftBound(cam);
 		Vector2Int topRightBound = ChunkManager.getTopRightBound(cam);
 		ChunkManager.LoadChunks(grid, bottomLeftBound, topRightBound);
-		ChunkManager.UnloadChunks(grid, bottomLeftBound, topRightBound);
+		// ChunkManager.UnloadChunks(grid, bottomLeftBound, topRightBound);
 	}
 
 	// If the user is left clicks, place their held Placeable
