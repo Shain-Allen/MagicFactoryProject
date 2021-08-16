@@ -3,95 +3,79 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static PlaceableHelpers;
-using static HelpFuncs;
 
 public class MysticDrillLogic : Placeable
 {
 	private GridControl grid;
-
 	private Vector3 outputLocation;
-
 	private bool isMining = false;
+	private List<BaseOre> minableOres = new List<BaseOre>();
+	[SerializeField]
+	private int miningRadius = 2;
 
 	public override void PlacedAction(GridControl _grid)
 	{
 		grid = _grid;
 		outputLocation = transform.up * 2;
 
-		//Debug.Log(gameObject.transform.position + outputLocation);
+		// Make sure this can be placed, otherwise stop
+		for (int x = -1; x <= 1; x++)
+			for (int y = -1; y <= 1; y++)
+				if (GetPlaceableAt<Placeable>(grid, transform.position + (Vector3.right * x) + (Vector3.up * y)))
+					return;
 
-		AddToWorld(grid, this, Vector3.up + Vector3.left); AddToWorld(grid, this, Vector3.up); AddToWorld(grid, this, Vector3.up + Vector3.right);
-		AddToWorld(grid, this, Vector3.left); AddToWorld(grid, this); AddToWorld(grid, this, Vector3.right);
-		AddToWorld(grid, this, Vector3.down + Vector3.left); AddToWorld(grid, this, Vector3.down); AddToWorld(grid, this, Vector3.down + Vector3.right);
+		// Place this drill into the world
+		for (int x = -1; x <= 1; x++)
+			for (int y = -1; y <= 1; y++)
+				AddToWorld(grid, this, (Vector3.right * x) + (Vector3.up * y));
+
+		// Fill the minableOres list with all the minable ores
+		BaseOre tempOre;
+		for (int x = -miningRadius; x <= miningRadius; x++)
+			for (int y = -miningRadius; y <= miningRadius; y++)
+				if (tempOre = GetResourceAt<BaseOre>(grid, transform.position + new Vector3(x, y)))
+					minableOres.Add(tempOre);
 
 		grid.Tick += TryMineOre;
 	}
 
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this, Vector3.up + Vector3.left); RemoveFromWorld(grid, this, Vector3.up); RemoveFromWorld(grid, this, Vector3.up + Vector3.right);
-		RemoveFromWorld(grid, this, Vector3.left); RemoveFromWorld(grid, this); RemoveFromWorld(grid, this, Vector3.right);
-		RemoveFromWorld(grid, this, Vector3.down + Vector3.left); RemoveFromWorld(grid, this, Vector3.down); RemoveFromWorld(grid, this, Vector3.down + Vector3.right);
+		for (int x = -1; x <= 1; x++)
+			for (int y = -1; y <= 1; y++)
+				RemoveFromWorld(grid, this, (Vector3.right * x) + (Vector3.up * y));
 
 		grid.Tick -= TryMineOre;
-
 		Destroy(gameObject);
 	}
 
 	public void TryMineOre(object sender, EventArgs e)
 	{
-		if (!isMining)
-		{
-			List<GameObject> ores = new List<GameObject>();
-			GameObject outputOre = null;
-
-			GameObject chunkParent;
-			for (int x = -2; x <= 2; x++)
-			{
-				for (int y = 2; y >= -2; y--)
-				{
-					chunkParent = GetChunkParentByPos(grid, transform.position + new Vector3(x, y));
-					if (chunkParent)
-					{
-						if (chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y])
-						{
-							ores.Add(chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position + new Vector3(x, y)).x, PosToPosInChunk(transform.position + new Vector3(x, y)).y]);
-						}
-					}
-				}
-			}
-
-			if (ores.Count != 0)
-			{
-				outputOre = ores[UnityEngine.Random.Range(0, ores.Count)];
-
-				StartCoroutine(Mining(this, outputOre));
-			}
-		}
+		if (!isMining && minableOres.Count != 0)
+			StartCoroutine(Mining());
 	}
 
-	private IEnumerator Mining(MysticDrillLogic drill, GameObject outputOre)
+	private IEnumerator Mining()
 	{
-		drill.isMining = true;
+		int oreInListToMine = UnityEngine.Random.Range(0, minableOres.Count);
+		BaseOre outputOre = minableOres[oreInListToMine];
+		GameObject returnOre;
+		isMining = true;
+
 		yield return new WaitForSeconds(grid.beltCycleTime * 4);
 
-		BeltLogic outputBelt;
-		GameObject chunkParent = GetChunkParentByPos(grid, drill.transform.position + drill.outputLocation);
-		if (chunkParent && GetPlaceableAt<ItemControl>(grid, drill.transform.position + drill.outputLocation).TryGetComponent<BeltLogic>(out outputBelt))
+		BeltLogic outputBelt = GetPlaceableAt<BeltLogic>(grid, transform.position + outputLocation);
+		if (outputBelt)
 		{
 			yield return new WaitWhile(() => outputBelt.getItemSlot());
 
-			// This should never be false, but it's just in case because this is a coroutine
-			if (!outputBelt.getItemSlot())
-			{
-				GameObject returnOre;
-				outputOre.GetComponent<BaseOre>().MineOre(out returnOre);
-				outputBelt.InsertItem(returnOre);
-			}
-
+			outputOre.MineOre(out returnOre);
+			outputBelt.InsertItem(returnOre);
+			if (outputOre == null)
+				minableOres.RemoveAt(oreInListToMine);
 		}
 
-		drill.isMining = false;
+		isMining = false;
 		yield return null;
 	}
 }

@@ -23,10 +23,9 @@ public class BaseOre : BaseResource
 	{
 		remainingOre--;
 		returnOre = oreInfo.itemDictionary.itemList[oreInfo.returnObjectIndex];
-		GameObject chunkParent;
-		if (remainingOre == 0 && grid.worldChunks.TryGetValue(GetChunk(transform.position), out chunkParent))
+		if (remainingOre == 0)
 		{
-			chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position).x, PosToPosInChunk(transform.position).y] = null;
+			RemoveResourceFromWorld(grid, this);
 			Destroy(gameObject);
 		}
 	}

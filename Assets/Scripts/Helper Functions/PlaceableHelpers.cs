@@ -64,6 +64,12 @@ public class PlaceableHelpers
 		}
 		return default(T);
 	}
+	public static void RemoveResourceFromWorld(GridControl grid, BaseResource resource)
+	{
+		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);
+		if (chunkParent)
+			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(resource.transform.position).x, PosToPosInChunk(resource.transform.position).y] = null;
+	}
 
 	/* Everything Below Belongs in an ItemControlHelpers.cs */
 
