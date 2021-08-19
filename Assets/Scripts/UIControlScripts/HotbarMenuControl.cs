@@ -39,8 +39,9 @@ public class HotbarMenuControl : MonoBehaviour
 	private void ResetInvSlot(Button invslot_)
 	{
 		invslot_.onClick.RemoveAllListeners();
-		invslot_.onClick.AddListener(() => itemSelector.gameObject.SetActive(true));
-		invslot_.onClick.AddListener(() => UpdateItemSelector(invslot_));
+		invslot_.gameObject.AddComponent<CustomButton>();
+		//invslot_.onClick.AddListener(() => itemSelector.gameObject.SetActive(true));
+		//invslot_.onClick.AddListener(() => UpdateItemSelector(invslot_));
 	}
 
 	private void UpdateItemSelector(Button invslot_)
