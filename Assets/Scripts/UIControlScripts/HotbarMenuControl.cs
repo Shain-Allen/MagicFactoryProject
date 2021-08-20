@@ -46,9 +46,6 @@ public class HotbarMenuControl : MonoBehaviour
 		invslot_.onClick.RemoveAllListeners();
 
 		invslot_.gameObject.AddComponent<CustomButton>().SetButtonReference(itemSelector, this, invslot_);
-		//Debug.Log($"Setting button references {invslot_.gameObject.GetComponent<CustomButton>()}");
-		//invslot_.onClick.AddListener(() => itemSelector.gameObject.SetActive(true));
-		//invslot_.onClick.AddListener(() => UpdateItemSelector(invslot_));
 	}
 
 	public void UpdateItemSelector(Button invslot_)
@@ -60,14 +57,12 @@ public class HotbarMenuControl : MonoBehaviour
 			int index = i;
 			tempButton.onClick.AddListener(() => UpdateItemSlot(invslot_, index));
 			tempButton.onClick.AddListener(() => itemSelector.gameObject.SetActive(false));
-			Debug.Log(i);
 		}
 	}
 
 	private void UpdateItemSlot(Button invslot_, int itemIndex_)
 	{
 		invslot_.onClick.RemoveAllListeners();
-		Debug.Log(itemIndex_);
 		invslot_.onClick.AddListener(() => brush.ChangeBrushItem(itemIndex_));
 		invslot_.GetComponent<Image>().sprite = placeables.itemList[itemIndex_].GetComponent<SpriteRenderer>().sprite;
 		invslot_.GetComponent<Image>().color = placeables.itemList[itemIndex_].GetComponent<SpriteRenderer>().color;
