@@ -12,8 +12,8 @@ public class CustomButton : MonoBehaviour, IPointerClickHandler
 	{
 		if (eventData_.button == PointerEventData.InputButton.Middle)
 		{
-			itemSelector.gameObject.SetActive(true);
 			HotbarController.UpdateItemSelector(button);
+			itemSelector.gameObject.SetActive(true);
 		}
 	}
 

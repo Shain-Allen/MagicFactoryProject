@@ -35,8 +35,6 @@ public class HotbarMenuControl : MonoBehaviour
 		{
 			GameObject newButton = Instantiate(buttonSlot, itemSelector.transform.position, Quaternion.identity, itemSelector.transform);
 
-			Debug.Log(newButton.name);
-
 			newButton.GetComponent<Image>().sprite = placeables.itemList[i].GetComponent<SpriteRenderer>().sprite;
 			newButton.GetComponent<Image>().color = placeables.itemList[i].GetComponent<SpriteRenderer>().color;
 			itemSelectorChoices[i] = newButton.GetComponent<Button>();
@@ -55,19 +53,23 @@ public class HotbarMenuControl : MonoBehaviour
 
 	public void UpdateItemSelector(Button invslot_)
 	{
-		for (int i = 0; i < itemSelectorChoices.Length; i++)
+		for (int i = 0; i < placeables.itemList.Length; i++)
 		{
-			itemSelectorChoices[i].onClick.RemoveAllListeners();
-			itemSelectorChoices[i].onClick.AddListener(() => UpdateItemSlot(invslot_, i));
-			itemSelectorChoices[i].onClick.AddListener(() => itemSelector.gameObject.SetActive(false));
+			Button tempButton = itemSelectorChoices[i];
+			tempButton.onClick.RemoveAllListeners();
+			int index = i;
+			tempButton.onClick.AddListener(() => UpdateItemSlot(invslot_, index));
+			tempButton.onClick.AddListener(() => itemSelector.gameObject.SetActive(false));
+			Debug.Log(i);
 		}
 	}
 
-	private void UpdateItemSlot(Button invslot_, int ItemIndex)
+	private void UpdateItemSlot(Button invslot_, int itemIndex_)
 	{
-		ResetInvSlot(invslot_);
-		invslot_.onClick.AddListener(() => brush.ChangeBrushItem(ItemIndex));
-		invslot_.GetComponent<Image>().sprite = placeables.itemList[ItemIndex].GetComponent<SpriteRenderer>().sprite;
-		invslot_.GetComponent<Image>().color = placeables.itemList[ItemIndex].GetComponent<SpriteRenderer>().color;
+		invslot_.onClick.RemoveAllListeners();
+		Debug.Log(itemIndex_);
+		invslot_.onClick.AddListener(() => brush.ChangeBrushItem(itemIndex_));
+		invslot_.GetComponent<Image>().sprite = placeables.itemList[itemIndex_].GetComponent<SpriteRenderer>().sprite;
+		invslot_.GetComponent<Image>().color = placeables.itemList[itemIndex_].GetComponent<SpriteRenderer>().color;
 	}
 }
