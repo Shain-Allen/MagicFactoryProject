@@ -48,7 +48,7 @@ public class TileBrush : MonoBehaviour
 
 		// Move the camera and player
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
-		UpdatePlayerAnimation();
+		//UpdatePlayerAnimation();
 
 		//See if new chunks need to be loaded or unloaded
 		Vector2Int bottomLeftBound = ChunkManager.getBottomLeftBound(cam);
@@ -115,12 +115,19 @@ public class TileBrush : MonoBehaviour
 	private void PlayerMovementStart(InputAction.CallbackContext context)
 	{
 		moveInput = context.ReadValue<Vector2>();
+
+		animator.SetBool("isWalking", true);
+
+		animator.SetFloat("MoveX", moveInput.x);
+		animator.SetFloat("MoveY", moveInput.y);
 	}
 
 	// Sets movement to 0,0 when WASD is not being pressed
 	private void PlayerMovementStop()
 	{
 		moveInput = Vector2.zero;
+
+		animator.SetBool("isWalking", false);
 	}
 
 	// Rotates the brush item 90 degrees clockwise
