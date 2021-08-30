@@ -48,7 +48,6 @@ public class TileBrush : MonoBehaviour
 
 		// Move the camera and player
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
-		//UpdatePlayerAnimation();
 
 		//See if new chunks need to be loaded or unloaded
 		Vector2Int bottomLeftBound = ChunkManager.getBottomLeftBound(cam);
@@ -79,21 +78,6 @@ public class TileBrush : MonoBehaviour
 		if (placeableToRemove == null)
 			return;
 		placeableToRemove.RemovedAction();
-	}
-
-	// Changes the state of the Player animator so it animates correctly
-	private void UpdatePlayerAnimation()
-	{
-		bool isWalking = !(moveInput.x == 0 && moveInput.y == 0);
-		animator.SetBool("isWalking", isWalking);
-
-		if (isWalking)
-		{
-			float facingFloat = VectorToEuler(moveInput) / 90;
-			if (facingFloat % 2 != 0)
-				facingFloat = (facingFloat < 2) ? 1 : 3;
-			animator.SetInteger("facingDirection", (int)facingFloat);
-		}
 	}
 
 	// Updates the brush item to the last clicked item
