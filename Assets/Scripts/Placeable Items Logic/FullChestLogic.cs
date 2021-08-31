@@ -27,7 +27,7 @@ public class FullChestLogic : ItemControl, IOpenMenu
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
-		if (pullingIC && !pullingIC.getItemSlot() && itemToClone)
+		if (pullingIC && pullingIC.AllowItem(this) && itemToClone)
 		{
 			pullingIC.setItemSlot(Instantiate(itemToClone, transform.position, Quaternion.identity, grid.transform));
 			StartCoroutine(SmoothMove(grid, pullingIC.getItemSlot(), transform.position, pullingIC.transform.position));

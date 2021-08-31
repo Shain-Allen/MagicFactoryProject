@@ -49,7 +49,7 @@ public class MergerLeftLogic : ItemControl
 	{
 		// Try to move an item
 		ItemControl sideToMoveFrom = chooseSideToMoveFrom();
-		if (sideToMoveFrom && pullingIC && !pullingIC.getItemSlot())
+		if (sideToMoveFrom && pullingIC && pullingIC.AllowItem(this))
 		{
 			StartCoroutine(SmoothMove(grid, sideToMoveFrom.getItemSlot(), sideToMoveFrom.getItemSlot().transform.position, frontBelt.transform.position));
 			pullingIC.setItemSlot(sideToMoveFrom.getItemSlot());

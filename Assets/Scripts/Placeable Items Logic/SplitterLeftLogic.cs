@@ -67,8 +67,8 @@ public class SplitterLeftLogic : ItemControl
 	private ItemControl chooseOutputBelt()
 	{
 		ItemControl outputBelt = null;
-		bool leftOutputFree = frontBelt && !frontBelt.getItemSlot();
-		bool rightOutputFree = rightPair.getFrontBelt() && !rightPair.getFrontBelt().getItemSlot();
+		bool leftOutputFree = frontBelt && frontBelt.AllowItem(this);
+		bool rightOutputFree = rightPair.getFrontBelt() && rightPair.getFrontBelt().AllowItem(this);
 
 		// If it's left's turn and left is free, choose it
 		if (nextOutputLeft && leftOutputFree)

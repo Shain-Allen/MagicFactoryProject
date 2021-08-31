@@ -107,5 +107,11 @@ public abstract class ItemControl : Placeable
 			return false;
 		return true;
 	}
+	public virtual bool AllowItem(ItemControl askingIC)
+	{
+		if (itemSlot)
+			return false;
+		return true;
+	}
 }
 

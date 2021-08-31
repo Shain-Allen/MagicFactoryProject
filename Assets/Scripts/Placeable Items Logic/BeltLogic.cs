@@ -58,7 +58,7 @@ public class BeltLogic : ItemControl
 	public override void MoveItem(ItemControl pullingIC)
 	{
 		// If this belt can move its item forward legally and immediately
-		if (pullingIC && itemSlot && !pullingIC.getItemSlot())
+		if (pullingIC && itemSlot && pullingIC.AllowItem(this))
 		{
 			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
 			pullingIC.setItemSlot(itemSlot);
