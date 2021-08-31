@@ -17,7 +17,7 @@ public class MergerRightLogic : ItemControl
 
 	public override void TryAttachBackBelt()
 	{
-		TryAttachBackBeltHelper(grid, this, 180);
+		TryAttachBackBeltHelper(grid, this);
 	}
 
 	public override void MoveItem()

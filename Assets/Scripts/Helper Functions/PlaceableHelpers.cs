@@ -95,6 +95,10 @@ public class PlaceableHelpers
 	}
 
 	// Attaches the back belt if possible from the relative angle, copy documentation from ItemControl.cs
+	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC)
+	{
+		TryAttachFrontBeltHelper(grid, IC, 180);
+	}
 	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC, int relativeAngle)
 	{
 		Vector3 dirVector = EulerToVector(relativeAngle + IC.transform.rotation.eulerAngles.z);
@@ -112,11 +116,11 @@ public class PlaceableHelpers
 	}
 
 	// Returns the relative angle of MainIC's facing direction to the angle of AskingIC
-	public static int getRelativeAngle(ItemControl CenterIC, ItemControl deltaIC)
+	public static int getRelativeAngle(ItemControl IC, ItemControl askingIC)
 	{
-		Vector3 deltaPos = deltaIC.transform.position - CenterIC.transform.position;
+		Vector3 deltaPos = askingIC.transform.position - IC.transform.position;
 		float absoluteAngle = VectorToEuler(deltaPos);
-		float relativeAngle = (CenterIC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
+		float relativeAngle = (IC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
 		return (int)Mathf.Round(relativeAngle);
 	}
 
