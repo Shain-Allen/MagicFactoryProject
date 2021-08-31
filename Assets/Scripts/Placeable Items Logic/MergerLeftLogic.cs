@@ -45,22 +45,22 @@ public class MergerLeftLogic : ItemControl
 	}
 
 	// This is the part that needs to get reworked
-	public override void MoveItem()
+	public override void MoveItem(ItemControl pullingIC)
 	{
 		// Try to move an item
 		ItemControl sideToMoveFrom = chooseSideToMoveFrom();
-		if (sideToMoveFrom && frontBelt && !frontBelt.getItemSlot())
+		if (sideToMoveFrom && pullingIC && !pullingIC.getItemSlot())
 		{
 			StartCoroutine(SmoothMove(grid, sideToMoveFrom.getItemSlot(), sideToMoveFrom.getItemSlot().transform.position, frontBelt.transform.position));
-			frontBelt.setItemSlot(sideToMoveFrom.getItemSlot());
+			pullingIC.setItemSlot(sideToMoveFrom.getItemSlot());
 			sideToMoveFrom.setItemSlot(null);
 		}
 
 		// Chain reaction backwards
 		if (backBelt)
-			backBelt.MoveItem();
+			backBelt.MoveItem(this);
 		if (rightPair.getBackBelt())
-			rightPair.getBackBelt().MoveItem();
+			rightPair.getBackBelt().MoveItem(this);
 	}
 
 	// Chooses a random elible side of the SM to move an item from
@@ -94,7 +94,7 @@ public class MergerLeftLogic : ItemControl
 	public void BeltCycle(object sender, EventArgs e)
 	{
 		if (frontBelt == null)
-			MoveItem();
+			MoveItem(null);
 	}
 
 	public override void RemovedAction()

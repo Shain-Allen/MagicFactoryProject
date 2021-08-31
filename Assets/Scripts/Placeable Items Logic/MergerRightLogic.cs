@@ -20,7 +20,7 @@ public class MergerRightLogic : ItemControl
 		TryAttachBackBeltHelper(grid, this);
 	}
 
-	public override void MoveItem()
+	public override void MoveItem(ItemControl pullingIC)
 	{
 		// This should never be called
 	}

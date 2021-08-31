@@ -20,7 +20,7 @@ public class VoidChestLogic : ItemControl
 		TryAttachBackBeltHelper(grid, this);
 	}
 
-	public override void MoveItem()
+	public override void MoveItem(ItemControl pullingIC)
 	{
 		if (itemSlot)
 		{
@@ -28,12 +28,12 @@ public class VoidChestLogic : ItemControl
 			itemSlot = null;
 		}
 		if (backBelt)
-			backBelt.MoveItem();
+			backBelt.MoveItem(this);
 	}
 
 	// This is always a front belt, so always start a chain with this
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		MoveItem();
+		MoveItem(null);
 	}
 }

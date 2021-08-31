@@ -20,7 +20,7 @@ public class SplitterRightLogic : ItemControl
 		TryAttachFrontBeltHelper(grid, this);
 	}
 
-	public override void MoveItem()
+	public override void MoveItem(ItemControl pullingIC)
 	{
 		// Don't do anything to prevent the backBelt from being pulled forward twice
 	}

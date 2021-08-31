@@ -25,12 +25,12 @@ public class FullChestLogic : ItemControl, IOpenMenu
 		TryAttachFrontBeltHelper(grid, this);
 	}
 
-	public override void MoveItem()
+	public override void MoveItem(ItemControl pullingIC)
 	{
-		if (frontBelt && !frontBelt.getItemSlot() && itemToClone)
+		if (pullingIC && !pullingIC.getItemSlot() && itemToClone)
 		{
-			frontBelt.setItemSlot(Instantiate(itemToClone, transform.position, Quaternion.identity, grid.transform));
-			StartCoroutine(SmoothMove(grid, frontBelt.getItemSlot(), transform.position, frontBelt.transform.position));
+			pullingIC.setItemSlot(Instantiate(itemToClone, transform.position, Quaternion.identity, grid.transform));
+			StartCoroutine(SmoothMove(grid, pullingIC.getItemSlot(), transform.position, pullingIC.transform.position));
 		}
 	}
 

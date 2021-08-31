@@ -55,19 +55,19 @@ public class BeltLogic : ItemControl
 		spriteRenderer.flipX = (angle == 270);
 	}
 
-	public override void MoveItem()
+	public override void MoveItem(ItemControl pullingIC)
 	{
 		// If this belt can move its item forward legally and immediately
-		if (frontBelt && itemSlot && !frontBelt.getItemSlot())
+		if (pullingIC && itemSlot && !pullingIC.getItemSlot())
 		{
-			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, frontBelt.transform.position));
-			frontBelt.setItemSlot(itemSlot);
+			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
+			pullingIC.setItemSlot(itemSlot);
 			itemSlot = null;
 		}
 
 		// Chain reaction backwards
 		if (backBelt)
-			backBelt.MoveItem();
+			backBelt.MoveItem(this);
 	}
 
 	public override bool AllowBackBeltFrom(ItemControl askingIC)
@@ -82,7 +82,7 @@ public class BeltLogic : ItemControl
 	public void BeltCycle(object sender, EventArgs e)
 	{
 		if (frontBelt == null)
-			MoveItem();
+			MoveItem(null);
 	}
 
 	public void InsertItem(GameObject newItem)

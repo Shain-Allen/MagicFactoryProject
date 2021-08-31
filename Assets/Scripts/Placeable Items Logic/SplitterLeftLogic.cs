@@ -45,7 +45,7 @@ public class SplitterLeftLogic : ItemControl
 	}
 
 	// This is the part that needs to get reworked
-	public override void MoveItem()
+	public override void MoveItem(ItemControl pullingIC)
 	{
 		ItemControl outputBelt = chooseOutputBelt();
 		// Try to move the item
@@ -58,9 +58,9 @@ public class SplitterLeftLogic : ItemControl
 
 		// Chain reaction backwards
 		if (backBelt)
-			backBelt.MoveItem();
+			backBelt.MoveItem(this);
 		if (rightPair.getBackBelt())
-			rightPair.getBackBelt().MoveItem();
+			rightPair.getBackBelt().MoveItem(this);
 	}
 
 	// Tries to switch back and forth each time, if possible
@@ -102,7 +102,7 @@ public class SplitterLeftLogic : ItemControl
 	public void BeltCycle(object sender, EventArgs e)
 	{
 		if (frontBelt == null)
-			MoveItem();
+			MoveItem(null);
 	}
 
 	public override void RemovedAction()
