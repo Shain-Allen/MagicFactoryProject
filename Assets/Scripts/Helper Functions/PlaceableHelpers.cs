@@ -76,42 +76,39 @@ public class PlaceableHelpers
 	// Attaches the front belt if possible, copy documentation from ItemControl.cs
 	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC)
 	{
-		Vector3 direction = EulerToVector(IC.transform.rotation.eulerAngles.z);
-		ItemControl ICFront = GetPlaceableAt<ItemControl>(grid, IC.transform.position + direction);
-		IC.setFrontBelt(null);
+		TryAttachFrontBeltHelper(grid, IC, 0);
+	}
+	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC, int relativeAngle)
+	{
+		Vector3 dirVector = EulerToVector(relativeAngle + IC.transform.rotation.eulerAngles.z);
+		ItemControl askingIC = GetPlaceableAt<ItemControl>(grid, dirVector + IC.transform.position);
+		if (askingIC)
+			TryAttachFrontBeltHelper(grid, IC, askingIC);
+	}
+	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
+	{
+		if (!IC.AllowFrontBeltTo(askingIC) || !askingIC.AllowBackBeltFrom(IC))
+			return;
 
-		// Make sure the IC in front exists, allows this to attach, and isn't occupied
-		if (ICFront != null && ICFront.getAllowBackBelt() && ICFront.getBackBelt() == null)
-		{
-			// Prevent a situation where they point right at each other |>>| |<<|
-			if (!ICFront.getAllowFrontBelt() || ICFront.transform.rotation.eulerAngles.z != (IC.transform.rotation.eulerAngles.z + 180) % 360)
-			{
-				IC.setFrontBelt(ICFront);
-				IC.getFrontBelt().setBackBelt(IC);
-				IC.getFrontBelt().UpdateSprite();
-			}
-		}
+		IC.setFrontBelt(askingIC);
+		askingIC.setBackBelt(IC);
 	}
 
 	// Attaches the back belt if possible from the relative angle, copy documentation from ItemControl.cs
 	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC, int relativeAngle)
 	{
-		int connectionAngle = (int)(IC.transform.rotation.eulerAngles.z + relativeAngle) % 360;
-		Vector3 deltaPos = EulerToVector(connectionAngle);
-		ItemControl ICSide = GetPlaceableAt<ItemControl>(grid, IC.transform.position + deltaPos);
-		IC.setBackBelt(null);
+		Vector3 dirVector = EulerToVector(relativeAngle + IC.transform.rotation.eulerAngles.z);
+		ItemControl askingIC = GetPlaceableAt<ItemControl>(grid, dirVector + IC.transform.position);
+		if (askingIC)
+			TryAttachBackBeltHelper(grid, IC, askingIC);
+	}
+	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
+	{
+		if (!IC.AllowBackBeltFrom(askingIC) || !askingIC.AllowFrontBeltTo(IC))
+			return;
 
-		// If IC on the given side exists, allows this to attach, and isn't occupied
-		if (ICSide != null && ICSide.getAllowFrontBelt() && ICSide.getFrontBelt() == null)
-		{
-			// And if it is pointing to this IC
-			if ((ICSide.transform.rotation.eulerAngles.z + 180) % 360 == connectionAngle)
-			{
-				IC.setBackBelt(ICSide);
-				IC.getBackBelt().setFrontBelt(IC);
-				IC.getBackBelt().UpdateSprite();
-			}
-		}
+		IC.setBackBelt(askingIC);
+		askingIC.setFrontBelt(IC);
 	}
 
 	// Returns the relative angle of MainIC's facing direction to the angle of AskingIC

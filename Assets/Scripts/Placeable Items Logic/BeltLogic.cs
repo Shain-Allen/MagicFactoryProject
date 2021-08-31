@@ -73,7 +73,7 @@ public class BeltLogic : ItemControl
 	public override bool AllowBackBeltFrom(ItemControl askingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, askingIC);
-		if (backBelt || relativeAngle < 90 || relativeAngle > 270)
+		if (backBelt || relativeAngle == 0)
 			return false;
 		return true;
 	}

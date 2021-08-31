@@ -17,8 +17,6 @@ public abstract class ItemControl : Placeable
 	protected GameObject itemSlot = null;
 	protected GridControl grid;
 
-	public bool getAllowFrontBelt() { return allowFrontBelt; }
-	public bool getAllowBackBelt() { return allowBackBelt; }
 	public virtual ItemControl getFrontBelt() { return frontBelt; }
 	public virtual ItemControl getBackBelt() { return backBelt; }
 	public virtual GameObject getItemSlot() { return itemSlot; }
@@ -45,11 +43,17 @@ public abstract class ItemControl : Placeable
 		RemoveFromWorld(grid, this);
 
 		if (backBelt)
+		{
+			backBelt.setFrontBelt(null);
 			backBelt.TryAttachFrontBelt();
+		}
 		backBelt = null;
 
 		if (frontBelt)
+		{
+			frontBelt.setBackBelt(null);
 			frontBelt.TryAttachBackBelt();
+		}
 		frontBelt = null;
 
 		if (itemSlot)
@@ -89,7 +93,7 @@ public abstract class ItemControl : Placeable
 	public abstract void MoveItem();
 
 	// Takes a EulerAngle for the side this is being asked from
-	public virtual bool AllowFrontBeltFrom(ItemControl askingIC)
+	public virtual bool AllowFrontBeltTo(ItemControl askingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, askingIC);
 		if (!allowFrontBelt || frontBelt || relativeAngle != 0)
