@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using static MathHelpers;
 using static PlaceableHelpers;
 using static ICHelpers;
 
@@ -47,7 +49,15 @@ public class BeltLogic : ItemControl
 		if (backBelt == null)
 			return;
 
-		float angle = getRelativeAngle(this, backBelt);
+		// This gets the closest position of backbelt to this belt, therefore being the connection probably
+		// Note that this is incredibly jenk, but the best possible solution at the moment
+		List<Vector3> backPositions = backBelt.getAllPositions();
+		Vector3 backConnectionPos = backPositions[0];
+		foreach (Vector3 pos in backPositions)
+			if (GetDistance(backConnectionPos, this.transform.position) > GetDistance(pos, this.transform.position))
+				backConnectionPos = pos;
+
+		float angle = getRelativeAngle(this, backConnectionPos);
 		//(transform.rotation.eulerAngles.z - backBelt.transform.rotation.eulerAngles.z + 360) % 360;
 		if (angle == 180)
 			return;
