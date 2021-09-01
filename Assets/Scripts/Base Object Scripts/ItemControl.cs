@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static PlaceableHelpers;
+using static ICHelpers;
 
 /* An IC currently is an item in the world that has precisely 1 slot for an item in it
  * These slots typically have a frontBelt and/or a backBelt, signalled by allow Front/Back Belt

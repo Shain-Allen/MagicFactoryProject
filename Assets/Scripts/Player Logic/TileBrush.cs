@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using static HelpFuncs;
+using static GridHelpers;
 using static PlaceableHelpers;
 
 public class TileBrush : MonoBehaviour

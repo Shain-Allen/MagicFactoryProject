@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static PlaceableHelpers;
-using static HelpFuncs;
+using static GridHelpers;
+using static ResourceHelpers;
 
 public class BaseOre : BaseResource
 {

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static HelpFuncs;
+using static MathHelpers;
+using static GridHelpers;
 
 public class OreGeneration : MonoBehaviour
 {

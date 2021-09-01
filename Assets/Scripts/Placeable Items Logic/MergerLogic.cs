@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static HelpFuncs;
+using static MathHelpers;
 using static PlaceableHelpers;
+using static ICHelpers;
 
 public class MergerLogic : ItemControl
 {

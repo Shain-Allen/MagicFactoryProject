@@ -1,7 +1,6 @@
 using System;
-using System.Collections;
 using UnityEngine;
-using static HelpFuncs;
+using static GridHelpers;
 
 public class PlaceableHelpers
 {
@@ -44,111 +43,5 @@ public class PlaceableHelpers
 		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
 		if (chunkParent)
 			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = null;
-	}
-
-	/* The Below Function Belongs in its own ResourceHelpers.cs */
-
-	// Returns the Ore or Gas at the provided location, or null if there isn't an anything there
-	public static T GetResourceAt<T>(GridControl grid, Vector2 pos) where T : BaseResource
-	{
-		GameObject objAtPos, chunkParent;
-		T oreAtPos;
-
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
-		{
-			objAtPos = chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
-			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out oreAtPos)))
-			{
-				return oreAtPos;
-			}
-		}
-		return default(T);
-	}
-	public static void RemoveResourceFromWorld(GridControl grid, BaseResource resource)
-	{
-		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);
-		if (chunkParent)
-			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(resource.transform.position).x, PosToPosInChunk(resource.transform.position).y] = null;
-	}
-
-	/* Everything Below Belongs in an ItemControlHelpers.cs */
-
-	// Attaches the front belt if possible, copy documentation from ItemControl.cs
-	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC)
-	{
-		TryAttachFrontBeltHelper(grid, IC, 0);
-	}
-	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC, int relativeAngle)
-	{
-		Vector3 dirVector = EulerToVector(relativeAngle + IC.transform.rotation.eulerAngles.z);
-		ItemControl askingIC = GetPlaceableAt<ItemControl>(grid, dirVector + IC.transform.position);
-		if (askingIC)
-			TryAttachFrontBeltHelper(grid, IC, askingIC);
-	}
-	public static void TryAttachFrontBeltHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
-	{
-		if (!IC.AllowFrontBeltTo(askingIC) || !askingIC.AllowBackBeltFrom(IC))
-			return;
-
-		IC.setFrontBelt(askingIC);
-		askingIC.setBackBelt(IC);
-		IC.UpdateSprite();
-		askingIC.UpdateSprite();
-	}
-
-	// Attaches the back belt if possible from the relative angle, copy documentation from ItemControl.cs
-	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC)
-	{
-		TryAttachBackBeltHelper(grid, IC, 180);
-	}
-	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC, int relativeAngle)
-	{
-		Vector3 dirVector = EulerToVector(relativeAngle + IC.transform.rotation.eulerAngles.z);
-		ItemControl askingIC = GetPlaceableAt<ItemControl>(grid, dirVector + IC.transform.position);
-		if (askingIC)
-			TryAttachBackBeltHelper(grid, IC, askingIC);
-	}
-	public static void TryAttachBackBeltHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
-	{
-		if (!IC.AllowBackBeltFrom(askingIC) || !askingIC.AllowFrontBeltTo(IC))
-			return;
-
-		IC.setBackBelt(askingIC);
-		askingIC.setFrontBelt(IC);
-		IC.UpdateSprite();
-		askingIC.UpdateSprite();
-	}
-
-	// Returns the relative angle of MainIC's facing direction to the angle of AskingIC
-	public static int getRelativeAngle(ItemControl IC, ItemControl askingIC)
-	{
-		return getRelativeAngle(IC, askingIC.transform.position);
-	}
-	public static int getRelativeAngle(ItemControl IC, Vector3 askingICPos)
-	{
-		Vector3 deltaPos = askingICPos - IC.transform.position;
-		float absoluteAngle = VectorToEuler(deltaPos);
-		float relativeAngle = (IC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
-		return (int)Mathf.Round(relativeAngle);
-	}
-
-	// Smoothly moves the item from slot one to slot two
-	public static IEnumerator SmoothMove(GridControl grid, GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
-	{
-		float timeElapsed = 0;
-
-		while (timeElapsed < grid.beltCycleTime)
-		{
-			if (!Item)
-				yield break;
-
-			Item.transform.position = Vector3.Lerp(startingPOS, EndingPOS, timeElapsed / grid.beltCycleTime);
-			timeElapsed += Time.deltaTime;
-
-			yield return null;
-		}
-
-		if (Item)
-			Item.transform.position = EndingPOS;
 	}
 }

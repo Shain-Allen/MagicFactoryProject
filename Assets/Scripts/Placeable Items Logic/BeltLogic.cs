@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using static PlaceableHelpers;
+using static ICHelpers;
 
 /* For all overriding methods without documentation, check ItemControl.cs */
 public class BeltLogic : ItemControl
