@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static PlaceableHelpers;
 
@@ -76,7 +74,6 @@ public class BridgeLogic : ItemControl
 	public override bool AllowFrontBeltTo(ItemControl askingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, askingIC);
-		Debug.Log($"Asking if allow front to {relativeAngle}");
 		if (relativeAngle == 0 && !frontOut)
 			return true;
 		if (relativeAngle == 270 && !leftOut)
@@ -86,7 +83,6 @@ public class BridgeLogic : ItemControl
 	public override void setFrontBelt(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
-		Debug.Log($"Setting front to {relativeAngle}");
 		if (relativeAngle == 0)
 			frontOut = newIC;
 		else if (relativeAngle == 270)
@@ -110,7 +106,6 @@ public class BridgeLogic : ItemControl
 	public override bool AllowBackBeltFrom(ItemControl askingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, askingIC);
-		Debug.Log($"Asking if allow back from {relativeAngle}");
 		if (relativeAngle == 180 && !backIn)
 			return true;
 		if (relativeAngle == 90 && !rightIn)
@@ -120,7 +115,6 @@ public class BridgeLogic : ItemControl
 	public override void setBackBelt(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
-		Debug.Log($"Setting back from {relativeAngle}");
 		if (relativeAngle == 180)
 			backIn = newIC;
 		else if (relativeAngle == 90)
