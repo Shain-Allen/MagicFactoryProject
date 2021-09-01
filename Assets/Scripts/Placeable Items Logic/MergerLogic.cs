@@ -7,8 +7,8 @@ using static PlaceableHelpers;
 
 public class MergerLogic : ItemControl
 {
-	public ItemControl leftInput = null;
-	public ItemControl rightInput = null;
+	ItemControl leftInput = null;
+	ItemControl rightInput = null;
 	GameObject leftItem = null;
 	GameObject rightItem = null;
 	Vector3 rightOffset, backOffset;
