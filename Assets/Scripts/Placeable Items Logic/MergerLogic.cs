@@ -94,9 +94,17 @@ public class MergerLogic : ItemControl
 		return null;
 	}
 
+	public override bool AllowItem(Placeable askingPlaceable)
+	{
+		if (askingPlaceable.transform.position == transform.position + backOffset)
+			return !leftItem;
+		if (askingPlaceable.transform.position == transform.position + backOffset + rightOffset)
+			return !rightItem;
+		return false;
+	}
+
 	public override void MoveItem(ItemControl pullingIC)
 	{
-		Debug.Log("Trying To Pull an Item");
 		// Try to move an item
 		GameObject itemToMove = GetItemToMove();
 		if (itemToMove && pullingIC && pullingIC.AllowItem(this))
