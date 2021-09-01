@@ -59,7 +59,7 @@ public class MergerLogic : ItemControl
 		if (itemToMove && pullingIC && pullingIC.AllowItem(this))
 		{
 			StartCoroutine(SmoothMove(grid, itemToMove, itemToMove.transform.position, pullingIC.transform.position));
-			pullingIC.setItemSlot(itemToMove);
+			pullingIC.setItemSlot(this, itemToMove);
 			if (itemToMoveLeft)
 				rightItem = null;
 			else

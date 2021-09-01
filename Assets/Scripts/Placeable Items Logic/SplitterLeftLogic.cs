@@ -51,9 +51,9 @@ public class SplitterLeftLogic : ItemControl
 		// Try to move the item
 		if (itemSlot && outputBelt)
 		{
-			StartCoroutine(SmoothMove(grid, getItemSlot(), getItemSlot().transform.position, outputBelt.transform.position));
-			outputBelt.setItemSlot(getItemSlot());
-			setItemSlot(null);
+			StartCoroutine(SmoothMove(grid, getItemSlot(this), getItemSlot(this).transform.position, outputBelt.transform.position));
+			outputBelt.setItemSlot(this, getItemSlot(this));
+			setItemSlot(this, null);
 		}
 
 		// Chain reaction backwards

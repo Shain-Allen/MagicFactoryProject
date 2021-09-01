@@ -51,9 +51,9 @@ public class MergerLeftLogic : ItemControl
 		ItemControl sideToMoveFrom = chooseSideToMoveFrom();
 		if (sideToMoveFrom && pullingIC && pullingIC.AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, sideToMoveFrom.getItemSlot(), sideToMoveFrom.getItemSlot().transform.position, frontBelt.transform.position));
-			pullingIC.setItemSlot(sideToMoveFrom.getItemSlot());
-			sideToMoveFrom.setItemSlot(null);
+			StartCoroutine(SmoothMove(grid, sideToMoveFrom.getItemSlot(this), sideToMoveFrom.getItemSlot(this).transform.position, frontBelt.transform.position));
+			pullingIC.setItemSlot(this, sideToMoveFrom.getItemSlot(this));
+			sideToMoveFrom.setItemSlot(this, null);
 		}
 
 		// Chain reaction backwards
@@ -72,7 +72,7 @@ public class MergerLeftLogic : ItemControl
 			sideToMoveFrom = this;
 			sideToMoveFromLeft = false;
 		}
-		else if (!sideToMoveFromLeft && rightPair.getItemSlot())
+		else if (!sideToMoveFromLeft && rightPair.getItemSlot(this))
 		{
 			sideToMoveFrom = rightPair;
 			sideToMoveFromLeft = true;
@@ -82,7 +82,7 @@ public class MergerLeftLogic : ItemControl
 			sideToMoveFrom = this;
 			sideToMoveFromLeft = false;
 		}
-		else if (rightPair.getItemSlot())
+		else if (rightPair.getItemSlot(this))
 		{
 			sideToMoveFrom = rightPair;
 			sideToMoveFromLeft = true;

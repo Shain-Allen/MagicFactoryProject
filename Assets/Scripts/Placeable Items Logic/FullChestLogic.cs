@@ -29,8 +29,8 @@ public class FullChestLogic : ItemControl, IOpenMenu
 	{
 		if (pullingIC && pullingIC.AllowItem(this) && itemToClone)
 		{
-			pullingIC.setItemSlot(Instantiate(itemToClone, transform.position, Quaternion.identity, grid.transform));
-			StartCoroutine(SmoothMove(grid, pullingIC.getItemSlot(), transform.position, pullingIC.transform.position));
+			pullingIC.setItemSlot(this, Instantiate(itemToClone, transform.position, Quaternion.identity, grid.transform));
+			StartCoroutine(SmoothMove(grid, pullingIC.getItemSlot(this), transform.position, pullingIC.transform.position));
 		}
 	}
 

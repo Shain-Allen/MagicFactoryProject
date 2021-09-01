@@ -19,10 +19,10 @@ public abstract class ItemControl : Placeable
 
 	public virtual ItemControl getFrontBelt() { return frontBelt; }
 	public virtual ItemControl getBackBelt() { return backBelt; }
-	public virtual GameObject getItemSlot() { return itemSlot; }
+	public virtual GameObject getItemSlot(ItemControl askingIC) { return itemSlot; }
 	public virtual void setFrontBelt(ItemControl newIC) { frontBelt = newIC; }
 	public virtual void setBackBelt(ItemControl newIC) { backBelt = newIC; }
-	public virtual void setItemSlot(GameObject item) { itemSlot = item; }
+	public virtual void setItemSlot(ItemControl askingIC, GameObject item) { itemSlot = item; }
 
 
 	/* PlacedAction initializes the variables inside this IC, and attaches to nearby ICs

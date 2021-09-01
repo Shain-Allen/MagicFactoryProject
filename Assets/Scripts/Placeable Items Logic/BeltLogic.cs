@@ -61,7 +61,7 @@ public class BeltLogic : ItemControl
 		if (pullingIC && itemSlot && pullingIC.AllowItem(this))
 		{
 			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
-			pullingIC.setItemSlot(itemSlot);
+			pullingIC.setItemSlot(this, itemSlot);
 			itemSlot = null;
 		}
 
