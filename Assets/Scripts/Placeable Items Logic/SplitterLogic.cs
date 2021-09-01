@@ -77,6 +77,10 @@ public class SplitterLogic : ItemControl
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
+		// Prevents MoveItem from being called twice each BeltCycle by only responding to calls from left side
+		if (pullingIC != leftOutput && pullingIC != null)
+			return;
+
 		ItemControl outputBelt = chooseOutputBelt();
 		// Try to move the item
 		if (itemSlot && outputBelt)
@@ -127,7 +131,7 @@ public class SplitterLogic : ItemControl
 	// If this belt is in front, start a chain reaction backwards for movement
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		if (leftOutput == null || rightOutput == null)
+		if (leftOutput == null)
 			MoveItem(null);
 	}
 
