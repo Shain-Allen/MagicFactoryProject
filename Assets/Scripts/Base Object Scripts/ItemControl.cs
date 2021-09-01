@@ -107,7 +107,8 @@ public abstract class ItemControl : Placeable
 			return false;
 		return true;
 	}
-	public virtual bool AllowItem(ItemControl askingIC)
+	// This one is a Placeable instead of IC because MysticDrillLogic is an IC
+	public virtual bool AllowItem(Placeable askingPlaceable)
 	{
 		if (itemSlot)
 			return false;
