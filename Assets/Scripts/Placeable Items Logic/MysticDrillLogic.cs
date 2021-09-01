@@ -67,7 +67,7 @@ public class MysticDrillLogic : Placeable
 		BeltLogic outputBelt = GetPlaceableAt<BeltLogic>(grid, transform.position + outputLocation);
 		if (outputBelt)
 		{
-			yield return new WaitWhile(() => outputBelt.AllowItem(this));
+			yield return new WaitWhile(() => outputBelt.AllowItem(null));
 
 			outputOre.MineOre(out returnOre);
 			outputBelt.InsertItem(returnOre);

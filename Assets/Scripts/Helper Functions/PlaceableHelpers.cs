@@ -92,6 +92,8 @@ public class PlaceableHelpers
 
 		IC.setFrontBelt(askingIC);
 		askingIC.setBackBelt(IC);
+		IC.UpdateSprite();
+		askingIC.UpdateSprite();
 	}
 
 	// Attaches the back belt if possible from the relative angle, copy documentation from ItemControl.cs
@@ -113,6 +115,8 @@ public class PlaceableHelpers
 
 		IC.setBackBelt(askingIC);
 		askingIC.setFrontBelt(IC);
+		IC.UpdateSprite();
+		askingIC.UpdateSprite();
 	}
 
 	// Returns the relative angle of MainIC's facing direction to the angle of AskingIC

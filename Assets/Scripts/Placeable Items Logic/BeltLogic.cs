@@ -47,12 +47,13 @@ public class BeltLogic : ItemControl
 		if (backBelt == null)
 			return;
 
-		float angle = (transform.rotation.eulerAngles.z - backBelt.transform.rotation.eulerAngles.z + 360) % 360;
-		if (angle == 0)
+		float angle = getRelativeAngle(this, backBelt);
+		//(transform.rotation.eulerAngles.z - backBelt.transform.rotation.eulerAngles.z + 360) % 360;
+		if (angle == 180)
 			return;
 		// Otherwise, it must be a corner belt; if it's turning right, it needs to be flipped
 		spriteRenderer.sprite = cornerBelt;
-		spriteRenderer.flipX = (angle == 270);
+		spriteRenderer.flipX = (angle == 90);
 	}
 
 	public override void MoveItem(ItemControl pullingIC)
