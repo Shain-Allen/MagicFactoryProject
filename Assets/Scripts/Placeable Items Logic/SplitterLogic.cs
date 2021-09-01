@@ -138,6 +138,33 @@ public class SplitterLogic : ItemControl
 	public override void RemovedAction()
 	{
 		RemoveFromWorld(grid, this, rightOffset);
-		base.RemovedAction();
+		RemoveFromWorld(grid, this);
+
+		if (backBelt)
+		{
+			backBelt.setFrontBeltToNull(this);
+			backBelt.TryAttachFrontBelt();
+		}
+		backBelt = null;
+
+		if (leftOutput)
+		{
+			leftOutput.setBackBeltToNull(this);
+			leftOutput.TryAttachBackBelt();
+		}
+		leftOutput = null;
+
+		if (rightOutput)
+		{
+			rightOutput.setBackBeltToNull(this);
+			rightOutput.TryAttachBackBelt();
+		}
+		rightOutput = null;
+
+		if (itemSlot)
+			Destroy(itemSlot);
+		itemSlot = null;
+
+		Destroy(gameObject);
 	}
 }

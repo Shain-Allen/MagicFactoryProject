@@ -114,6 +114,33 @@ public class MergerLogic : ItemControl
 	public override void RemovedAction()
 	{
 		RemoveFromWorld(grid, this, rightOffset);
-		base.RemovedAction();
+		RemoveFromWorld(grid, this);
+
+		if (leftInput)
+		{
+			leftInput.setFrontBeltToNull(this);
+			leftInput.TryAttachFrontBelt();
+		}
+		leftInput = null;
+
+		if (rightInput)
+		{
+			rightInput.setFrontBeltToNull(this);
+			rightInput.TryAttachFrontBelt();
+		}
+		rightInput = null;
+
+		if (frontBelt)
+		{
+			frontBelt.setBackBeltToNull(this);
+			frontBelt.TryAttachBackBelt();
+		}
+		frontBelt = null;
+
+		if (itemSlot)
+			Destroy(itemSlot);
+		itemSlot = null;
+
+		Destroy(gameObject);
 	}
 }

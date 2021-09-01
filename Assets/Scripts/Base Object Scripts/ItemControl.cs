@@ -19,9 +19,6 @@ public abstract class ItemControl : Placeable
 	protected GameObject itemSlot = null;
 	protected GridControl grid;
 
-	public virtual ItemControl getFrontBelt() { return frontBelt; }
-	public virtual ItemControl getBackBelt() { return backBelt; }
-	public virtual GameObject getItemSlot(ItemControl askingIC) { return itemSlot; }
 	public virtual void setFrontBelt(ItemControl newIC) { frontBelt = newIC; }
 	public virtual void setFrontBeltToNull(ItemControl deletingIC) { frontBelt = null; }
 	public virtual void setBackBelt(ItemControl newIC) { backBelt = newIC; }
