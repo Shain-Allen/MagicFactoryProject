@@ -9,10 +9,8 @@ public class MergerLogic : ItemControl
 {
 	ItemControl leftInput = null;
 	ItemControl rightInput = null;
-	GameObject leftItem = null;
-	GameObject rightItem = null;
 	Vector3 rightOffset, backOffset;
-	bool itemToMoveLeft = true;
+	bool sideToMoveFromLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
 	{
@@ -77,77 +75,33 @@ public class MergerLogic : ItemControl
 			rightInput = null;
 	}
 
-	public override void setItemSlot(ItemControl askingIC, GameObject item)
-	{
-		if (askingIC.transform.position == transform.position + backOffset)
-			leftItem = item;
-		else if (askingIC.transform.position == transform.position + backOffset + rightOffset)
-			rightItem = item;
-	}
-
-	public override GameObject getItemSlot(ItemControl askingIC)
-	{
-		if (askingIC.transform.position == transform.position + backOffset)
-			return leftItem;
-		else if (askingIC.transform.position == transform.position + backOffset + rightOffset)
-			return rightItem;
-		return null;
-	}
-
-	public override bool AllowItem(Placeable askingPlaceable)
-	{
-		if (askingPlaceable.transform.position == transform.position + backOffset)
-			return !leftItem;
-		if (askingPlaceable.transform.position == transform.position + backOffset + rightOffset)
-			return !rightItem;
-		return false;
-	}
-
 	public override void MoveItem(ItemControl pullingIC)
 	{
 		// Try to move an item
-		GameObject itemToMove = GetItemToMove();
-		if (itemToMove && pullingIC && pullingIC.AllowItem(this))
+		if (itemSlot && pullingIC && pullingIC.AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, itemToMove, itemToMove.transform.position, pullingIC.transform.position));
-			pullingIC.setItemSlot(this, itemToMove);
-			if (itemToMoveLeft)
-				rightItem = null;
-			else
-				leftItem = null;
+			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
+			pullingIC.setItemSlot(this, itemSlot);
+			base.itemSlot = null;
 		}
 
-		// Chain reaction backwards
-		if (leftInput)
-			leftInput.MoveItem(this);
-		if (rightInput)
-			rightInput.MoveItem(this);
-	}
-
-	// Chooses a random elible side of the SM to move an item from
-	private GameObject GetItemToMove()
-	{
-		if (itemToMoveLeft && leftItem)
+		// Chain reaction backwards, prioritizing the side who's turn it is
+		if (sideToMoveFromLeft)
 		{
-			itemToMoveLeft = false;
-			return leftItem;
+			sideToMoveFromLeft = false;
+			if (leftInput)
+				leftInput.MoveItem(this);
+			if (rightInput)
+				rightInput.MoveItem(this);
 		}
-		if (!itemToMoveLeft && rightItem)
+		else
 		{
-			itemToMoveLeft = true;
-			return rightItem;
+			sideToMoveFromLeft = true;
+			if (rightInput)
+				rightInput.MoveItem(this);
+			if (leftInput)
+				leftInput.MoveItem(this);
 		}
-		if (leftItem)
-		{
-			itemToMoveLeft = false;
-			return leftItem;
-		}
-		if (rightItem)
-		{
-			itemToMoveLeft = true;
-			return rightItem;
-		}
-		return null;
 	}
 
 	// If this belt is in front, start a chain reaction backwards for movement
