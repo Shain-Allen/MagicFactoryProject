@@ -1,21 +1,24 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static HelpFuncs;
 using static PlaceableHelpers;
 
 public class MergerLogic : ItemControl
 {
-	ItemControl leftInput = null;
-	ItemControl rightInput = null;
+	public ItemControl leftInput = null;
+	public ItemControl rightInput = null;
 	GameObject leftItem = null;
 	GameObject rightItem = null;
-	Vector3 rightOffset;
+	Vector3 rightOffset, backOffset;
 	bool itemToMoveLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		rightOffset = EulerToVector(270 + transform.rotation.eulerAngles.z);
+		rightOffset = EulerToVector(transform.rotation.eulerAngles.z + 270);
+		backOffset = EulerToVector(transform.rotation.eulerAngles.z + 180);
 		if (GetPlaceableAt<Placeable>(grid, transform.position + rightOffset) != null)
 			return;
 
@@ -26,34 +29,74 @@ public class MergerLogic : ItemControl
 		TryAttachBackBelt();
 	}
 
-	public override void setBackBelt(ItemControl newIC)
-	{
-		// TODO
-		base.setBackBelt(newIC);
-	}
-
 	public override void TryAttachFrontBelt()
 	{
 		TryAttachFrontBeltHelper(grid, this);
 	}
 
+	public override List<Vector3> getAllPositions()
+	{
+		List<Vector3> toReturn = new List<Vector3>();
+		toReturn.Add(transform.position);
+		toReturn.Add(transform.position + rightOffset);
+		return toReturn;
+	}
+
+	public override void setBackBelt(ItemControl newIC)
+	{
+		if (newIC.transform.position == transform.position + backOffset)
+			leftInput = newIC;
+		else if (newIC.transform.position == transform.position + backOffset + rightOffset)
+			rightInput = newIC;
+	}
+
 	public override void TryAttachBackBelt()
 	{
 		TryAttachBackBeltHelper(grid, this);
-		Vector3 backSideOffset = EulerToVector(transform.rotation.eulerAngles.z + 180);
-		ItemControl behindRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + backSideOffset + rightOffset);
+		ItemControl behindRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + backOffset + rightOffset);
 		if (behindRightSideIC)
 			TryAttachBackBeltHelper(grid, this, behindRightSideIC);
 	}
 
 	public override bool AllowBackBeltFrom(ItemControl askingIC)
 	{
-		// TODO
-		return base.AllowBackBeltFrom(askingIC);
+		if (askingIC.transform.position == transform.position + backOffset)
+			if (leftInput == null)
+				return true;
+		if (askingIC.transform.position == transform.position + backOffset + rightOffset)
+			if (rightInput == null)
+				return true;
+		return false;
+	}
+
+	public override void setBackBeltToNull(ItemControl deletingIC)
+	{
+		if (deletingIC.transform.position == transform.position + backOffset)
+			leftInput = null;
+		else if (deletingIC.transform.position == transform.position + backOffset + rightOffset)
+			rightInput = null;
+	}
+
+	public override void setItemSlot(ItemControl askingIC, GameObject item)
+	{
+		if (askingIC.transform.position == transform.position + backOffset)
+			leftItem = item;
+		else if (askingIC.transform.position == transform.position + backOffset + rightOffset)
+			rightItem = item;
+	}
+
+	public override GameObject getItemSlot(ItemControl askingIC)
+	{
+		if (askingIC.transform.position == transform.position + backOffset)
+			return leftItem;
+		else if (askingIC.transform.position == transform.position + backOffset + rightOffset)
+			return rightItem;
+		return null;
 	}
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
+		Debug.Log("Trying To Pull an Item");
 		// Try to move an item
 		GameObject itemToMove = GetItemToMove();
 		if (itemToMove && pullingIC && pullingIC.AllowItem(this))

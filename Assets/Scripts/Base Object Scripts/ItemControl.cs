@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static PlaceableHelpers;
 
@@ -21,9 +23,17 @@ public abstract class ItemControl : Placeable
 	public virtual ItemControl getBackBelt() { return backBelt; }
 	public virtual GameObject getItemSlot(ItemControl askingIC) { return itemSlot; }
 	public virtual void setFrontBelt(ItemControl newIC) { frontBelt = newIC; }
+	public virtual void setFrontBeltToNull(ItemControl deletingIC) { frontBelt = null; }
 	public virtual void setBackBelt(ItemControl newIC) { backBelt = newIC; }
+	public virtual void setBackBeltToNull(ItemControl deletingIC) { backBelt = null; }
 	public virtual void setItemSlot(ItemControl askingIC, GameObject item) { itemSlot = item; }
 
+	public virtual List<Vector3> getAllPositions()
+	{
+		List<Vector3> toReturn = new List<Vector3>();
+		toReturn.Add(transform.position);
+		return toReturn;
+	}
 
 	/* PlacedAction initializes the variables inside this IC, and attaches to nearby ICs
 	 * No special Preconditions
@@ -44,14 +54,14 @@ public abstract class ItemControl : Placeable
 
 		if (backBelt)
 		{
-			backBelt.setFrontBelt(null);
+			backBelt.setFrontBeltToNull(this);
 			backBelt.TryAttachFrontBelt();
 		}
 		backBelt = null;
 
 		if (frontBelt)
 		{
-			frontBelt.setBackBelt(null);
+			frontBelt.setBackBeltToNull(this);
 			frontBelt.TryAttachBackBelt();
 		}
 		frontBelt = null;
@@ -95,17 +105,27 @@ public abstract class ItemControl : Placeable
 	// Takes a EulerAngle for the side this is being asked from
 	public virtual bool AllowFrontBeltTo(ItemControl askingIC)
 	{
-		int relativeAngle = getRelativeAngle(this, askingIC);
-		if (!allowFrontBelt || frontBelt || relativeAngle != 0)
+		if (!allowFrontBelt || frontBelt)
 			return false;
-		return true;
+		foreach (Vector3 pos in askingIC.getAllPositions())
+		{
+			int relativeAngle = getRelativeAngle(this, pos);
+			if (relativeAngle == 0)
+				return true;
+		}
+		return false;
 	}
 	public virtual bool AllowBackBeltFrom(ItemControl askingIC)
 	{
-		int relativeAngle = getRelativeAngle(this, askingIC);
-		if (!allowBackBelt || backBelt || relativeAngle != 180)
+		if (!allowBackBelt || backBelt)
 			return false;
-		return true;
+		foreach (Vector3 pos in askingIC.getAllPositions())
+		{
+			int relativeAngle = getRelativeAngle(this, pos);
+			if (relativeAngle == 180)
+				return true;
+		}
+		return false;
 	}
 	// This one is a Placeable instead of IC because MysticDrillLogic is an IC
 	public virtual bool AllowItem(Placeable askingPlaceable)

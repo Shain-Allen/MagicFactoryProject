@@ -123,6 +123,13 @@ public class PlaceableHelpers
 		float relativeAngle = (IC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
 		return (int)Mathf.Round(relativeAngle);
 	}
+	public static int getRelativeAngle(ItemControl IC, Vector3 askingICPos)
+	{
+		Vector3 deltaPos = askingICPos - IC.transform.position;
+		float absoluteAngle = VectorToEuler(deltaPos);
+		float relativeAngle = (IC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
+		return (int)Mathf.Round(relativeAngle);
+	}
 
 	// Smoothly moves the item from slot one to slot two
 	public static IEnumerator SmoothMove(GridControl grid, GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
