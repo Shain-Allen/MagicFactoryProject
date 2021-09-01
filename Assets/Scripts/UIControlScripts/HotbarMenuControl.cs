@@ -24,6 +24,7 @@ public class HotbarMenuControl : MonoBehaviour
 
 	private void Start()
 	{
+		//go through all hotbar slots and reset them.
 		for (int i = 0; i < hotbar.childCount; i++)
 		{
 			ResetInvSlot(hotbar.GetChild(i).GetComponent<Button>());
@@ -31,12 +32,14 @@ public class HotbarMenuControl : MonoBehaviour
 
 		itemSelectorChoices = new Button[placeables.itemList.Length];
 
+		//load up the selection panel with the items from placeables item list
 		for (int i = 0; i < placeables.itemList.Length; i++)
 		{
 			GameObject newButton = Instantiate(buttonSlot, itemSelector.transform.position, Quaternion.identity, itemSelector.transform);
 
 			newButton.GetComponent<Image>().sprite = placeables.itemList[i].GetComponent<SpriteRenderer>().sprite;
 			newButton.GetComponent<Image>().color = placeables.itemList[i].GetComponent<SpriteRenderer>().color;
+			newButton.GetComponent<Image>().preserveAspect = true;
 			itemSelectorChoices[i] = newButton.GetComponent<Button>();
 		}
 	}
@@ -66,5 +69,6 @@ public class HotbarMenuControl : MonoBehaviour
 		invslot_.onClick.AddListener(() => brush.ChangeBrushItem(itemIndex_));
 		invslot_.GetComponent<Image>().sprite = placeables.itemList[itemIndex_].GetComponent<SpriteRenderer>().sprite;
 		invslot_.GetComponent<Image>().color = placeables.itemList[itemIndex_].GetComponent<SpriteRenderer>().color;
+		invslot_.GetComponent<Image>().preserveAspect = true;
 	}
 }
