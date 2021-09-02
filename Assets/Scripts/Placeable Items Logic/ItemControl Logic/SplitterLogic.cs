@@ -7,40 +7,19 @@ using static ICHelpers;
 
 public class SplitterLogic : ItemControl
 {
-	public ItemControl leftOutput = null;
-	public ItemControl rightOutput = null;
+	public ItemControl leftOutput, rightOutput;
 	Vector3 rightOffset, frontOffset;
 	bool nextOutputLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
 	{
-		grid = grid_;
 		rightOffset = EulerToVector(transform.rotation.eulerAngles.z + 270);
 		frontOffset = EulerToVector(transform.rotation.eulerAngles.z);
-		if (GetPlaceableAt<Placeable>(grid, transform.position + rightOffset) != null)
+		if (GetPlaceableAt<Placeable>(grid_, transform.position + rightOffset) != null)
 			return;
 
-		grid.OnBeltTimerCycle += BeltCycle;
-		AddToWorld(grid, this);
-		AddToWorld(grid, this, rightOffset);
-		TryAttachOutputs();
-		TryAttachInputs();
-	}
-
-	public override void TryAttachOutputs()
-	{
-		TryAttachOutputHelper(grid, this);
-		ItemControl frontRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + frontOffset + rightOffset);
-		if (frontRightSideIC)
-			TryAttachOutputHelper(grid, this, frontRightSideIC);
-	}
-
-	public override void setOutput(ItemControl newIC)
-	{
-		if (newIC.transform.position == transform.position + frontOffset)
-			leftOutput = newIC;
-		else if (newIC.transform.position == transform.position + frontOffset + rightOffset)
-			rightOutput = newIC;
+		AddToWorld(grid_, this, rightOffset);
+		base.PlacedAction(grid_);
 	}
 
 	public override List<Vector3> getAllPositions()
@@ -51,11 +30,20 @@ public class SplitterLogic : ItemControl
 		return toReturn;
 	}
 
-	public override void TryAttachInputs()
+	public override void TryAttachOutputs()
 	{
-		TryAttachInputHelper(grid, this);
+		TryAttachOutputHelper(grid, this);
+		ItemControl frontRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + frontOffset + rightOffset);
+		if (frontRightSideIC)
+			TryAttachOutputHelper(grid, this, frontRightSideIC);
 	}
-
+	public override void setOutput(ItemControl newIC)
+	{
+		if (newIC.transform.position == transform.position + frontOffset)
+			leftOutput = newIC;
+		else if (newIC.transform.position == transform.position + frontOffset + rightOffset)
+			rightOutput = newIC;
+	}
 	public override bool AllowOutputTo(ItemControl askingIC)
 	{
 		if (askingIC.transform.position == transform.position + frontOffset)
@@ -66,7 +54,6 @@ public class SplitterLogic : ItemControl
 				return true;
 		return false;
 	}
-
 	public override void setOutputToNull(ItemControl deletingIC)
 	{
 		if (deletingIC.transform.position == transform.position + frontOffset)
@@ -94,7 +81,6 @@ public class SplitterLogic : ItemControl
 		if (inputIC)
 			inputIC.MoveItem(this);
 	}
-
 	private ItemControl chooseOutputIC()
 	{
 		bool leftOutputFree = leftOutput && leftOutput.AllowItem(this);
@@ -126,13 +112,6 @@ public class SplitterLogic : ItemControl
 		}
 		// If neither are free, will return null
 		return null;
-	}
-
-	// If this IC is in output, start a chain reaction backwards for movement
-	public void BeltCycle(object sender, EventArgs e)
-	{
-		if (leftOutput == null)
-			MoveItem(null);
 	}
 
 	public override void RemovedAction()

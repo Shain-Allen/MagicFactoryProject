@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
-using static PlaceableHelpers;
 using static ICHelpers;
+using static PlaceableHelpers;
 
 /* An IC is a placeable that has at least 1 input and/or output, and holds at least 1 item
  * Some ICs can't have an output, signalled by allowOutputTo, or input, signalled by allowInputFrom
@@ -16,8 +17,8 @@ public abstract class ItemControl : Placeable
 	 * outputIC refers to the output IC, ICs with multiple outputs might not use this variable
 	 * inputIC refers to the input IC, ICs with multiple inputs might not use this variable
 	 * itemSlot refers to the item in this IC, ICs with multiple items might not use this variable 
-	 * allowOutputTo will be turned false if this IC cannot have outputs
-	 * allowInputFrom will be turned false if this IC cannot have inputs
+	 * allowOutputs will be turned false if this IC cannot have outputs
+	 * allowInputs will be turned false if this IC cannot have inputs
 	 * The transform of this IC should never have a non-integer position, or a rotation that isn't a multiple of 90
 	 */
 	protected bool allowOutputs = true;
@@ -27,6 +28,15 @@ public abstract class ItemControl : Placeable
 	protected GameObject itemSlot = null;
 
 	// Generic Placeable Functions
+
+	public override void PlacedAction(GridControl grid_)
+	{
+		base.PlacedAction(grid_);
+		TryAttachInputs();
+		TryAttachOutputs();
+		if (allowInputs)
+			grid.OnBeltTimerCycle += BeltCycle;
+	}
 
 	/* RemovedAction removes this IC, then has its output and input IC update their connections
 	 * No special Preconditions
@@ -73,7 +83,11 @@ public abstract class ItemControl : Placeable
 	 * No special preconditions
 	 * POSTCONDITIONS: Only the outputIC of this IC and this IC will be altered
 	 */
-	public virtual void TryAttachOutputs() { }
+	public virtual void TryAttachOutputs()
+	{
+		if (allowOutputs)
+			TryAttachOutputHelper(grid, this);
+	}
 
 	// Returns true if this IC can attach to the askingIC as the output IC of this
 	public virtual bool AllowOutputTo(ItemControl askingIC)
@@ -103,7 +117,11 @@ public abstract class ItemControl : Placeable
 	 * No special preconditions
 	 * POSTCONDITIONS: Only the inputIC of this IC and this IC will be altered
 	 */
-	public virtual void TryAttachInputs() { }
+	public virtual void TryAttachInputs()
+	{
+		if (allowInputs)
+			TryAttachInputHelper(grid, this);
+	}
 
 	// Returns if this IC can attach to the askingIC as the input IC of this
 	public virtual bool AllowInputFrom(ItemControl askingIC)
@@ -136,7 +154,16 @@ public abstract class ItemControl : Placeable
 		(Currently broken in the event a Splitter's output-left side calls MoveItem before the output-right side)
 	 * cont.: An item will never move if its outputIC already has an item
 	 */
-	public abstract void MoveItem(ItemControl pullingIC);
+	public virtual void MoveItem(ItemControl pullingIC)
+	{
+		// If this IC can move its item forward legally and immediately
+		if (pullingIC && pullingIC == outputIC && itemSlot && pullingIC.AllowItem(this))
+		{
+			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
+			pullingIC.setItemSlot(this, itemSlot);
+			itemSlot = null;
+		}
+	}
 
 	// Returns if this IC can allow an item to be placed in it
 	public virtual bool AllowItem(ItemControl askingIC)
@@ -150,5 +177,12 @@ public abstract class ItemControl : Placeable
 	 * This input askingIC is necessary if this IC has multiple inputICs
 	 */
 	public virtual void setItemSlot(ItemControl askingIC, GameObject item) { itemSlot = item; }
+
+	// If this IC is at the front of the line, start a chain reaction backwards of movement
+	public virtual void BeltCycle(object sender, EventArgs e)
+	{
+		if (!allowOutputs || outputIC == null)
+			MoveItem(null);
+	}
 }
 

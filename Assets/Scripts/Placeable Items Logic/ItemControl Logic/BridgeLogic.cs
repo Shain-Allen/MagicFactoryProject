@@ -6,23 +6,11 @@ using static ICHelpers;
 /* For all overriding methods without documentation, check ItemControl.cs */
 public class BridgeLogic : ItemControl
 {
-	public ItemControl leftOut = null;
-	public ItemControl frontOut = null;
-	public ItemControl rightIn = null;
-	public ItemControl backIn = null;
-	public GameObject topItem = null; // for the input to output path
-	public GameObject bottomItem = null; // for the right to left path
+	// topItem is the back to front path item, bottom is right to left path 
+	GameObject topItem, bottomItem;
+	ItemControl backIn, frontOut, rightIn, leftOut;
 
 	// Placement in the world
-	public override void PlacedAction(GridControl grid_)
-	{
-		grid = grid_;
-		grid.OnBeltTimerCycle += BeltCycle;
-
-		AddToWorld(grid, this);
-		TryAttachOutputs();
-		TryAttachInputs();
-	}
 	public override void RemovedAction()
 	{
 		RemoveFromWorld(grid, this);
@@ -180,7 +168,7 @@ public class BridgeLogic : ItemControl
 		if (backIn)
 			backIn.MoveItem(this);
 	}
-	public void BeltCycle(object sender, EventArgs e)
+	public override void BeltCycle(object sender, EventArgs e)
 	{
 		if (leftOut == null)
 			MoveItemLeftHelper();

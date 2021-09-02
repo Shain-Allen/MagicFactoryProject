@@ -7,29 +7,19 @@ using static ICHelpers;
 
 public class MergerLogic : ItemControl
 {
-	ItemControl leftInput = null;
-	ItemControl rightInput = null;
+	ItemControl leftInput, rightInput;
 	Vector3 rightOffset, backOffset;
 	bool sideToMoveFromLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
 	{
-		grid = grid_;
 		rightOffset = EulerToVector(transform.rotation.eulerAngles.z + 270);
 		backOffset = EulerToVector(transform.rotation.eulerAngles.z + 180);
-		if (GetPlaceableAt<Placeable>(grid, transform.position + rightOffset) != null)
+		if (GetPlaceableAt<Placeable>(grid_, transform.position + rightOffset) != null)
 			return;
 
-		grid.OnBeltTimerCycle += BeltCycle;
-		AddToWorld(grid, this);
-		AddToWorld(grid, this, rightOffset);
-		TryAttachOutputs();
-		TryAttachInputs();
-	}
-
-	public override void TryAttachOutputs()
-	{
-		TryAttachOutputHelper(grid, this);
+		AddToWorld(grid_, this, rightOffset);
+		base.PlacedAction(grid_);
 	}
 
 	public override List<Vector3> getAllPositions()
@@ -47,7 +37,6 @@ public class MergerLogic : ItemControl
 		else if (newIC.transform.position == transform.position + backOffset + rightOffset)
 			rightInput = newIC;
 	}
-
 	public override void TryAttachInputs()
 	{
 		TryAttachInputHelper(grid, this);
@@ -55,7 +44,6 @@ public class MergerLogic : ItemControl
 		if (behindRightSideIC)
 			TryAttachInputHelper(grid, this, behindRightSideIC);
 	}
-
 	public override bool AllowInputFrom(ItemControl askingIC)
 	{
 		if (askingIC.transform.position == transform.position + backOffset)
@@ -66,7 +54,6 @@ public class MergerLogic : ItemControl
 				return true;
 		return false;
 	}
-
 	public override void setInputToNull(ItemControl deletingIC)
 	{
 		if (deletingIC.transform.position == transform.position + backOffset)
@@ -77,13 +64,7 @@ public class MergerLogic : ItemControl
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
-		// Try to move an item
-		if (itemSlot && pullingIC && pullingIC.AllowItem(this))
-		{
-			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
-			pullingIC.setItemSlot(this, itemSlot);
-			base.itemSlot = null;
-		}
+		base.MoveItem(pullingIC);
 
 		// Chain reaction backwards, prioritizing the side who's turn it is
 		if (sideToMoveFromLeft)
@@ -102,13 +83,6 @@ public class MergerLogic : ItemControl
 			if (leftInput)
 				leftInput.MoveItem(this);
 		}
-	}
-
-	// If this IC is in output, start a chain reaction backwards for movement
-	public void BeltCycle(object sender, EventArgs e)
-	{
-		if (outputIC == null)
-			MoveItem(null);
 	}
 
 	public override void RemovedAction()

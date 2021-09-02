@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static MathHelpers;
-using static PlaceableHelpers;
 using static ICHelpers;
 
-/* For all overriding methods without documentation, check ItemControl.cs */
+/* For all overriding methods, check ItemControl.cs for further documentation*/
 public class BeltLogic : ItemControl
 {
 	public Sprite straightBelt;
@@ -15,17 +14,7 @@ public class BeltLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		grid = grid_;
-		grid.OnBeltTimerCycle += BeltCycle;
-
-		AddToWorld(grid, this);
-		TryAttachOutputs();
-		TryAttachInputs();
-	}
-
-	public override void TryAttachOutputs()
-	{
-		TryAttachOutputHelper(grid, this);
+		base.PlacedAction(grid_);
 	}
 
 	public override void TryAttachInputs()
@@ -67,13 +56,7 @@ public class BeltLogic : ItemControl
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
-		// If this belt can move its item forward legally and immediately
-		if (pullingIC && itemSlot && pullingIC.AllowItem(this))
-		{
-			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
-			pullingIC.setItemSlot(this, itemSlot);
-			itemSlot = null;
-		}
+		base.MoveItem(pullingIC);
 
 		// Chain reaction backwards
 		if (inputIC)
@@ -86,13 +69,6 @@ public class BeltLogic : ItemControl
 		if (inputIC || relativeAngle == 0)
 			return false;
 		return true;
-	}
-
-	// If this belt is in output, start a chain reaction backwards for movement
-	public void BeltCycle(object sender, EventArgs e)
-	{
-		if (outputIC == null)
-			MoveItem(null);
 	}
 
 	public void InsertItem(GameObject newItem)

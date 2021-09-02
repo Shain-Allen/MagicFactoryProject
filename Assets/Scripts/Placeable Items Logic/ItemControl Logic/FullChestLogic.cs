@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using static PlaceableHelpers;
 using static ICHelpers;
 
 /* For all overriding methods without documentation, check ItemControl.cs */
@@ -12,18 +11,9 @@ public class FullChestLogic : ItemControl, IOpenMenu
 
 	public override void PlacedAction(GridControl grid_)
 	{
-		grid = grid_;
 		allowInputs = false;
-
-		AddToWorld(grid, this);
-		TryAttachOutputs();
-
+		base.PlacedAction(grid_);
 		FullChestMenu = GameObject.FindGameObjectWithTag("ItemSpawnerMenu").GetComponent<ItemSpawnerMenu>();
-	}
-
-	public override void TryAttachOutputs()
-	{
-		TryAttachOutputHelper(grid, this);
 	}
 
 	public override void MoveItem(ItemControl pullingIC)
