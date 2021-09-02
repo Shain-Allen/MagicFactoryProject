@@ -23,13 +23,13 @@ public class MergerLogic : ItemControl
 		grid.OnBeltTimerCycle += BeltCycle;
 		AddToWorld(grid, this);
 		AddToWorld(grid, this, rightOffset);
-		TryAttachFrontBelt();
-		TryAttachBackBelt();
+		TryAttachOutputs();
+		TryAttachInputs();
 	}
 
-	public override void TryAttachFrontBelt()
+	public override void TryAttachOutputs()
 	{
-		TryAttachFrontBeltHelper(grid, this);
+		TryAttachOutputHelper(grid, this);
 	}
 
 	public override List<Vector3> getAllPositions()
@@ -40,7 +40,7 @@ public class MergerLogic : ItemControl
 		return toReturn;
 	}
 
-	public override void setBackBelt(ItemControl newIC)
+	public override void setInput(ItemControl newIC)
 	{
 		if (newIC.transform.position == transform.position + backOffset)
 			leftInput = newIC;
@@ -48,15 +48,15 @@ public class MergerLogic : ItemControl
 			rightInput = newIC;
 	}
 
-	public override void TryAttachBackBelt()
+	public override void TryAttachInputs()
 	{
-		TryAttachBackBeltHelper(grid, this);
+		TryAttachInputHelper(grid, this);
 		ItemControl behindRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + backOffset + rightOffset);
 		if (behindRightSideIC)
-			TryAttachBackBeltHelper(grid, this, behindRightSideIC);
+			TryAttachInputHelper(grid, this, behindRightSideIC);
 	}
 
-	public override bool AllowBackBeltFrom(ItemControl askingIC)
+	public override bool AllowInputFrom(ItemControl askingIC)
 	{
 		if (askingIC.transform.position == transform.position + backOffset)
 			if (leftInput == null)
@@ -67,7 +67,7 @@ public class MergerLogic : ItemControl
 		return false;
 	}
 
-	public override void setBackBeltToNull(ItemControl deletingIC)
+	public override void setInputToNull(ItemControl deletingIC)
 	{
 		if (deletingIC.transform.position == transform.position + backOffset)
 			leftInput = null;
@@ -104,10 +104,10 @@ public class MergerLogic : ItemControl
 		}
 	}
 
-	// If this belt is in front, start a chain reaction backwards for movement
+	// If this IC is in output, start a chain reaction backwards for movement
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		if (frontBelt == null)
+		if (outputIC == null)
 			MoveItem(null);
 	}
 
@@ -118,24 +118,24 @@ public class MergerLogic : ItemControl
 
 		if (leftInput)
 		{
-			leftInput.setFrontBeltToNull(this);
-			leftInput.TryAttachFrontBelt();
+			leftInput.setOutputToNull(this);
+			leftInput.TryAttachOutputs();
 		}
 		leftInput = null;
 
 		if (rightInput)
 		{
-			rightInput.setFrontBeltToNull(this);
-			rightInput.TryAttachFrontBelt();
+			rightInput.setOutputToNull(this);
+			rightInput.TryAttachOutputs();
 		}
 		rightInput = null;
 
-		if (frontBelt)
+		if (outputIC)
 		{
-			frontBelt.setBackBeltToNull(this);
-			frontBelt.TryAttachBackBelt();
+			outputIC.setInputToNull(this);
+			outputIC.TryAttachInputs();
 		}
-		frontBelt = null;
+		outputIC = null;
 
 		if (itemSlot)
 			Destroy(itemSlot);

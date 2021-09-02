@@ -23,19 +23,19 @@ public class SplitterLogic : ItemControl
 		grid.OnBeltTimerCycle += BeltCycle;
 		AddToWorld(grid, this);
 		AddToWorld(grid, this, rightOffset);
-		TryAttachFrontBelt();
-		TryAttachBackBelt();
+		TryAttachOutputs();
+		TryAttachInputs();
 	}
 
-	public override void TryAttachFrontBelt()
+	public override void TryAttachOutputs()
 	{
-		TryAttachFrontBeltHelper(grid, this);
+		TryAttachOutputHelper(grid, this);
 		ItemControl frontRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + frontOffset + rightOffset);
 		if (frontRightSideIC)
-			TryAttachFrontBeltHelper(grid, this, frontRightSideIC);
+			TryAttachOutputHelper(grid, this, frontRightSideIC);
 	}
 
-	public override void setFrontBelt(ItemControl newIC)
+	public override void setOutput(ItemControl newIC)
 	{
 		if (newIC.transform.position == transform.position + frontOffset)
 			leftOutput = newIC;
@@ -51,12 +51,12 @@ public class SplitterLogic : ItemControl
 		return toReturn;
 	}
 
-	public override void TryAttachBackBelt()
+	public override void TryAttachInputs()
 	{
-		TryAttachBackBeltHelper(grid, this);
+		TryAttachInputHelper(grid, this);
 	}
 
-	public override bool AllowFrontBeltTo(ItemControl askingIC)
+	public override bool AllowOutputTo(ItemControl askingIC)
 	{
 		if (askingIC.transform.position == transform.position + frontOffset)
 			if (leftOutput == null)
@@ -67,7 +67,7 @@ public class SplitterLogic : ItemControl
 		return false;
 	}
 
-	public override void setFrontBeltToNull(ItemControl deletingIC)
+	public override void setOutputToNull(ItemControl deletingIC)
 	{
 		if (deletingIC.transform.position == transform.position + frontOffset)
 			leftOutput = null;
@@ -81,7 +81,7 @@ public class SplitterLogic : ItemControl
 		if (pullingIC != leftOutput && pullingIC != null)
 			return;
 
-		ItemControl outputBelt = chooseOutputBelt();
+		ItemControl outputBelt = chooseOutputIC();
 		// Try to move the item
 		if (itemSlot && outputBelt)
 		{
@@ -91,11 +91,11 @@ public class SplitterLogic : ItemControl
 		}
 
 		// Chain reaction backwards
-		if (backBelt)
-			backBelt.MoveItem(this);
+		if (inputIC)
+			inputIC.MoveItem(this);
 	}
 
-	private ItemControl chooseOutputBelt()
+	private ItemControl chooseOutputIC()
 	{
 		bool leftOutputFree = leftOutput && leftOutput.AllowItem(this);
 		bool rightOutputFree = rightOutput && rightOutput.AllowItem(this);
@@ -128,7 +128,7 @@ public class SplitterLogic : ItemControl
 		return null;
 	}
 
-	// If this belt is in front, start a chain reaction backwards for movement
+	// If this IC is in output, start a chain reaction backwards for movement
 	public void BeltCycle(object sender, EventArgs e)
 	{
 		if (leftOutput == null)
@@ -140,24 +140,24 @@ public class SplitterLogic : ItemControl
 		RemoveFromWorld(grid, this, rightOffset);
 		RemoveFromWorld(grid, this);
 
-		if (backBelt)
+		if (inputIC)
 		{
-			backBelt.setFrontBeltToNull(this);
-			backBelt.TryAttachFrontBelt();
+			inputIC.setOutputToNull(this);
+			inputIC.TryAttachOutputs();
 		}
-		backBelt = null;
+		inputIC = null;
 
 		if (leftOutput)
 		{
-			leftOutput.setBackBeltToNull(this);
-			leftOutput.TryAttachBackBelt();
+			leftOutput.setInputToNull(this);
+			leftOutput.TryAttachInputs();
 		}
 		leftOutput = null;
 
 		if (rightOutput)
 		{
-			rightOutput.setBackBeltToNull(this);
-			rightOutput.TryAttachBackBelt();
+			rightOutput.setInputToNull(this);
+			rightOutput.TryAttachInputs();
 		}
 		rightOutput = null;
 

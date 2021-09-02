@@ -10,7 +10,7 @@ public class BridgeLogic : ItemControl
 	public ItemControl frontOut = null;
 	public ItemControl rightIn = null;
 	public ItemControl backIn = null;
-	public GameObject topItem = null; // for the back to front path
+	public GameObject topItem = null; // for the input to output path
 	public GameObject bottomItem = null; // for the right to left path
 
 	// Placement in the world
@@ -20,8 +20,8 @@ public class BridgeLogic : ItemControl
 		grid.OnBeltTimerCycle += BeltCycle;
 
 		AddToWorld(grid, this);
-		TryAttachFrontBelt();
-		TryAttachBackBelt();
+		TryAttachOutputs();
+		TryAttachInputs();
 	}
 	public override void RemovedAction()
 	{
@@ -29,29 +29,29 @@ public class BridgeLogic : ItemControl
 
 		if (backIn)
 		{
-			backIn.setFrontBeltToNull(this);
-			backIn.TryAttachFrontBelt();
+			backIn.setOutputToNull(this);
+			backIn.TryAttachOutputs();
 		}
 		backIn = null;
 
 		if (frontOut)
 		{
-			frontOut.setBackBeltToNull(this);
-			frontOut.TryAttachBackBelt();
+			frontOut.setInputToNull(this);
+			frontOut.TryAttachInputs();
 		}
 		frontOut = null;
 
 		if (rightIn)
 		{
-			rightIn.setFrontBeltToNull(this);
-			rightIn.TryAttachFrontBelt();
+			rightIn.setOutputToNull(this);
+			rightIn.TryAttachOutputs();
 		}
 		rightIn = null;
 
 		if (leftOut)
 		{
-			leftOut.setBackBeltToNull(this);
-			leftOut.TryAttachBackBelt();
+			leftOut.setInputToNull(this);
+			leftOut.TryAttachInputs();
 		}
 		leftOut = null;
 
@@ -66,13 +66,13 @@ public class BridgeLogic : ItemControl
 		Destroy(gameObject);
 	}
 
-	// Front Belt Stuff
-	public override void TryAttachFrontBelt()
+	// Output IC Stuff
+	public override void TryAttachOutputs()
 	{
-		TryAttachFrontBeltHelper(grid, this, 0);
-		TryAttachBackBeltHelper(grid, this, 90);
+		TryAttachOutputHelper(grid, this, 0);
+		TryAttachInputHelper(grid, this, 90);
 	}
-	public override bool AllowFrontBeltTo(ItemControl askingIC)
+	public override bool AllowOutputTo(ItemControl askingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, askingIC);
 		if (relativeAngle == 0 && !frontOut)
@@ -81,7 +81,7 @@ public class BridgeLogic : ItemControl
 			return true;
 		return false;
 	}
-	public override void setFrontBelt(ItemControl newIC)
+	public override void setOutput(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
 		if (relativeAngle == 0)
@@ -89,7 +89,7 @@ public class BridgeLogic : ItemControl
 		else if (relativeAngle == 270)
 			leftOut = newIC;
 	}
-	public override void setFrontBeltToNull(ItemControl deletingIC)
+	public override void setOutputToNull(ItemControl deletingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, deletingIC);
 		if (relativeAngle == 0)
@@ -98,13 +98,13 @@ public class BridgeLogic : ItemControl
 			leftOut = null;
 	}
 
-	// Back Belt Stuff
-	public override void TryAttachBackBelt()
+	// Input IC Stuff
+	public override void TryAttachInputs()
 	{
-		TryAttachBackBeltHelper(grid, this, 180);
-		TryAttachBackBeltHelper(grid, this, 270);
+		TryAttachInputHelper(grid, this, 180);
+		TryAttachInputHelper(grid, this, 270);
 	}
-	public override bool AllowBackBeltFrom(ItemControl askingIC)
+	public override bool AllowInputFrom(ItemControl askingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, askingIC);
 		if (relativeAngle == 180 && !backIn)
@@ -113,7 +113,7 @@ public class BridgeLogic : ItemControl
 			return true;
 		return false;
 	}
-	public override void setBackBelt(ItemControl newIC)
+	public override void setInput(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
 		if (relativeAngle == 180)
@@ -121,7 +121,7 @@ public class BridgeLogic : ItemControl
 		else if (relativeAngle == 90)
 			rightIn = newIC;
 	}
-	public override void setBackBeltToNull(ItemControl deletingIC)
+	public override void setInputToNull(ItemControl deletingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, deletingIC);
 		if (relativeAngle == 180)

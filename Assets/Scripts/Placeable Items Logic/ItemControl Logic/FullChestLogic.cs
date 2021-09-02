@@ -13,17 +13,17 @@ public class FullChestLogic : ItemControl, IOpenMenu
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		allowBackBelt = false;
+		allowInputs = false;
 
 		AddToWorld(grid, this);
-		TryAttachFrontBelt();
+		TryAttachOutputs();
 
 		FullChestMenu = GameObject.FindGameObjectWithTag("ItemSpawnerMenu").GetComponent<ItemSpawnerMenu>();
 	}
 
-	public override void TryAttachFrontBelt()
+	public override void TryAttachOutputs()
 	{
-		TryAttachFrontBeltHelper(grid, this);
+		TryAttachOutputHelper(grid, this);
 	}
 
 	public override void MoveItem(ItemControl pullingIC)

@@ -9,16 +9,16 @@ public class VoidChestLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		allowFrontBelt = false;
+		allowOutputs = false;
 		grid.OnBeltTimerCycle += BeltCycle;
 
 		AddToWorld(grid, this);
-		TryAttachBackBelt();
+		TryAttachInputs();
 	}
 
-	public override void TryAttachBackBelt()
+	public override void TryAttachInputs()
 	{
-		TryAttachBackBeltHelper(grid, this);
+		TryAttachInputHelper(grid, this);
 	}
 
 	public override void MoveItem(ItemControl pullingIC)
@@ -28,11 +28,11 @@ public class VoidChestLogic : ItemControl
 			Destroy(itemSlot);
 			itemSlot = null;
 		}
-		if (backBelt)
-			backBelt.MoveItem(this);
+		if (inputIC)
+			inputIC.MoveItem(this);
 	}
 
-	// This is always a front belt, so always start a chain with this
+	// This is always a output IC, so always start a chain with this
 	public void BeltCycle(object sender, EventArgs e)
 	{
 		MoveItem(null);

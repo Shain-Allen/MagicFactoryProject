@@ -19,46 +19,45 @@ public class BeltLogic : ItemControl
 		grid.OnBeltTimerCycle += BeltCycle;
 
 		AddToWorld(grid, this);
-		TryAttachFrontBelt();
-		TryAttachBackBelt();
+		TryAttachOutputs();
+		TryAttachInputs();
 	}
 
-	public override void TryAttachFrontBelt()
+	public override void TryAttachOutputs()
 	{
-		TryAttachFrontBeltHelper(grid, this);
+		TryAttachOutputHelper(grid, this);
 	}
 
-	public override void TryAttachBackBelt()
+	public override void TryAttachInputs()
 	{
 		// If it can't attach to the one behind it, try its left side, then its right
-		TryAttachBackBeltHelper(grid, this, 180);
-		if (backBelt == null)
-			TryAttachBackBeltHelper(grid, this, 90);
-		if (backBelt == null)
-			TryAttachBackBeltHelper(grid, this, 270);
+		TryAttachInputHelper(grid, this, 180);
+		if (inputIC == null)
+			TryAttachInputHelper(grid, this, 90);
+		if (inputIC == null)
+			TryAttachInputHelper(grid, this, 270);
 
 		UpdateSprite();
 	}
 
 	public override void UpdateSprite()
 	{
-		// Belts should default to straight when it has no backbelt or backbelt is right behind
+		// Belts should default to straight when it has no inputIC or inputIC is right behind
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
 
-		if (backBelt == null)
+		if (inputIC == null)
 			return;
 
-		// This gets the closest position of backbelt to this belt, therefore being the connection probably
+		// This gets the closest position of inputIC to this belt, therefore being the connection probably
 		// Note that this is incredibly jenk, but the best possible solution at the moment
-		List<Vector3> backPositions = backBelt.getAllPositions();
+		List<Vector3> backPositions = inputIC.getAllPositions();
 		Vector3 backConnectionPos = backPositions[0];
 		foreach (Vector3 pos in backPositions)
 			if (GetDistance(backConnectionPos, this.transform.position) > GetDistance(pos, this.transform.position))
 				backConnectionPos = pos;
 
 		float angle = getRelativeAngle(this, backConnectionPos);
-		//(transform.rotation.eulerAngles.z - backBelt.transform.rotation.eulerAngles.z + 360) % 360;
 		if (angle == 180)
 			return;
 		// Otherwise, it must be a corner belt; if it's turning right, it needs to be flipped
@@ -77,22 +76,22 @@ public class BeltLogic : ItemControl
 		}
 
 		// Chain reaction backwards
-		if (backBelt)
-			backBelt.MoveItem(this);
+		if (inputIC)
+			inputIC.MoveItem(this);
 	}
 
-	public override bool AllowBackBeltFrom(ItemControl askingIC)
+	public override bool AllowInputFrom(ItemControl askingIC)
 	{
 		int relativeAngle = getRelativeAngle(this, askingIC);
-		if (backBelt || relativeAngle == 0)
+		if (inputIC || relativeAngle == 0)
 			return false;
 		return true;
 	}
 
-	// If this belt is in front, start a chain reaction backwards for movement
+	// If this belt is in output, start a chain reaction backwards for movement
 	public void BeltCycle(object sender, EventArgs e)
 	{
-		if (frontBelt == null)
+		if (outputIC == null)
 			MoveItem(null);
 	}
 

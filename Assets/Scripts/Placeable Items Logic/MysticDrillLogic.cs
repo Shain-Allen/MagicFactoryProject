@@ -7,7 +7,6 @@ using static ResourceHelpers;
 
 public class MysticDrillLogic : Placeable
 {
-	private GridControl grid;
 	private Vector3 outputLocation;
 	private bool isMining = false;
 	private List<BaseOre> minableOres = new List<BaseOre>();
