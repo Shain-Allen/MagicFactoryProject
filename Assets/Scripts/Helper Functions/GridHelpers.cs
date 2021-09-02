@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GridHelpers : MonoBehaviour
 {
-	// Gets the parent GameObject for a chunk given any X, Y value
+	// Returns the parent chunk object given any chunk's position, or a standard position
 	public static GameObject GetChunkParentByPos(GridControl grid, Vector2 pos)
 	{
 		return GetChunkParentByChunk(grid, GetChunk(pos));
@@ -15,7 +15,7 @@ public class GridHelpers : MonoBehaviour
 		return tempChunkParent;
 	}
 
-	// Returns the chunk as a Vector2Int
+	// Returns the chunk at the provided position as a Vector2Int
 	public static Vector2Int GetChunk(Vector2 input)
 	{
 		return GetChunk(input.x, input.y);
@@ -59,7 +59,7 @@ public class GridHelpers : MonoBehaviour
 		return topRight - diff;
 	}
 
-	// Returns a Vector2Int of the chunk of the position in question
+	// Returns the left-bottom-most position in the provided chunk
 	public static Vector2Int ChunkToPos(float x, float y)
 	{
 		return ChunkToPos(new Vector2(x, y));
@@ -71,7 +71,7 @@ public class GridHelpers : MonoBehaviour
 		return new Vector2Int(x, y);
 	}
 
-	// Returns a Vector2Int of the pos relative to the bottom left of the chunk
+	// Returns the position relative to the bottom left of the chunk
 	public static Vector2Int PosToPosInChunk(float x, float y)
 	{
 		return PosToPosInChunk(new Vector2(x, y));

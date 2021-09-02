@@ -19,6 +19,16 @@ public class ResourceHelpers : MonoBehaviour
 		}
 		return default(T);
 	}
+
+	// Places the given Resource into the world and the chunk array
+	public static void AddToWorld(GridControl grid, BaseResource resource)
+	{
+		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);
+		if (chunkParent)
+			chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(resource.transform.position).x, PosToPosInChunk(resource.transform.position).y] = resource.gameObject;
+
+	}
+
 	// Removes the Resource given from the world grid
 	public static void RemoveResourceFromWorld(GridControl grid, BaseResource resource)
 	{

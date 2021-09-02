@@ -1,5 +1,4 @@
 using UnityEngine;
-using static GridHelpers;
 using static ResourceHelpers;
 
 public class BaseOre : BaseResource
@@ -9,14 +8,15 @@ public class BaseOre : BaseResource
 
 	private GridControl grid;
 
+	// Creates this ore and initalized how many ore remains in it
 	public void GenerateOre(GridControl _grid, GameObject chunkParent)
 	{
-		remainingOre = Mathf.RoundToInt(oreInfo.baseOreAmount + oreInfo.DistanceMultiplier * Vector3.Distance(transform.position, Vector3.zero));
 		grid = _grid;
-
-		chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(transform.position).x, PosToPosInChunk(transform.position).y] = gameObject;
+		remainingOre = Mathf.RoundToInt(oreInfo.baseOreAmount + oreInfo.DistanceMultiplier * Vector3.Distance(transform.position, Vector3.zero));
+		AddToWorld(grid, this);
 	}
 
+	// Substracts 1 from the remaining ore, returnOre returns the type of ore this makes, then this deletes if it runs empty
 	public void MineOre(out GameObject returnOre)
 	{
 		remainingOre--;

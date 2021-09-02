@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class MathHelpers : MonoBehaviour
 {
-	// Calls Math.Round, but turns it into a float 
+	// Calls Math.Round, but turns it into a float instead of it being a double 
 	private static float Round(float input, int degree)
 	{
 		return (float)Math.Round(input, degree);
 	}
 
-	// Simple Function to ensure X and Y are both within the given bounds
+	// Returns true if the X,Y position is within the given bounds
 	public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
 	{
 		return insideBorder(pos.x, pos.y, bottomLeft.x, topRight.x, bottomLeft.y, topRight.y);
@@ -19,7 +19,7 @@ public class MathHelpers : MonoBehaviour
 		return !(x < left || y < bottom || x > right || y > top);
 	}
 
-	// Takes an angle in Degrees and converts it to a 2D Vector3 of length 1, like a unit circle
+	// Takes a Euler Angle and converts it to a 2D Vector3 of length 1, like a unit circle
 	public static Vector3 EulerToVector(float eulerAngle)
 	{
 		eulerAngle *= -1;
@@ -27,7 +27,7 @@ public class MathHelpers : MonoBehaviour
 		float y = Round(Mathf.Cos(eulerAngle * Mathf.PI / 180), 3);
 		return new Vector3(x, y, 0);
 	}
-	// Takes any Vector3 and turns the X/Y into an Euler Angle
+	// Returns the Euler Angle of any Vector3 (ignores the Z axis)
 	public static float VectorToEuler(Vector3 input)
 	{
 		float toReturn = (-Mathf.Atan(input.y / input.x) * 180 / Mathf.PI) + 90;
@@ -37,7 +37,7 @@ public class MathHelpers : MonoBehaviour
 		return Round(toReturn, 1);
 	}
 
-	// Pythagorean Theorems two Vector2s
+	// Returns the distance between 2 points using the pythagorean theorem
 	public static float GetDistance(Vector2 a, Vector2 b)
 	{
 		return GetDistance(a.x, b.x, a.y, b.y);
