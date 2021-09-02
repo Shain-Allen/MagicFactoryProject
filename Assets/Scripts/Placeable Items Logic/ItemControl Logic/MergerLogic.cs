@@ -1,64 +1,51 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using static MathHelpers;
 using static PlaceableHelpers;
 using static ICHelpers;
 
 public class MergerLogic : ItemControl
 {
 	ItemControl leftInput, rightInput;
-	Vector3 rightOffset, backOffset;
 	bool sideToMoveFromLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
 	{
-		rightOffset = EulerToVector(transform.rotation.eulerAngles.z + 270);
-		backOffset = EulerToVector(transform.rotation.eulerAngles.z + 180);
-		if (GetPlaceableAt<Placeable>(grid_, transform.position + rightOffset) != null)
+		if (GetPlaceableAt<Placeable>(grid_, transform.position + transform.right) != null)
 			return;
 
-		AddToWorld(grid_, this, rightOffset);
+		positions.Add(transform.position + transform.right);
 		base.PlacedAction(grid_);
-	}
-
-	public override List<Vector3> getAllPositions()
-	{
-		List<Vector3> toReturn = new List<Vector3>();
-		toReturn.Add(transform.position);
-		toReturn.Add(transform.position + rightOffset);
-		return toReturn;
 	}
 
 	public override void setInput(ItemControl newIC)
 	{
-		if (newIC.transform.position == transform.position + backOffset)
+		if (newIC.transform.position == transform.position - transform.up)
 			leftInput = newIC;
-		else if (newIC.transform.position == transform.position + backOffset + rightOffset)
+		else if (newIC.transform.position == transform.position - transform.up + transform.right)
 			rightInput = newIC;
 	}
 	public override void TryAttachInputs()
 	{
 		TryAttachInputHelper(grid, this);
-		ItemControl behindRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + backOffset + rightOffset);
+		ItemControl behindRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position - transform.up + transform.right);
 		if (behindRightSideIC)
 			TryAttachInputHelper(grid, this, behindRightSideIC);
 	}
 	public override bool AllowInputFrom(ItemControl askingIC)
 	{
-		if (askingIC.transform.position == transform.position + backOffset)
+		if (askingIC.transform.position == transform.position - transform.up)
 			if (leftInput == null)
 				return true;
-		if (askingIC.transform.position == transform.position + backOffset + rightOffset)
+		if (askingIC.transform.position == transform.position - transform.up + transform.right)
 			if (rightInput == null)
 				return true;
 		return false;
 	}
 	public override void setInputToNull(ItemControl deletingIC)
 	{
-		if (deletingIC.transform.position == transform.position + backOffset)
+		if (deletingIC.transform.position == transform.position - transform.up)
 			leftInput = null;
-		else if (deletingIC.transform.position == transform.position + backOffset + rightOffset)
+		else if (deletingIC.transform.position == transform.position - transform.up + transform.right)
 			rightInput = null;
 	}
 
@@ -87,7 +74,7 @@ public class MergerLogic : ItemControl
 
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this, rightOffset);
+		RemoveFromWorld(grid, this, transform.right);
 		RemoveFromWorld(grid, this);
 
 		if (leftInput)

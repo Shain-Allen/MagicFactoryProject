@@ -1,64 +1,51 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using static MathHelpers;
 using static PlaceableHelpers;
 using static ICHelpers;
 
 public class SplitterLogic : ItemControl
 {
 	public ItemControl leftOutput, rightOutput;
-	Vector3 rightOffset, frontOffset;
 	bool nextOutputLeft = true;
 
 	public override void PlacedAction(GridControl grid_)
 	{
-		rightOffset = EulerToVector(transform.rotation.eulerAngles.z + 270);
-		frontOffset = EulerToVector(transform.rotation.eulerAngles.z);
-		if (GetPlaceableAt<Placeable>(grid_, transform.position + rightOffset) != null)
+		if (GetPlaceableAt<Placeable>(grid_, transform.position + transform.right) != null)
 			return;
 
-		AddToWorld(grid_, this, rightOffset);
+		positions.Add(transform.position + transform.right);
 		base.PlacedAction(grid_);
-	}
-
-	public override List<Vector3> getAllPositions()
-	{
-		List<Vector3> toReturn = new List<Vector3>();
-		toReturn.Add(transform.position);
-		toReturn.Add(transform.position + rightOffset);
-		return toReturn;
 	}
 
 	public override void TryAttachOutputs()
 	{
 		TryAttachOutputHelper(grid, this);
-		ItemControl frontRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + frontOffset + rightOffset);
+		ItemControl frontRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + transform.up + transform.right);
 		if (frontRightSideIC)
 			TryAttachOutputHelper(grid, this, frontRightSideIC);
 	}
 	public override void setOutput(ItemControl newIC)
 	{
-		if (newIC.transform.position == transform.position + frontOffset)
+		if (newIC.transform.position == transform.position + transform.up)
 			leftOutput = newIC;
-		else if (newIC.transform.position == transform.position + frontOffset + rightOffset)
+		else if (newIC.transform.position == transform.position + transform.up + transform.right)
 			rightOutput = newIC;
 	}
 	public override bool AllowOutputTo(ItemControl askingIC)
 	{
-		if (askingIC.transform.position == transform.position + frontOffset)
+		if (askingIC.transform.position == transform.position + transform.up)
 			if (leftOutput == null)
 				return true;
-		if (askingIC.transform.position == transform.position + frontOffset + rightOffset)
+		if (askingIC.transform.position == transform.position + transform.up + transform.right)
 			if (rightOutput == null)
 				return true;
 		return false;
 	}
 	public override void setOutputToNull(ItemControl deletingIC)
 	{
-		if (deletingIC.transform.position == transform.position + frontOffset)
+		if (deletingIC.transform.position == transform.position + transform.up)
 			leftOutput = null;
-		else if (deletingIC.transform.position == transform.position + frontOffset + rightOffset)
+		else if (deletingIC.transform.position == transform.position + transform.up + transform.right)
 			rightOutput = null;
 	}
 
@@ -116,7 +103,7 @@ public class SplitterLogic : ItemControl
 
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this, rightOffset);
+		RemoveFromWorld(grid, this, transform.right);
 		RemoveFromWorld(grid, this);
 
 		if (inputIC)
