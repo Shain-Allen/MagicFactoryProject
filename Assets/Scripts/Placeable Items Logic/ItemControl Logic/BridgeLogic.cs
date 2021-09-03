@@ -61,11 +61,6 @@ public class BridgeLogic : ItemControl
 	}
 
 	// Output IC Stuff
-	public override void TryAttachOutputs()
-	{
-		TryAttachOutputHelper(grid, this, 0);
-		TryAttachInputHelper(grid, this, 90);
-	}
 	public override void setOutput(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
@@ -84,11 +79,6 @@ public class BridgeLogic : ItemControl
 	}
 
 	// Input IC Stuff
-	public override void TryAttachInputs()
-	{
-		TryAttachInputHelper(grid, this, 180);
-		TryAttachInputHelper(grid, this, 270);
-	}
 	public override void setInput(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);

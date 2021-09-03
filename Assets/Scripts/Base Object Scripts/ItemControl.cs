@@ -91,7 +91,8 @@ public abstract class ItemControl : Placeable
 	public virtual void TryAttachOutputs()
 	{
 		if (allowOutputs)
-			TryAttachOutputHelper(grid, this);
+			foreach (Vector3 validRelPos in outputValidRelPoses)
+				TryAttachOutputHelper(grid, this, validRelPos);
 	}
 
 	// Returns true if this IC can attach to the askingIC as the output IC of this
@@ -122,7 +123,8 @@ public abstract class ItemControl : Placeable
 	public virtual void TryAttachInputs()
 	{
 		if (allowInputs)
-			TryAttachInputHelper(grid, this);
+			foreach (Vector3 validRelPos in inputValidRelPoses)
+				TryAttachInputHelper(grid, this);
 	}
 
 	// Returns if this IC can attach to the askingIC as the input IC of this

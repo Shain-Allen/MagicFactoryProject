@@ -18,13 +18,6 @@ public class SplitterLogic : ItemControl
 		base.PlacedAction(grid_);
 	}
 
-	public override void TryAttachOutputs()
-	{
-		TryAttachOutputHelper(grid, this);
-		ItemControl frontRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position + transform.up + transform.right);
-		if (frontRightSideIC)
-			TryAttachOutputHelper(grid, this, frontRightSideIC);
-	}
 	public override void setOutput(ItemControl newIC)
 	{
 		if (newIC.transform.position == transform.position + transform.up)

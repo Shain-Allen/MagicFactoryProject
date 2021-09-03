@@ -25,13 +25,6 @@ public class MergerLogic : ItemControl
 		else if (newIC.transform.position == transform.position - transform.up + transform.right)
 			rightInput = newIC;
 	}
-	public override void TryAttachInputs()
-	{
-		TryAttachInputHelper(grid, this);
-		ItemControl behindRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position - transform.up + transform.right);
-		if (behindRightSideIC)
-			TryAttachInputHelper(grid, this, behindRightSideIC);
-	}
 	public override void setInputToNull(ItemControl deletingIC)
 	{
 		if (deletingIC.transform.position == transform.position - transform.up)
