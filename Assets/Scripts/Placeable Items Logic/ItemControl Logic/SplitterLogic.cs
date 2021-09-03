@@ -13,7 +13,8 @@ public class SplitterLogic : ItemControl
 		if (GetPlaceableAt<Placeable>(grid_, transform.position + transform.right) != null)
 			return;
 
-		positions.Add(transform.position + transform.right);
+		relativePositions.Add(transform.right);
+		outputValidRelPoses.Add(transform.right + transform.up);
 		base.PlacedAction(grid_);
 	}
 
@@ -30,16 +31,6 @@ public class SplitterLogic : ItemControl
 			leftOutput = newIC;
 		else if (newIC.transform.position == transform.position + transform.up + transform.right)
 			rightOutput = newIC;
-	}
-	public override bool AllowOutputTo(ItemControl askingIC)
-	{
-		if (askingIC.transform.position == transform.position + transform.up)
-			if (leftOutput == null)
-				return true;
-		if (askingIC.transform.position == transform.position + transform.up + transform.right)
-			if (rightOutput == null)
-				return true;
-		return false;
 	}
 	public override void setOutputToNull(ItemControl deletingIC)
 	{

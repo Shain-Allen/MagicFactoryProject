@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static ICHelpers;
 using static PlaceableHelpers;
@@ -21,17 +22,21 @@ public abstract class ItemControl : Placeable
 	 * allowInputs will be turned false if this IC cannot have inputs
 	 * The transform of this IC should never have a non-integer position, or a rotation that isn't a multiple of 90
 	 */
-	protected bool allowOutputs = true;
+	protected GameObject itemSlot = null;
+	protected ItemControl inputIC = null;
 	protected ItemControl outputIC = null;
 	protected bool allowInputs = true;
-	protected ItemControl inputIC = null;
-	protected GameObject itemSlot = null;
+	protected bool allowOutputs = true;
+	protected List<Vector3> inputValidRelPoses = new List<Vector3>();
+	protected List<Vector3> outputValidRelPoses = new List<Vector3>();
 
 	// Generic Placeable Functions
 
 	public override void PlacedAction(GridControl grid_)
 	{
 		base.PlacedAction(grid_);
+		inputValidRelPoses.Add(-transform.up);
+		outputValidRelPoses.Add(transform.up);
 		TryAttachInputs();
 		TryAttachOutputs();
 		if (allowInputs)
@@ -94,12 +99,9 @@ public abstract class ItemControl : Placeable
 	{
 		if (!allowOutputs || outputIC)
 			return false;
-		foreach (Vector3 pos in askingIC.getAllPositions())
-		{
-			int relativeAngle = getRelativeAngle(this, pos);
-			if (relativeAngle == 0)
+		foreach (Vector3 pos in outputValidRelPoses)
+			if (askingIC.transform.position - transform.position == pos)
 				return true;
-		}
 		return false;
 	}
 
@@ -128,12 +130,9 @@ public abstract class ItemControl : Placeable
 	{
 		if (!allowInputs || inputIC)
 			return false;
-		foreach (Vector3 pos in askingIC.getAllPositions())
-		{
-			int relativeAngle = getRelativeAngle(this, pos);
-			if (relativeAngle == 180)
+		foreach (Vector3 pos in inputValidRelPoses)
+			if (askingIC.transform.position - transform.position == pos)
 				return true;
-		}
 		return false;
 	}
 

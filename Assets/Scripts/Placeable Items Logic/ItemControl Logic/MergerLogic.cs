@@ -13,7 +13,8 @@ public class MergerLogic : ItemControl
 		if (GetPlaceableAt<Placeable>(grid_, transform.position + transform.right) != null)
 			return;
 
-		positions.Add(transform.position + transform.right);
+		relativePositions.Add(transform.right);
+		inputValidRelPoses.Add(transform.right - transform.up);
 		base.PlacedAction(grid_);
 	}
 
@@ -30,16 +31,6 @@ public class MergerLogic : ItemControl
 		ItemControl behindRightSideIC = GetPlaceableAt<ItemControl>(grid, transform.position - transform.up + transform.right);
 		if (behindRightSideIC)
 			TryAttachInputHelper(grid, this, behindRightSideIC);
-	}
-	public override bool AllowInputFrom(ItemControl askingIC)
-	{
-		if (askingIC.transform.position == transform.position - transform.up)
-			if (leftInput == null)
-				return true;
-		if (askingIC.transform.position == transform.position - transform.up + transform.right)
-			if (rightInput == null)
-				return true;
-		return false;
 	}
 	public override void setInputToNull(ItemControl deletingIC)
 	{

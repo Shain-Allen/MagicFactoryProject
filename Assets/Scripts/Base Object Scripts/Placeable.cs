@@ -5,7 +5,7 @@ using static PlaceableHelpers;
 public abstract class Placeable : MonoBehaviour
 {
 	protected GridControl grid;
-	protected List<Vector3> positions = new List<Vector3>();
+	protected List<Vector3> relativePositions = new List<Vector3>();
 
 	/* PlacedAction initializes the variables inside this Placeable and adds this to the world grid
 	 * PRECONDITIONS: There shouldn't be another placeable at this one's location
@@ -14,9 +14,9 @@ public abstract class Placeable : MonoBehaviour
 	public virtual void PlacedAction(GridControl grid_)
 	{
 		grid = grid_;
-		positions.Add(transform.position);
-		foreach (Vector3 pos in positions)
-			AddToWorld(grid, this, pos - transform.position);
+		relativePositions.Add(Vector3.zero);
+		foreach (Vector3 pos in relativePositions)
+			AddToWorld(grid, this, pos);
 	}
 
 	/* RemovedAction removes this from existance
@@ -26,11 +26,17 @@ public abstract class Placeable : MonoBehaviour
 	 */
 	public virtual void RemovedAction()
 	{
-		foreach (Vector3 pos in positions)
-			RemoveFromWorld(grid, this, pos - transform.position);
+		foreach (Vector3 pos in relativePositions)
+			RemoveFromWorld(grid, this, pos);
 		Destroy(gameObject);
 	}
 
 	// Returns a list of all the positions this IC occupies, necessary for multi-tile structures
-	public virtual List<Vector3> getAllPositions() { return positions; }
+	public virtual List<Vector3> getAllPositions()
+	{
+		List<Vector3> toReturn = new List<Vector3>();
+		foreach (Vector3 pos in relativePositions)
+			toReturn.Add(pos + transform.position);
+		return toReturn;
+	}
 }

@@ -11,6 +11,12 @@ public class BridgeLogic : ItemControl
 	ItemControl backIn, frontOut, rightIn, leftOut;
 
 	// Placement in the world
+	public override void PlacedAction(GridControl grid_)
+	{
+		inputValidRelPoses.Add(transform.right);
+		outputValidRelPoses.Add(-transform.right);
+		base.PlacedAction(grid_);
+	}
 	public override void RemovedAction()
 	{
 		RemoveFromWorld(grid, this);
@@ -60,15 +66,6 @@ public class BridgeLogic : ItemControl
 		TryAttachOutputHelper(grid, this, 0);
 		TryAttachInputHelper(grid, this, 90);
 	}
-	public override bool AllowOutputTo(ItemControl askingIC)
-	{
-		int relativeAngle = getRelativeAngle(this, askingIC);
-		if (relativeAngle == 0 && !frontOut)
-			return true;
-		if (relativeAngle == 270 && !leftOut)
-			return true;
-		return false;
-	}
 	public override void setOutput(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
@@ -91,15 +88,6 @@ public class BridgeLogic : ItemControl
 	{
 		TryAttachInputHelper(grid, this, 180);
 		TryAttachInputHelper(grid, this, 270);
-	}
-	public override bool AllowInputFrom(ItemControl askingIC)
-	{
-		int relativeAngle = getRelativeAngle(this, askingIC);
-		if (relativeAngle == 180 && !backIn)
-			return true;
-		if (relativeAngle == 90 && !rightIn)
-			return true;
-		return false;
 	}
 	public override void setInput(ItemControl newIC)
 	{

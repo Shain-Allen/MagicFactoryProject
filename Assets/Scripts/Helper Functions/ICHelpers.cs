@@ -17,6 +17,12 @@ public class ICHelpers : MonoBehaviour
 		if (askingIC)
 			TryAttachOutputHelper(grid, IC, askingIC);
 	}
+	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
+	{
+		ItemControl outputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
+		if (outputIC)
+			TryAttachOutputHelper(grid, IC, outputIC);
+	}
 	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
 	{
 		if (!IC.AllowOutputTo(askingIC) || !askingIC.AllowInputFrom(IC))
@@ -39,6 +45,12 @@ public class ICHelpers : MonoBehaviour
 		ItemControl askingIC = GetPlaceableAt<ItemControl>(grid, dirVector + IC.transform.position);
 		if (askingIC)
 			TryAttachInputHelper(grid, IC, askingIC);
+	}
+	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
+	{
+		ItemControl outputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
+		if (outputIC)
+			TryAttachInputHelper(grid, IC, outputIC);
 	}
 	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
 	{
