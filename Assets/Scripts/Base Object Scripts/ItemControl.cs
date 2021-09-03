@@ -23,12 +23,12 @@ public abstract class ItemControl : Placeable
 	 * The transform of this IC should never have a non-integer position, or a rotation that isn't a multiple of 90
 	 */
 	protected GameObject itemSlot = null;
-	protected ItemControl inputIC = null;
-	protected ItemControl outputIC = null;
 	protected bool allowInputs = true;
 	protected bool allowOutputs = true;
 	protected List<Vector3> inputValidRelPoses = new List<Vector3>();
 	protected List<Vector3> outputValidRelPoses = new List<Vector3>();
+	public ItemControl[] inputICs = new ItemControl[1];
+	public ItemControl[] outputICs = new ItemControl[1];
 
 	// Generic Placeable Functions
 
@@ -54,13 +54,19 @@ public abstract class ItemControl : Placeable
 	{
 		base.RemovedAction();
 
-		if (inputIC)
-			inputIC.TryAttachOutputs();
-		inputIC = null;
+		for (int i = 0; i < inputICs.Length; i++)
+		{
+			if (inputICs[i])
+				inputICs[i].TryAttachOutputs();
+			inputICs[i] = null;
+		}
 
-		if (outputIC)
-			outputIC.TryAttachInputs();
-		outputIC = null;
+		for (int i = 0; i < outputICs.Length; i++)
+		{
+			if (outputICs[i])
+				outputICs[i].TryAttachInputs();
+			outputICs[i] = null;
+		}
 
 		if (itemSlot)
 			Destroy(itemSlot);
@@ -82,25 +88,44 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void TryAttachOutputs()
 	{
-		outputIC = null;
 		if (allowOutputs)
+		{
+			// Resets all connections this currently has
+			for (int i = 0; i < outputICs.Length; i++)
+				if (outputICs[i])
+				{
+					outputICs[i].setInput(null);
+					outputICs[i] = null;
+				}
+			// Tries to attach a connection at every valid position
 			foreach (Vector3 validRelPos in outputValidRelPoses)
 				TryAttachOutputHelper(grid, this, validRelPos);
+		}
 	}
 
 	// Returns true if this IC can attach to the askingIC as the output IC of this
 	public virtual bool AllowOutputTo(ItemControl askingIC)
 	{
-		if (!allowOutputs || outputIC)
+		if (!allowOutputs)
 			return false;
-		foreach (Vector3 pos in outputValidRelPoses)
-			if (askingIC.transform.position - transform.position == pos)
-				return true;
+		// If every slot is full, then this can't accept an output
+		for (int i = 0; i < outputICs.Length + 1; i++)
+		{
+			if (i == outputICs.Length)
+				return false;
+			if (outputICs[i] == null)
+				break;
+		}
+		// Tries to see if askingIC has any position in a valid spot
+		foreach (Vector3 validRelPos in outputValidRelPoses)
+			foreach (Vector3 askingPos in askingIC.getAllPositions())
+				if (askingPos - transform.position == validRelPos)
+					return true;
 		return false;
 	}
 
 	// Sets the outputIC of this IC to be newIC
-	public virtual void setOutput(ItemControl newIC) { outputIC = newIC; }
+	public virtual void setOutput(ItemControl newIC) { outputICs[0] = newIC; }
 
 	// Input IC Functions
 
@@ -110,25 +135,44 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void TryAttachInputs()
 	{
-		inputIC = null;
 		if (allowInputs)
+		{
+			// Resets all connections this currently has
+			for (int i = 0; i < inputICs.Length; i++)
+				if (inputICs[i])
+				{
+					inputICs[i].setOutput(null);
+					inputICs[i] = null;
+				}
+			// Tries to attach a connection at every valid position
 			foreach (Vector3 validRelPos in inputValidRelPoses)
 				TryAttachInputHelper(grid, this, validRelPos);
+		}
 	}
 
 	// Returns if this IC can attach to the askingIC as the input IC of this
 	public virtual bool AllowInputFrom(ItemControl askingIC)
 	{
-		if (!allowInputs || inputIC)
+		if (!allowInputs)
 			return false;
-		foreach (Vector3 pos in inputValidRelPoses)
-			if (askingIC.transform.position - transform.position == pos)
-				return true;
+		// If every slot is full, then this can't accept an input
+		for (int i = 0; i < inputICs.Length + 1; i++)
+		{
+			if (i == inputICs.Length)
+				return false;
+			if (inputICs[i] == null)
+				break;
+		}
+		// Tries to see if askingIC has any position in a valid spot
+		foreach (Vector3 validRelPos in inputValidRelPoses)
+			foreach (Vector3 askingPos in askingIC.getAllPositions())
+				if (askingPos - transform.position == validRelPos)
+					return true;
 		return false;
 	}
 
 	// Sets the inputIC of this IC to be newIC
-	public virtual void setInput(ItemControl newIC) { inputIC = newIC; }
+	public virtual void setInput(ItemControl newIC) { inputICs[0] = newIC; }
 
 	// Item slot things
 
@@ -142,7 +186,7 @@ public abstract class ItemControl : Placeable
 	public virtual void MoveItem(ItemControl pullingIC)
 	{
 		// If this IC can move its item forward legally and immediately
-		if (pullingIC && pullingIC == outputIC && itemSlot && pullingIC.AllowItem(this))
+		if (pullingIC && pullingIC == outputICs[0] && itemSlot && pullingIC.AllowItem(this))
 		{
 			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
 			pullingIC.setItemSlot(this, itemSlot);
@@ -166,7 +210,7 @@ public abstract class ItemControl : Placeable
 	// If this IC is at the front of the line, start a chain reaction backwards of movement
 	public virtual void BeltCycle(object sender, EventArgs e)
 	{
-		if (!allowOutputs || outputIC == null)
+		if (!allowOutputs || outputICs[0] == null)
 			MoveItem(null);
 	}
 }

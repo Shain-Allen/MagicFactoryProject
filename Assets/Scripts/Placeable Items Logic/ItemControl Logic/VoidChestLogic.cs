@@ -17,7 +17,7 @@ public class VoidChestLogic : ItemControl
 			Destroy(itemSlot);
 			itemSlot = null;
 		}
-		if (inputIC)
-			inputIC.MoveItem(this);
+		if (inputICs[0])
+			inputICs[0].MoveItem(this);
 	}
 }

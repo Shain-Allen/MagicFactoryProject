@@ -8,11 +8,14 @@ public class BridgeLogic : ItemControl
 {
 	// topItem is the back to front path item, bottom is right to left path 
 	GameObject topItem, bottomItem;
-	ItemControl backIn, frontOut, rightIn, leftOut;
+	// outputICs[0] is the front output, outputICs[1] is the left output
+	// inputICs[0] is the back input, inputICs[1] is the right input
 
 	// Placement in the world
 	public override void PlacedAction(GridControl grid_)
 	{
+		inputICs = new ItemControl[2];
+		outputICs = new ItemControl[2];
 		inputValidRelPoses.Add(transform.right);
 		outputValidRelPoses.Add(-transform.right);
 		base.PlacedAction(grid_);
@@ -20,22 +23,6 @@ public class BridgeLogic : ItemControl
 	public override void RemovedAction()
 	{
 		base.RemovedAction();
-
-		if (backIn)
-			backIn.TryAttachOutputs();
-		backIn = null;
-
-		if (rightIn)
-			rightIn.TryAttachOutputs();
-		rightIn = null;
-
-		if (frontOut)
-			frontOut.TryAttachInputs();
-		frontOut = null;
-
-		if (leftOut)
-			leftOut.TryAttachInputs();
-		leftOut = null;
 
 		if (topItem)
 			Destroy(topItem);
@@ -48,28 +35,38 @@ public class BridgeLogic : ItemControl
 
 	public override void setOutput(ItemControl newIC)
 	{
+		if (newIC == null)
+		{
+			TryAttachOutputs();
+			return;
+		}
 		int relativeAngle = getRelativeAngle(this, newIC);
 		if (relativeAngle == 0)
-			frontOut = newIC;
+			outputICs[0] = newIC;
 		else if (relativeAngle == 270)
-			leftOut = newIC;
+			outputICs[1] = newIC;
 	}
 
 	public override void setInput(ItemControl newIC)
 	{
+		if (newIC == null)
+		{
+			TryAttachInputs();
+			return;
+		}
 		int relativeAngle = getRelativeAngle(this, newIC);
 		if (relativeAngle == 180)
-			backIn = newIC;
+			inputICs[0] = newIC;
 		else if (relativeAngle == 90)
-			rightIn = newIC;
+			inputICs[1] = newIC;
 	}
 
 	// Item Stuff
 	public override bool AllowItem(ItemControl askingIC)
 	{
-		if (askingIC == backIn)
+		if (askingIC == inputICs[0])
 			return !topItem;
-		else if (askingIC == rightIn)
+		else if (askingIC == inputICs[1])
 			return !bottomItem;
 		// If the thing wants to deposit onto here, it can only deposit on top
 		else
@@ -77,9 +74,9 @@ public class BridgeLogic : ItemControl
 	}
 	public override void setItemSlot(ItemControl askingIC, GameObject item)
 	{
-		if (askingIC == backIn)
+		if (askingIC == inputICs[0])
 			topItem = item;
-		else if (askingIC == rightIn)
+		else if (askingIC == inputICs[1])
 			bottomItem = item;
 		// If the thing wants to deposit onto here, it can only deposit on top
 		else
@@ -87,38 +84,38 @@ public class BridgeLogic : ItemControl
 	}
 	public override void MoveItem(ItemControl pullingIC)
 	{
-		if (pullingIC == leftOut)
+		if (pullingIC == outputICs[1])
 			MoveItemLeftHelper();
-		else if (pullingIC == frontOut)
+		else if (pullingIC == outputICs[0])
 			MoveItemFrontHelper();
 	}
 	private void MoveItemLeftHelper()
 	{
-		if (leftOut && bottomItem && leftOut.AllowItem(this))
+		if (outputICs[1] && bottomItem && outputICs[1].AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, bottomItem, bottomItem.transform.position, leftOut.transform.position));
-			leftOut.setItemSlot(this, bottomItem);
+			StartCoroutine(SmoothMove(grid, bottomItem, bottomItem.transform.position, outputICs[1].transform.position));
+			outputICs[1].setItemSlot(this, bottomItem);
 			bottomItem = null;
 		}
-		if (rightIn)
-			rightIn.MoveItem(this);
+		if (inputICs[1])
+			inputICs[1].MoveItem(this);
 	}
 	private void MoveItemFrontHelper()
 	{
-		if (frontOut && topItem && frontOut.AllowItem(this))
+		if (outputICs[0] && topItem && outputICs[0].AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, topItem, topItem.transform.position, frontOut.transform.position));
-			frontOut.setItemSlot(this, topItem);
+			StartCoroutine(SmoothMove(grid, topItem, topItem.transform.position, outputICs[0].transform.position));
+			outputICs[0].setItemSlot(this, topItem);
 			topItem = null;
 		}
-		if (backIn)
-			backIn.MoveItem(this);
+		if (inputICs[0])
+			inputICs[0].MoveItem(this);
 	}
 	public override void BeltCycle(object sender, EventArgs e)
 	{
-		if (leftOut == null)
+		if (outputICs[1] == null)
 			MoveItemLeftHelper();
-		if (frontOut == null)
+		if (outputICs[0] == null)
 			MoveItemFrontHelper();
 	}
 }

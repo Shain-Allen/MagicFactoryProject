@@ -28,17 +28,6 @@ public class BeltLogic : ItemControl
 		TryAttachInputs();
 		TryAttachOutputs();
 		grid.OnBeltTimerCycle += BeltCycle;
-		/*
-		// The addition of an extra back and the removeAt are done to give priority to attaching behind first
-		inputValidRelPoses.Add(-transform.up);
-		inputValidRelPoses.Add(-transform.right);
-		inputValidRelPoses.Add(transform.right);
-		base.PlacedAction(grid_);
-		inputValidRelPoses.Clear();
-		inputValidRelPoses.Add(-transform.up);
-		inputValidRelPoses.Add(-transform.right);
-		inputValidRelPoses.Add(transform.right);
-		*/
 	}
 
 	public override void TryAttachInputs()
@@ -53,12 +42,12 @@ public class BeltLogic : ItemControl
 		spriteRenderer.sprite = straightBelt;
 		spriteRenderer.flipX = false;
 
-		if (inputIC == null)
+		if (inputICs[0] == null)
 			return;
 
 		// This gets the closest position of inputIC to this belt, therefore being the connection probably
 		// Note that this is incredibly jenk, but the best possible solution at the moment
-		List<Vector3> backPositions = inputIC.getAllPositions();
+		List<Vector3> backPositions = inputICs[0].getAllPositions();
 		Vector3 backConnectionPos = backPositions[0];
 		foreach (Vector3 pos in backPositions)
 			if (GetDistance(backConnectionPos, this.transform.position) > GetDistance(pos, this.transform.position))
@@ -77,8 +66,8 @@ public class BeltLogic : ItemControl
 		base.MoveItem(pullingIC);
 
 		// Chain reaction backwards
-		if (inputIC)
-			inputIC.MoveItem(this);
+		if (inputICs[0])
+			inputICs[0].MoveItem(this);
 	}
 
 	public void InsertItem(GameObject newItem)
