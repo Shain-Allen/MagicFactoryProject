@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static MathHelpers;
+using static PlaceableHelpers;
 using static ICHelpers;
 
 /* For all overriding methods, check ItemControl.cs for further documentation*/
@@ -15,12 +16,29 @@ public class BeltLogic : ItemControl
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 
+		grid = grid_;
+		relativePositions.Add(Vector3.zero);
+		foreach (Vector3 pos in relativePositions)
+			AddToWorld(grid, this, pos);
+
+		inputValidRelPoses.Add(-transform.up);
+		inputValidRelPoses.Add(-transform.right);
+		inputValidRelPoses.Add(transform.right);
+		outputValidRelPoses.Add(transform.up);
+		TryAttachInputs();
+		TryAttachOutputs();
+		grid.OnBeltTimerCycle += BeltCycle;
+		/*
 		// The addition of an extra back and the removeAt are done to give priority to attaching behind first
-		inputValidRelPoses.Add(-Vector3.up);
-		inputValidRelPoses.Add(-Vector3.right);
-		inputValidRelPoses.Add(Vector3.right);
+		inputValidRelPoses.Add(-transform.up);
+		inputValidRelPoses.Add(-transform.right);
+		inputValidRelPoses.Add(transform.right);
 		base.PlacedAction(grid_);
-		inputValidRelPoses.RemoveAt(3);
+		inputValidRelPoses.Clear();
+		inputValidRelPoses.Add(-transform.up);
+		inputValidRelPoses.Add(-transform.right);
+		inputValidRelPoses.Add(transform.right);
+		*/
 	}
 
 	public override void TryAttachInputs()
@@ -61,14 +79,6 @@ public class BeltLogic : ItemControl
 		// Chain reaction backwards
 		if (inputIC)
 			inputIC.MoveItem(this);
-	}
-
-	public override bool AllowInputFrom(ItemControl askingIC)
-	{
-		int relativeAngle = getRelativeAngle(this, askingIC);
-		if (inputIC || relativeAngle == 0)
-			return false;
-		return true;
 	}
 
 	public void InsertItem(GameObject newItem)

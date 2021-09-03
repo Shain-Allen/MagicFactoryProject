@@ -48,9 +48,9 @@ public class ICHelpers : MonoBehaviour
 	}
 	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
 	{
-		ItemControl outputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
-		if (outputIC)
-			TryAttachInputHelper(grid, IC, outputIC);
+		ItemControl inputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
+		if (inputIC)
+			TryAttachInputHelper(grid, IC, inputIC);
 	}
 	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
 	{

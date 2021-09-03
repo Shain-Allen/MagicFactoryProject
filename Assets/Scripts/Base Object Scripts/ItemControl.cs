@@ -113,7 +113,7 @@ public abstract class ItemControl : Placeable
 		inputIC = null;
 		if (allowInputs)
 			foreach (Vector3 validRelPos in inputValidRelPoses)
-				TryAttachInputHelper(grid, this);
+				TryAttachInputHelper(grid, this, validRelPos);
 	}
 
 	// Returns if this IC can attach to the askingIC as the input IC of this
