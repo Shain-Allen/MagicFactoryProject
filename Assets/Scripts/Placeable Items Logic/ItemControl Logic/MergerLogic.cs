@@ -51,8 +51,7 @@ public class MergerLogic : ItemControl
 
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this, transform.right);
-		RemoveFromWorld(grid, this);
+		base.RemovedAction();
 
 		if (leftInput)
 			leftInput.TryAttachOutputs();
@@ -61,15 +60,5 @@ public class MergerLogic : ItemControl
 		if (rightInput)
 			rightInput.TryAttachOutputs();
 		rightInput = null;
-
-		if (outputIC)
-			outputIC.TryAttachInputs();
-		outputIC = null;
-
-		if (itemSlot)
-			Destroy(itemSlot);
-		itemSlot = null;
-
-		Destroy(gameObject);
 	}
 }

@@ -80,12 +80,7 @@ public class SplitterLogic : ItemControl
 
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this, transform.right);
-		RemoveFromWorld(grid, this);
-
-		if (inputIC)
-			inputIC.TryAttachOutputs();
-		inputIC = null;
+		base.RemovedAction();
 
 		if (leftOutput)
 			leftOutput.TryAttachInputs();
@@ -94,11 +89,5 @@ public class SplitterLogic : ItemControl
 		if (rightOutput)
 			rightOutput.TryAttachInputs();
 		rightOutput = null;
-
-		if (itemSlot)
-			Destroy(itemSlot);
-		itemSlot = null;
-
-		Destroy(gameObject);
 	}
 }

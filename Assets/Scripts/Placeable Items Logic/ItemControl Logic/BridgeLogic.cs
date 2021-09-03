@@ -19,19 +19,19 @@ public class BridgeLogic : ItemControl
 	}
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this);
+		base.RemovedAction();
 
 		if (backIn)
 			backIn.TryAttachOutputs();
 		backIn = null;
 
-		if (frontOut)
-			frontOut.TryAttachInputs();
-		frontOut = null;
-
 		if (rightIn)
 			rightIn.TryAttachOutputs();
 		rightIn = null;
+
+		if (frontOut)
+			frontOut.TryAttachInputs();
+		frontOut = null;
 
 		if (leftOut)
 			leftOut.TryAttachInputs();
@@ -44,8 +44,6 @@ public class BridgeLogic : ItemControl
 		if (bottomItem)
 			Destroy(bottomItem);
 		bottomItem = null;
-
-		Destroy(gameObject);
 	}
 
 	public override void setOutput(ItemControl newIC)

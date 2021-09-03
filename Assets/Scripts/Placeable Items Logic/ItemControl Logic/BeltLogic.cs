@@ -14,18 +14,18 @@ public class BeltLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
+
+		// The addition of an extra back and the removeAt are done to give priority to attaching behind first
+		inputValidRelPoses.Add(-Vector3.up);
+		inputValidRelPoses.Add(-Vector3.right);
+		inputValidRelPoses.Add(Vector3.right);
 		base.PlacedAction(grid_);
+		inputValidRelPoses.RemoveAt(3);
 	}
 
 	public override void TryAttachInputs()
 	{
-		// If it can't attach to the one behind it, try its left side, then its right
-		TryAttachInputHelper(grid, this, 180);
-		if (inputIC == null)
-			TryAttachInputHelper(grid, this, 90);
-		if (inputIC == null)
-			TryAttachInputHelper(grid, this, 270);
-
+		base.TryAttachInputs();
 		UpdateSprite();
 	}
 

@@ -52,7 +52,7 @@ public abstract class ItemControl : Placeable
 	 */
 	public override void RemovedAction()
 	{
-		RemoveFromWorld(grid, this);
+		base.RemovedAction();
 
 		if (inputIC)
 			inputIC.TryAttachOutputs();
@@ -65,8 +65,6 @@ public abstract class ItemControl : Placeable
 		if (itemSlot)
 			Destroy(itemSlot);
 		itemSlot = null;
-
-		Destroy(gameObject);
 	}
 
 	/* (Only applies to children that have multiple sprites)
