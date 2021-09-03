@@ -25,13 +25,6 @@ public class SplitterLogic : ItemControl
 		else if (newIC.transform.position == transform.position + transform.up + transform.right)
 			rightOutput = newIC;
 	}
-	public override void setOutputToNull(ItemControl deletingIC)
-	{
-		if (deletingIC.transform.position == transform.position + transform.up)
-			leftOutput = null;
-		else if (deletingIC.transform.position == transform.position + transform.up + transform.right)
-			rightOutput = null;
-	}
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
@@ -91,24 +84,15 @@ public class SplitterLogic : ItemControl
 		RemoveFromWorld(grid, this);
 
 		if (inputIC)
-		{
-			inputIC.setOutputToNull(this);
 			inputIC.TryAttachOutputs();
-		}
 		inputIC = null;
 
 		if (leftOutput)
-		{
-			leftOutput.setInputToNull(this);
 			leftOutput.TryAttachInputs();
-		}
 		leftOutput = null;
 
 		if (rightOutput)
-		{
-			rightOutput.setInputToNull(this);
 			rightOutput.TryAttachInputs();
-		}
 		rightOutput = null;
 
 		if (itemSlot)

@@ -25,13 +25,6 @@ public class MergerLogic : ItemControl
 		else if (newIC.transform.position == transform.position - transform.up + transform.right)
 			rightInput = newIC;
 	}
-	public override void setInputToNull(ItemControl deletingIC)
-	{
-		if (deletingIC.transform.position == transform.position - transform.up)
-			leftInput = null;
-		else if (deletingIC.transform.position == transform.position - transform.up + transform.right)
-			rightInput = null;
-	}
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
@@ -62,24 +55,15 @@ public class MergerLogic : ItemControl
 		RemoveFromWorld(grid, this);
 
 		if (leftInput)
-		{
-			leftInput.setOutputToNull(this);
 			leftInput.TryAttachOutputs();
-		}
 		leftInput = null;
 
 		if (rightInput)
-		{
-			rightInput.setOutputToNull(this);
 			rightInput.TryAttachOutputs();
-		}
 		rightInput = null;
 
 		if (outputIC)
-		{
-			outputIC.setInputToNull(this);
 			outputIC.TryAttachInputs();
-		}
 		outputIC = null;
 
 		if (itemSlot)

@@ -55,17 +55,11 @@ public abstract class ItemControl : Placeable
 		RemoveFromWorld(grid, this);
 
 		if (inputIC)
-		{
-			inputIC.setOutputToNull(this);
 			inputIC.TryAttachOutputs();
-		}
 		inputIC = null;
 
 		if (outputIC)
-		{
-			outputIC.setInputToNull(this);
 			outputIC.TryAttachInputs();
-		}
 		outputIC = null;
 
 		if (itemSlot)
@@ -90,6 +84,7 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void TryAttachOutputs()
 	{
+		outputIC = null;
 		if (allowOutputs)
 			foreach (Vector3 validRelPos in outputValidRelPoses)
 				TryAttachOutputHelper(grid, this, validRelPos);
@@ -109,11 +104,6 @@ public abstract class ItemControl : Placeable
 	// Sets the outputIC of this IC to be newIC
 	public virtual void setOutput(ItemControl newIC) { outputIC = newIC; }
 
-	/* Sets the outputIC of this IC to be null
-	 * This input deletingIC is necessary if this IC has multiple outputICs
-	 */
-	public virtual void setOutputToNull(ItemControl deletingIC) { outputIC = null; }
-
 	// Input IC Functions
 
 	/* Attaches this IC's inputIC
@@ -122,6 +112,7 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void TryAttachInputs()
 	{
+		inputIC = null;
 		if (allowInputs)
 			foreach (Vector3 validRelPos in inputValidRelPoses)
 				TryAttachInputHelper(grid, this);
@@ -140,11 +131,6 @@ public abstract class ItemControl : Placeable
 
 	// Sets the inputIC of this IC to be newIC
 	public virtual void setInput(ItemControl newIC) { inputIC = newIC; }
-
-	/* Sets the inputIC of this IC to be null
-	 * This input deletingIC is necessary if this IC has multiple inputICs
-	 */
-	public virtual void setInputToNull(ItemControl deletingIC) { inputIC = null; }
 
 	// Item slot things
 

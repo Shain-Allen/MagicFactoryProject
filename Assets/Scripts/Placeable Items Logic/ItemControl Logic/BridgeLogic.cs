@@ -22,31 +22,19 @@ public class BridgeLogic : ItemControl
 		RemoveFromWorld(grid, this);
 
 		if (backIn)
-		{
-			backIn.setOutputToNull(this);
 			backIn.TryAttachOutputs();
-		}
 		backIn = null;
 
 		if (frontOut)
-		{
-			frontOut.setInputToNull(this);
 			frontOut.TryAttachInputs();
-		}
 		frontOut = null;
 
 		if (rightIn)
-		{
-			rightIn.setOutputToNull(this);
 			rightIn.TryAttachOutputs();
-		}
 		rightIn = null;
 
 		if (leftOut)
-		{
-			leftOut.setInputToNull(this);
 			leftOut.TryAttachInputs();
-		}
 		leftOut = null;
 
 		if (topItem)
@@ -60,7 +48,6 @@ public class BridgeLogic : ItemControl
 		Destroy(gameObject);
 	}
 
-	// Output IC Stuff
 	public override void setOutput(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
@@ -69,16 +56,7 @@ public class BridgeLogic : ItemControl
 		else if (relativeAngle == 270)
 			leftOut = newIC;
 	}
-	public override void setOutputToNull(ItemControl deletingIC)
-	{
-		int relativeAngle = getRelativeAngle(this, deletingIC);
-		if (relativeAngle == 0)
-			frontOut = null;
-		else if (relativeAngle == 90)
-			leftOut = null;
-	}
 
-	// Input IC Stuff
 	public override void setInput(ItemControl newIC)
 	{
 		int relativeAngle = getRelativeAngle(this, newIC);
@@ -86,14 +64,6 @@ public class BridgeLogic : ItemControl
 			backIn = newIC;
 		else if (relativeAngle == 90)
 			rightIn = newIC;
-	}
-	public override void setInputToNull(ItemControl deletingIC)
-	{
-		int relativeAngle = getRelativeAngle(this, deletingIC);
-		if (relativeAngle == 180)
-			backIn = null;
-		else if (relativeAngle == 270)
-			rightIn = null;
 	}
 
 	// Item Stuff
