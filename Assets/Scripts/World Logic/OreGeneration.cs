@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static MathHelpers;
 using static GridHelpers;
 
 public class OreGeneration : MonoBehaviour
@@ -96,7 +95,7 @@ public class OreGeneration : MonoBehaviour
 				dist = Vector2.Distance(new Vector2(x, y), new Vector2(center.x, center.y));
 				empty = !GetOreAt(grid, new Vector2Int(x, y));
 				oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
-				if (randGen.NextDouble() <= oddsOfOre && insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
+				if (randGen.NextDouble() <= oddsOfOre && insideBorder(new Vector2(x, y), new Vector2(left, bottom), new Vector2(right, top)) && dist <= rad && empty)
 				{
 					tempOre = Instantiate(oreName, new Vector3(x, y, 0), Quaternion.identity, curChunkParent.transform);
 

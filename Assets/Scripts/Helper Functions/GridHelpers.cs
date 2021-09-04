@@ -63,4 +63,9 @@ public class GridHelpers : MonoBehaviour
 		y -= (chunkPos.y * ChunkManager.CHUNK_SIZE);
 		return new Vector2Int(x, y);
 	}
+
+	public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
+	{
+		return !(pos.x < bottomLeft.x || pos.y < bottomLeft.y || pos.x > topRight.x || pos.y > topRight.y);
+	}
 }
