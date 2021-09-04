@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using static MathHelpers;
 using static PlaceableHelpers;
 
 public class ICHelpers : MonoBehaviour
@@ -29,22 +28,6 @@ public class ICHelpers : MonoBehaviour
 		inputIC.setOutput(IC);
 		IC.UpdateSprite();
 		inputIC.UpdateSprite();
-	}
-
-	// Returns the relative angle of MainIC's facing direction to the angle of AskingIC
-	public static int getRelativeAngle(ItemControl IC, Vector2 askingICPos)
-	{
-		Vector2 deltaPos = Round(askingICPos) - Round(IC.transform.position);
-		float absoluteAngle = VectorToEuler(deltaPos);
-		float relativeAngle = (IC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
-		return (int)Mathf.Round(relativeAngle);
-	}
-	private static Vector2Int Round(Vector2 pos)
-	{
-		Vector2Int newPos = new Vector2Int();
-		newPos.x = (int)Mathf.Round(pos.x);
-		newPos.y = (int)Mathf.Round(pos.y);
-		return newPos;
 	}
 
 	// Smoothly moves the item from slot one to slot two

@@ -12,14 +12,4 @@ public class MathHelpers : MonoBehaviour
 	{
 		return !(x < left || y < bottom || x > right || y > top);
 	}
-
-	// Returns the Euler Angle of any Vector3 (ignores the Z axis)
-	public static float VectorToEuler(Vector3 input)
-	{
-		float toReturn = (-Mathf.Atan(input.y / input.x) * 180 / Mathf.PI) + 90;
-		if (input.x > 0)
-			toReturn += 180;
-		toReturn = Mathf.Abs(toReturn);
-		return (float)Math.Round(toReturn, 1);
-	}
 }

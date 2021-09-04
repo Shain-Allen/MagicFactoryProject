@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static MathHelpers;
-using static ICHelpers;
 
 /* For all overriding methods, check ItemControl.cs for further documentation*/
 public class BeltLogic : ItemControl
@@ -44,12 +42,11 @@ public class BeltLogic : ItemControl
 			if (Vector3.Distance(backConnectionPos, this.transform.position) > Vector3.Distance(pos, this.transform.position))
 				backConnectionPos = pos;
 
-		float angle = getRelativeAngle(this, backConnectionPos);
-		if (angle == 180)
+		if (transform.position - transform.up == backConnectionPos)
 			return;
 		// Otherwise, it must be a corner belt; if it's turning right, it needs to be flipped
 		spriteRenderer.sprite = cornerBelt;
-		spriteRenderer.flipX = (angle == 90);
+		spriteRenderer.flipX = (transform.position - transform.right == backConnectionPos);
 	}
 
 	public override void MoveItem(ItemControl pullingIC)
@@ -59,13 +56,5 @@ public class BeltLogic : ItemControl
 		// Chain reaction backwards
 		if (inputICs[0])
 			inputICs[0].MoveItem(this);
-	}
-
-	public void InsertItem(GameObject newItem)
-	{
-		if (itemSlots[0])
-			return;
-
-		itemSlots[0] = Instantiate(newItem, transform.position, Quaternion.identity, transform.parent);
 	}
 }

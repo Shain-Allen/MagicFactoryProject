@@ -29,10 +29,9 @@ public class BridgeLogic : ItemControl
 			TryAttachOutputs();
 			return;
 		}
-		int relativeAngle = getRelativeAngle(this, newIC.transform.position);
-		if (relativeAngle == 0)
+		if (newIC.transform.position == transform.position + transform.up)
 			outputICs[0] = newIC;
-		else if (relativeAngle == 270)
+		else if (newIC.transform.position == transform.position - transform.right)
 			outputICs[1] = newIC;
 	}
 
@@ -43,10 +42,9 @@ public class BridgeLogic : ItemControl
 			TryAttachInputs();
 			return;
 		}
-		int relativeAngle = getRelativeAngle(this, newIC.transform.position);
-		if (relativeAngle == 180)
+		if (newIC.transform.position == transform.position - transform.up)
 			inputICs[0] = newIC;
-		else if (relativeAngle == 90)
+		else if (newIC.transform.position == transform.position + transform.right)
 			inputICs[1] = newIC;
 	}
 
