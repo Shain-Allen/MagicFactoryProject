@@ -11,7 +11,6 @@ public class FullChestLogic : ItemControl, IOpenMenu
 
 	public override void PlacedAction(GridControl grid_)
 	{
-		allowInputs = false;
 		outputValidRelPoses.Add(transform.up);
 		base.PlacedAction(grid_);
 		FullChestMenu = GameObject.FindGameObjectWithTag("ItemSpawnerMenu").GetComponent<ItemSpawnerMenu>();

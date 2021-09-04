@@ -21,8 +21,6 @@ public abstract class ItemControl : Placeable
 	 * allowInputs will be turned false if this IC cannot have inputs
 	 * The transform of this IC should never have a non-integer position, or a rotation that isn't a multiple of 90
 	 */
-	protected bool allowInputs = true;
-	protected bool allowOutputs = true;
 	protected List<Vector3> inputValidRelPoses = new List<Vector3>();
 	protected List<Vector3> outputValidRelPoses = new List<Vector3>();
 	public ItemControl[] inputICs = new ItemControl[1];
@@ -36,7 +34,7 @@ public abstract class ItemControl : Placeable
 		base.PlacedAction(grid_);
 		TryAttachInputs();
 		TryAttachOutputs();
-		if (allowInputs)
+		if (inputValidRelPoses.Count > 0)
 			grid.OnBeltTimerCycle += BeltCycle;
 	}
 
@@ -88,7 +86,7 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void TryAttachOutputs()
 	{
-		if (allowOutputs)
+		if (outputValidRelPoses.Count > 0)
 		{
 			// Resets all connections this currently has
 			for (int i = 0; i < outputICs.Length; i++)
@@ -106,8 +104,6 @@ public abstract class ItemControl : Placeable
 	// Returns true if this IC can attach to the askingIC as the output IC of this
 	public virtual bool AllowOutputTo(ItemControl askingIC)
 	{
-		if (!allowOutputs)
-			return false;
 		// If every slot is full, then this can't accept an output
 		for (int i = 0; i < outputICs.Length + 1; i++)
 		{
@@ -135,7 +131,7 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void TryAttachInputs()
 	{
-		if (allowInputs)
+		if (inputValidRelPoses.Count > 0)
 		{
 			// Resets all connections this currently has
 			for (int i = 0; i < inputICs.Length; i++)
@@ -153,8 +149,6 @@ public abstract class ItemControl : Placeable
 	// Returns if this IC can attach to the askingIC as the input IC of this
 	public virtual bool AllowInputFrom(ItemControl askingIC)
 	{
-		if (!allowInputs)
-			return false;
 		// If every slot is full, then this can't accept an input
 		for (int i = 0; i < inputICs.Length + 1; i++)
 		{
@@ -211,7 +205,7 @@ public abstract class ItemControl : Placeable
 	// If this IC is at the front of the line, start a chain reaction backwards of movement
 	public virtual void BeltCycle(object sender, EventArgs e)
 	{
-		if (!allowOutputs || outputICs[0] == null)
+		if (outputValidRelPoses.Count == 0 || outputICs[0] == null)
 			MoveItem(null);
 	}
 }

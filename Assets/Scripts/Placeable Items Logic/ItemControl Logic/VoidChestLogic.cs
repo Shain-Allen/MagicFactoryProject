@@ -6,7 +6,6 @@ public class VoidChestLogic : ItemControl
 {
 	public override void PlacedAction(GridControl grid_)
 	{
-		allowOutputs = false;
 		inputValidRelPoses.Add(-transform.up);
 		base.PlacedAction(grid_);
 	}
