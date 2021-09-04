@@ -18,7 +18,9 @@ public class MergerLogic : ItemControl
 
 		inputICs = new ItemControl[2];
 		relativePositions.Add(transform.right);
+		inputValidRelPoses.Add(-transform.up);
 		inputValidRelPoses.Add(transform.right - transform.up);
+		outputValidRelPoses.Add(transform.up);
 		base.PlacedAction(grid_);
 	}
 

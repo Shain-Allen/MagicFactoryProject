@@ -18,6 +18,8 @@ public class SplitterLogic : ItemControl
 
 		outputICs = new ItemControl[2];
 		relativePositions.Add(transform.right);
+		inputValidRelPoses.Add(-transform.up);
+		outputValidRelPoses.Add(transform.up);
 		outputValidRelPoses.Add(transform.right + transform.up);
 		base.PlacedAction(grid_);
 	}
@@ -59,7 +61,6 @@ public class SplitterLogic : ItemControl
 		if (inputICs[0])
 			inputICs[0].MoveItem(this);
 	}
-
 	private ItemControl chooseOutputIC()
 	{
 		bool leftOutputFree = outputICs[0] && outputICs[0].AllowItem(this);

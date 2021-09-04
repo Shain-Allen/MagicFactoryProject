@@ -39,6 +39,10 @@ public class PlaceableHelpers
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
 		if (chunkParent)
-			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = null;
+		{
+			Vector2Int pos = PosToPosInChunk(placeable.transform.position + posOffSet);
+			if (chunkParent.GetComponent<Chunk>().placeObjects[pos.x, pos.y] == placeable)
+				chunkParent.GetComponent<Chunk>().placeObjects[pos.x, pos.y] = null;
+		}
 	}
 }

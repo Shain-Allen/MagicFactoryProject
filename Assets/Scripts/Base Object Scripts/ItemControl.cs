@@ -34,8 +34,6 @@ public abstract class ItemControl : Placeable
 	public override void PlacedAction(GridControl grid_)
 	{
 		base.PlacedAction(grid_);
-		inputValidRelPoses.Add(-transform.up);
-		outputValidRelPoses.Add(transform.up);
 		TryAttachInputs();
 		TryAttachOutputs();
 		if (allowInputs)

@@ -15,19 +15,11 @@ public class BeltLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
-
-		grid = grid_;
-		relativePositions.Add(Vector3.zero);
-		foreach (Vector3 pos in relativePositions)
-			AddToWorld(grid, this, pos);
-
 		inputValidRelPoses.Add(-transform.up);
 		inputValidRelPoses.Add(-transform.right);
 		inputValidRelPoses.Add(transform.right);
 		outputValidRelPoses.Add(transform.up);
-		TryAttachInputs();
-		TryAttachOutputs();
-		grid.OnBeltTimerCycle += BeltCycle;
+		base.PlacedAction(grid_);
 	}
 
 	public override void TryAttachInputs()

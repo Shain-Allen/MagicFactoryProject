@@ -15,6 +15,8 @@ public class BridgeLogic : ItemControl
 		inputICs = new ItemControl[2];
 		outputICs = new ItemControl[2];
 		itemSlots = new GameObject[2];
+		inputValidRelPoses.Add(-transform.up);
+		outputValidRelPoses.Add(transform.up);
 		inputValidRelPoses.Add(transform.right);
 		outputValidRelPoses.Add(-transform.right);
 		base.PlacedAction(grid_);

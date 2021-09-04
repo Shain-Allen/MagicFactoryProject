@@ -16,6 +16,12 @@ public abstract class Placeable : MonoBehaviour
 		grid = grid_;
 		relativePositions.Add(Vector3.zero);
 		foreach (Vector3 pos in relativePositions)
+			if (GetPlaceableAt<Placeable>(grid_, transform.position + pos) != null)
+			{
+				RemovedAction();
+				return;
+			}
+		foreach (Vector3 pos in relativePositions)
 			AddToWorld(grid, this, pos);
 	}
 
