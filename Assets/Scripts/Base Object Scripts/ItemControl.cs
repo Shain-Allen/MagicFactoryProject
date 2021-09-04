@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static ICHelpers;
-using static PlaceableHelpers;
 
 /* An IC is a placeable that has at least 1 input and/or output, and holds at least 1 item
  * Some ICs can't have an output, signalled by allowOutputTo, or input, signalled by allowInputFrom
@@ -17,18 +16,18 @@ public abstract class ItemControl : Placeable
 	/* Variable Information:
 	 * outputIC refers to the output IC, ICs with multiple outputs might not use this variable
 	 * inputIC refers to the input IC, ICs with multiple inputs might not use this variable
-	 * itemSlot refers to the item in this IC, ICs with multiple items might not use this variable 
+	 * itemSlots[0] refers to the item in this IC, ICs with multiple items might not use this variable 
 	 * allowOutputs will be turned false if this IC cannot have outputs
 	 * allowInputs will be turned false if this IC cannot have inputs
 	 * The transform of this IC should never have a non-integer position, or a rotation that isn't a multiple of 90
 	 */
-	protected GameObject itemSlot = null;
 	protected bool allowInputs = true;
 	protected bool allowOutputs = true;
 	protected List<Vector3> inputValidRelPoses = new List<Vector3>();
 	protected List<Vector3> outputValidRelPoses = new List<Vector3>();
 	public ItemControl[] inputICs = new ItemControl[1];
 	public ItemControl[] outputICs = new ItemControl[1];
+	public GameObject[] itemSlots = new GameObject[1];
 
 	// Generic Placeable Functions
 
@@ -68,9 +67,12 @@ public abstract class ItemControl : Placeable
 			outputICs[i] = null;
 		}
 
-		if (itemSlot)
-			Destroy(itemSlot);
-		itemSlot = null;
+		for (int i = 0; i < itemSlots.Length; i++)
+		{
+			if (itemSlots[i])
+				Destroy(itemSlots[i]);
+			itemSlots[i] = null;
+		}
 	}
 
 	/* (Only applies to children that have multiple sprites)
@@ -186,26 +188,27 @@ public abstract class ItemControl : Placeable
 	public virtual void MoveItem(ItemControl pullingIC)
 	{
 		// If this IC can move its item forward legally and immediately
-		if (pullingIC && pullingIC == outputICs[0] && itemSlot && pullingIC.AllowItem(this))
+		if (pullingIC && pullingIC == outputICs[0] && itemSlots[0] && pullingIC.AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, pullingIC.transform.position));
-			pullingIC.setItemSlot(this, itemSlot);
-			itemSlot = null;
+			StartCoroutine(SmoothMove(grid, itemSlots[0], itemSlots[0].transform.position, pullingIC.transform.position));
+			pullingIC.setItemSlot(this, itemSlots[0]);
+			itemSlots[0] = null;
 		}
 	}
 
 	// Returns if this IC can allow an item to be placed in it
 	public virtual bool AllowItem(ItemControl askingIC)
 	{
-		if (itemSlot)
-			return false;
-		return true;
+		for (int i = 0; i < itemSlots.Length; i++)
+			if (!itemSlots[i])
+				return true;
+		return false;
 	}
 
-	/* Sets the itemSlot of this IC to be item
+	/* Sets the itemSlots[0] of this IC to be item
 	 * This input askingIC is necessary if this IC has multiple inputICs
 	 */
-	public virtual void setItemSlot(ItemControl askingIC, GameObject item) { itemSlot = item; }
+	public virtual void setItemSlot(ItemControl askingIC, GameObject item) { itemSlots[0] = item; }
 
 	// If this IC is at the front of the line, start a chain reaction backwards of movement
 	public virtual void BeltCycle(object sender, EventArgs e)

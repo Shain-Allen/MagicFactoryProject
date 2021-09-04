@@ -12,10 +12,10 @@ public class VoidChestLogic : ItemControl
 
 	public override void MoveItem(ItemControl pullingIC)
 	{
-		if (itemSlot)
+		if (itemSlots[0])
 		{
-			Destroy(itemSlot);
-			itemSlot = null;
+			Destroy(itemSlots[0]);
+			itemSlots[0] = null;
 		}
 		if (inputICs[0])
 			inputICs[0].MoveItem(this);

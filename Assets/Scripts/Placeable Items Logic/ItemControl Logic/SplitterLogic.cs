@@ -48,11 +48,11 @@ public class SplitterLogic : ItemControl
 
 		ItemControl outputBelt = chooseOutputIC();
 		// Try to move the item
-		if (itemSlot && outputBelt)
+		if (itemSlots[0] && outputBelt)
 		{
-			StartCoroutine(SmoothMove(grid, itemSlot, itemSlot.transform.position, outputBelt.transform.position));
-			outputBelt.setItemSlot(this, itemSlot);
-			itemSlot = null;
+			StartCoroutine(SmoothMove(grid, itemSlots[0], itemSlots[0].transform.position, outputBelt.transform.position));
+			outputBelt.setItemSlot(this, itemSlots[0]);
+			itemSlots[0] = null;
 		}
 
 		// Chain reaction backwards

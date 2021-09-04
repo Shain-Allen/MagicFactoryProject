@@ -1,13 +1,11 @@
 using System;
 using UnityEngine;
-using static PlaceableHelpers;
 using static ICHelpers;
 
 /* For all overriding methods without documentation, check ItemControl.cs */
 public class BridgeLogic : ItemControl
 {
-	// topItem is the back to front path item, bottom is right to left path 
-	GameObject topItem, bottomItem;
+	// itemSlots[0] is the top item, back-to-front, itemSlots[1] is the bottom item, right-to-left
 	// outputICs[0] is the front output, outputICs[1] is the left output
 	// inputICs[0] is the back input, inputICs[1] is the right input
 
@@ -16,21 +14,10 @@ public class BridgeLogic : ItemControl
 	{
 		inputICs = new ItemControl[2];
 		outputICs = new ItemControl[2];
+		itemSlots = new GameObject[2];
 		inputValidRelPoses.Add(transform.right);
 		outputValidRelPoses.Add(-transform.right);
 		base.PlacedAction(grid_);
-	}
-	public override void RemovedAction()
-	{
-		base.RemovedAction();
-
-		if (topItem)
-			Destroy(topItem);
-		topItem = null;
-
-		if (bottomItem)
-			Destroy(bottomItem);
-		bottomItem = null;
 	}
 
 	public override void setOutput(ItemControl newIC)
@@ -65,22 +52,22 @@ public class BridgeLogic : ItemControl
 	public override bool AllowItem(ItemControl askingIC)
 	{
 		if (askingIC == inputICs[0])
-			return !topItem;
+			return !itemSlots[0];
 		else if (askingIC == inputICs[1])
-			return !bottomItem;
+			return !itemSlots[1];
 		// If the thing wants to deposit onto here, it can only deposit on top
 		else
-			return !topItem;
+			return !itemSlots[0];
 	}
 	public override void setItemSlot(ItemControl askingIC, GameObject item)
 	{
 		if (askingIC == inputICs[0])
-			topItem = item;
+			itemSlots[0] = item;
 		else if (askingIC == inputICs[1])
-			bottomItem = item;
+			itemSlots[1] = item;
 		// If the thing wants to deposit onto here, it can only deposit on top
 		else
-			topItem = item;
+			itemSlots[0] = item;
 	}
 	public override void MoveItem(ItemControl pullingIC)
 	{
@@ -91,22 +78,22 @@ public class BridgeLogic : ItemControl
 	}
 	private void MoveItemLeftHelper()
 	{
-		if (outputICs[1] && bottomItem && outputICs[1].AllowItem(this))
+		if (outputICs[1] && itemSlots[1] && outputICs[1].AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, bottomItem, bottomItem.transform.position, outputICs[1].transform.position));
-			outputICs[1].setItemSlot(this, bottomItem);
-			bottomItem = null;
+			StartCoroutine(SmoothMove(grid, itemSlots[1], itemSlots[1].transform.position, outputICs[1].transform.position));
+			outputICs[1].setItemSlot(this, itemSlots[1]);
+			itemSlots[1] = null;
 		}
 		if (inputICs[1])
 			inputICs[1].MoveItem(this);
 	}
 	private void MoveItemFrontHelper()
 	{
-		if (outputICs[0] && topItem && outputICs[0].AllowItem(this))
+		if (outputICs[0] && itemSlots[0] && outputICs[0].AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, topItem, topItem.transform.position, outputICs[0].transform.position));
-			outputICs[0].setItemSlot(this, topItem);
-			topItem = null;
+			StartCoroutine(SmoothMove(grid, itemSlots[0], itemSlots[0].transform.position, outputICs[0].transform.position));
+			outputICs[0].setItemSlot(this, itemSlots[0]);
+			itemSlots[0] = null;
 		}
 		if (inputICs[0])
 			inputICs[0].MoveItem(this);

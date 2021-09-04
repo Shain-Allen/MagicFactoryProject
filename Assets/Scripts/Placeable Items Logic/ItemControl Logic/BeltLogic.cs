@@ -72,9 +72,9 @@ public class BeltLogic : ItemControl
 
 	public void InsertItem(GameObject newItem)
 	{
-		if (itemSlot)
+		if (itemSlots[0])
 			return;
 
-		itemSlot = Instantiate(newItem, transform.position, Quaternion.identity, transform.parent);
+		itemSlots[0] = Instantiate(newItem, transform.position, Quaternion.identity, transform.parent);
 	}
 }
