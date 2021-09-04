@@ -6,17 +6,6 @@ using static PlaceableHelpers;
 public class ICHelpers : MonoBehaviour
 {
 	// Attaches the output IC if possible, copy documentation from ItemControl.cs
-	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC)
-	{
-		TryAttachOutputHelper(grid, IC, 0);
-	}
-	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC, int relativeAngle)
-	{
-		Vector3 dirVector = EulerToVector(relativeAngle + IC.transform.rotation.eulerAngles.z);
-		ItemControl askingIC = GetPlaceableAt<ItemControl>(grid, dirVector + IC.transform.position);
-		if (askingIC)
-			TryAttachOutputHelper(grid, IC, askingIC);
-	}
 	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
 	{
 		ItemControl outputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
@@ -35,17 +24,6 @@ public class ICHelpers : MonoBehaviour
 	}
 
 	// Attaches the input IC if possible from the relative angle, copy documentation from ItemControl.cs
-	public static void TryAttachInputHelper(GridControl grid, ItemControl IC)
-	{
-		TryAttachInputHelper(grid, IC, 180);
-	}
-	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, int relativeAngle)
-	{
-		Vector3 dirVector = EulerToVector(relativeAngle + IC.transform.rotation.eulerAngles.z);
-		ItemControl askingIC = GetPlaceableAt<ItemControl>(grid, dirVector + IC.transform.position);
-		if (askingIC)
-			TryAttachInputHelper(grid, IC, askingIC);
-	}
 	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
 	{
 		ItemControl inputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
@@ -68,12 +46,20 @@ public class ICHelpers : MonoBehaviour
 	{
 		return getRelativeAngle(IC, askingIC.transform.position);
 	}
-	public static int getRelativeAngle(ItemControl IC, Vector3 askingICPos)
+	public static int getRelativeAngle(ItemControl IC, Vector2 askingICPos)
 	{
-		Vector3 deltaPos = askingICPos - IC.transform.position;
+		askingICPos = Round(askingICPos);
+		Vector2 deltaPos = askingICPos - Round(IC.transform.position);
 		float absoluteAngle = VectorToEuler(deltaPos);
 		float relativeAngle = (IC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
 		return (int)Mathf.Round(relativeAngle);
+	}
+	private static Vector2Int Round(Vector2 pos)
+	{
+		Vector2Int newPos = new Vector2Int();
+		newPos.x = (int)Mathf.Round(pos.x);
+		newPos.y = (int)Mathf.Round(pos.y);
+		return newPos;
 	}
 
 	// Smoothly moves the item from slot one to slot two
