@@ -2,6 +2,14 @@ using UnityEngine;
 
 public class GridHelpers : MonoBehaviour
 {
+	public static Vector2Int Round(Vector2 pos)
+	{
+		Vector2Int newPos = new Vector2Int();
+		newPos.x = (int)Mathf.Round(pos.x);
+		newPos.y = (int)Mathf.Round(pos.y);
+		return newPos;
+	}
+
 	// Returns the parent chunk object given any chunk's position, or a standard position
 	public static GameObject GetChunkParentByPos(GridControl grid, Vector2 pos)
 	{
@@ -18,6 +26,7 @@ public class GridHelpers : MonoBehaviour
 	// Returns the chunk at the provided position as a Vector2Int
 	public static Vector2Int GetChunk(Vector2 input)
 	{
+		input = Round(input);
 		return GetChunk(input.x, input.y);
 	}
 	public static Vector2Int GetChunk(float x, float y)
@@ -78,6 +87,7 @@ public class GridHelpers : MonoBehaviour
 	}
 	public static Vector2Int PosToPosInChunk(Vector2 pos)
 	{
+		pos = Round(pos);
 		Vector2Int chunkPos = ChunkToPos(GetChunk(pos));
 		int x = (int)(pos.x - chunkPos.x);
 		int y = (int)(pos.y - chunkPos.y);
