@@ -15,14 +15,14 @@ public class ChunkManager : MonoBehaviour
 	{
 		Camera camera = cam.GetComponent<Camera>();
 		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
-		return GetChunk(botLeft.x, botLeft.y);
+		return GetChunkPos(botLeft);
 	}
 
 	public static Vector2Int getTopRightBound(GameObject cam)
 	{
 		Camera camera = cam.GetComponent<Camera>();
 		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
-		return GetChunk(topRight.x, topRight.y);
+		return GetChunkPos(topRight);
 	}
 
 	public static void LoadChunks(GridControl grid, Vector2Int bottomLeftBound, Vector2Int topRightBound)

@@ -93,7 +93,7 @@ public class OreGeneration : MonoBehaviour
 		for (int x = center.x - maxRad; x <= center.x + maxRad; x++)
 			for (int y = center.y - maxRad; y <= center.y + maxRad; y++)
 			{
-				dist = GetDistance(x, center.x, y, center.y);
+				dist = Vector2.Distance(new Vector2(x, y), new Vector2(center.x, center.y));
 				empty = !GetOreAt(grid, new Vector2Int(x, y));
 				oddsOfOre = dist <= rad ? 1 - Math.Pow(dist / rad, 3) : 0;
 				if (randGen.NextDouble() <= oddsOfOre && insideBorder(x, y, left, right, bottom, top) && dist <= rad && empty)
@@ -116,8 +116,8 @@ public class OreGeneration : MonoBehaviour
 	public static GameObject GetOreAt(GridControl grid, Vector2Int pos)
 	{
 		GameObject chunkParent;
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
-			return chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+		if (grid.worldChunks.TryGetValue(GetChunkPos(pos), out chunkParent))
+			return chunkParent.GetComponent<Chunk>().oreObjects[GetPosInChunk(pos).x, GetPosInChunk(pos).y];
 		return null;
 	}
 
@@ -126,7 +126,7 @@ public class OreGeneration : MonoBehaviour
 	public static void AddOreToWorld(GridControl grid, Vector2Int pos, GameObject tempOre)
 	{
 		GameObject chunkParent;
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
-			chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y] = tempOre;
+		if (grid.worldChunks.TryGetValue(GetChunkPos(pos), out chunkParent))
+			chunkParent.GetComponent<Chunk>().oreObjects[GetPosInChunk(pos).x, GetPosInChunk(pos).y] = tempOre;
 	}
 }

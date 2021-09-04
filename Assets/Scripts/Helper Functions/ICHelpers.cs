@@ -9,47 +9,32 @@ public class ICHelpers : MonoBehaviour
 	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
 	{
 		ItemControl outputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
-		if (outputIC)
-			TryAttachOutputHelper(grid, IC, outputIC);
-	}
-	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
-	{
-		if (!IC.AllowOutputTo(askingIC) || !askingIC.AllowInputFrom(IC))
+		if (!outputIC || !IC.AllowOutputTo(outputIC) || !outputIC.AllowInputFrom(IC))
 			return;
 
-		IC.setOutput(askingIC);
-		askingIC.setInput(IC);
+		IC.setOutput(outputIC);
+		outputIC.setInput(IC);
 		IC.UpdateSprite();
-		askingIC.UpdateSprite();
+		outputIC.UpdateSprite();
 	}
 
 	// Attaches the input IC if possible from the relative angle, copy documentation from ItemControl.cs
 	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
 	{
 		ItemControl inputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
-		if (inputIC)
-			TryAttachInputHelper(grid, IC, inputIC);
-	}
-	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, ItemControl askingIC)
-	{
-		if (!IC.AllowInputFrom(askingIC) || !askingIC.AllowOutputTo(IC))
+		if (!inputIC || !IC.AllowInputFrom(inputIC) || !inputIC.AllowOutputTo(IC))
 			return;
 
-		IC.setInput(askingIC);
-		askingIC.setOutput(IC);
+		IC.setInput(inputIC);
+		inputIC.setOutput(IC);
 		IC.UpdateSprite();
-		askingIC.UpdateSprite();
+		inputIC.UpdateSprite();
 	}
 
 	// Returns the relative angle of MainIC's facing direction to the angle of AskingIC
-	public static int getRelativeAngle(ItemControl IC, ItemControl askingIC)
-	{
-		return getRelativeAngle(IC, askingIC.transform.position);
-	}
 	public static int getRelativeAngle(ItemControl IC, Vector2 askingICPos)
 	{
-		askingICPos = Round(askingICPos);
-		Vector2 deltaPos = askingICPos - Round(IC.transform.position);
+		Vector2 deltaPos = Round(askingICPos) - Round(IC.transform.position);
 		float absoluteAngle = VectorToEuler(deltaPos);
 		float relativeAngle = (IC.transform.rotation.eulerAngles.z - absoluteAngle + 360) % 360;
 		return (int)Mathf.Round(relativeAngle);

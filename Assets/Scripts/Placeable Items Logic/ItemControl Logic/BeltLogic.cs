@@ -41,7 +41,7 @@ public class BeltLogic : ItemControl
 		List<Vector3> backPositions = inputICs[0].getAllPositions();
 		Vector3 backConnectionPos = backPositions[0];
 		foreach (Vector3 pos in backPositions)
-			if (GetDistance(backConnectionPos, this.transform.position) > GetDistance(pos, this.transform.position))
+			if (Vector3.Distance(backConnectionPos, this.transform.position) > Vector3.Distance(pos, this.transform.position))
 				backConnectionPos = pos;
 
 		float angle = getRelativeAngle(this, backConnectionPos);

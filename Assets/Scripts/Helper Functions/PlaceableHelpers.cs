@@ -9,9 +9,9 @@ public class PlaceableHelpers
 		GameObject objAtPos, chunkParent;
 		T placeableAtPos;
 
-		if (grid.worldChunks.TryGetValue(GetChunk((pos)), out chunkParent))
+		if (grid.worldChunks.TryGetValue(GetChunkPos((pos)), out chunkParent))
 		{
-			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(pos).x, GetPosInChunk(pos).y];
 			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out placeableAtPos)))
 				return placeableAtPos;
 		}
@@ -19,28 +19,20 @@ public class PlaceableHelpers
 	}
 
 	// Places the given Placeable into the world and the chunk array. PosOffSet alters the position of the placeable, used for large placeables
-	public static void AddToWorld(GridControl grid, Placeable placeable)
-	{
-		AddToWorld(grid, placeable, Vector3.zero);
-	}
 	public static void AddToWorld(GridControl grid, Placeable placeable, Vector3 posOffSet)
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
 		if (chunkParent)
-			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(placeable.transform.position + posOffSet).x, PosToPosInChunk(placeable.transform.position + posOffSet).y] = placeable.gameObject;
+			chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(placeable.transform.position + posOffSet).x, GetPosInChunk(placeable.transform.position + posOffSet).y] = placeable.gameObject;
 	}
 
 	// Remove the Placeable from any references to it. PosOffSet alters the position of the placeable, used for large placeables
-	public static void RemoveFromWorld(GridControl grid, Placeable placeable)
-	{
-		RemoveFromWorld(grid, placeable, Vector3.zero);
-	}
 	public static void RemoveFromWorld(GridControl grid, Placeable placeable, Vector3 posOffSet)
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
 		if (chunkParent)
 		{
-			Vector2Int pos = PosToPosInChunk(placeable.transform.position + posOffSet);
+			Vector2Int pos = GetPosInChunk(placeable.transform.position + posOffSet);
 			if (chunkParent.GetComponent<Chunk>().placeObjects[pos.x, pos.y] == placeable)
 				chunkParent.GetComponent<Chunk>().placeObjects[pos.x, pos.y] = null;
 		}

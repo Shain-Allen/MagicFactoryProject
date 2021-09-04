@@ -9,9 +9,9 @@ public class ResourceHelpers : MonoBehaviour
 		GameObject objAtPos, chunkParent;
 		T oreAtPos;
 
-		if (grid.worldChunks.TryGetValue(GetChunk(pos), out chunkParent))
+		if (grid.worldChunks.TryGetValue(GetChunkPos(pos), out chunkParent))
 		{
-			objAtPos = chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(pos).x, PosToPosInChunk(pos).y];
+			objAtPos = chunkParent.GetComponent<Chunk>().oreObjects[GetPosInChunk(pos).x, GetPosInChunk(pos).y];
 			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out oreAtPos)))
 			{
 				return oreAtPos;
@@ -25,7 +25,7 @@ public class ResourceHelpers : MonoBehaviour
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);
 		if (chunkParent)
-			chunkParent.GetComponent<Chunk>().oreObjects[PosToPosInChunk(resource.transform.position).x, PosToPosInChunk(resource.transform.position).y] = resource.gameObject;
+			chunkParent.GetComponent<Chunk>().oreObjects[GetPosInChunk(resource.transform.position).x, GetPosInChunk(resource.transform.position).y] = resource.gameObject;
 
 	}
 
@@ -34,6 +34,6 @@ public class ResourceHelpers : MonoBehaviour
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);
 		if (chunkParent)
-			chunkParent.GetComponent<Chunk>().placeObjects[PosToPosInChunk(resource.transform.position).x, PosToPosInChunk(resource.transform.position).y] = null;
+			chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(resource.transform.position).x, GetPosInChunk(resource.transform.position).y] = null;
 	}
 }
