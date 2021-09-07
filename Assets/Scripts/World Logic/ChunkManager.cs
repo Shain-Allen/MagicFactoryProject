@@ -52,10 +52,10 @@ public class ChunkManager : MonoBehaviour
 		Chunk tempChunk = chunk.GetComponent<Chunk>();
 		if (tempChunk.chunkActive == setting)
 			return;
-		foreach (GameObject placeable in tempChunk.placeObjects)
+		foreach (Placeable placeable in tempChunk.placeObjects)
 			if (placeable)
 				placeable.GetComponent<SpriteRenderer>().enabled = setting;
-		foreach (GameObject resource in tempChunk.oreObjects)
+		foreach (BaseResource resource in tempChunk.resourceObjects)
 			if (resource)
 				resource.GetComponent<SpriteRenderer>().enabled = setting;
 		tempChunk.chunkActive = setting;

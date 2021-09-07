@@ -103,7 +103,6 @@ public class OreGeneration : MonoBehaviour
 				if (randGen.NextDouble() <= oddsOfResource && insideBorder(resourcePos, bottomLeftBound, topRightBound) && dist <= rad && spotIsEmpty)
 				{
 					tempResource = Instantiate(resourceName, ((Vector2)resourcePos), Quaternion.identity, curChunkParent.transform);
-					AddToWorld(grid, tempResource);
 					tempResource.Generate(grid);
 				}
 			}

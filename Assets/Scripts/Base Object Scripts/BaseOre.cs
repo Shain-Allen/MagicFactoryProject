@@ -5,13 +5,12 @@ public class BaseOre : BaseResource
 {
 	public OreInfoSO oreInfo;
 	public int remainingOre;
-
 	private GridControl grid;
 
 	// Creates this ore and initalized how many ore remains in it
-	public override void Generate(GridControl _grid)
+	public override void Generate(GridControl grid_)
 	{
-		grid = _grid;
+		grid = grid_;
 		remainingOre = Mathf.RoundToInt(oreInfo.baseOreAmount + oreInfo.DistanceMultiplier * Vector3.Distance(transform.position, Vector3.zero));
 		AddToWorld(grid, this);
 	}

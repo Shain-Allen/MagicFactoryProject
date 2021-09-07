@@ -9,7 +9,6 @@ public class BridgeLogic : ItemControl
 	// outputICs[0] is the front output, outputICs[1] is the left output
 	// inputICs[0] is the back input, inputICs[1] is the right input
 
-	// Placement in the world
 	public override void PlacedAction(GridControl grid_)
 	{
 		inputICs = new ItemControl[2];
@@ -34,7 +33,6 @@ public class BridgeLogic : ItemControl
 		else if (newIC.transform.position == transform.position - transform.right)
 			outputICs[1] = newIC;
 	}
-
 	public override void setInput(ItemControl newIC)
 	{
 		if (newIC == null)
@@ -55,9 +53,7 @@ public class BridgeLogic : ItemControl
 			return !itemSlots[0];
 		else if (askingIC == inputICs[1])
 			return !itemSlots[1];
-		// If the thing wants to deposit onto here, it can only deposit on top
-		else
-			return !itemSlots[0];
+		return false;
 	}
 	public override void setItemSlot(ItemControl askingIC, GameObject item)
 	{
@@ -65,44 +61,30 @@ public class BridgeLogic : ItemControl
 			itemSlots[0] = item;
 		else if (askingIC == inputICs[1])
 			itemSlots[1] = item;
-		// If the thing wants to deposit onto here, it can only deposit on top
-		else
-			itemSlots[0] = item;
 	}
 	public override void MoveItem(ItemControl pullingIC)
 	{
-		if (pullingIC == outputICs[1])
-			MoveItemLeftHelper();
-		else if (pullingIC == outputICs[0])
-			MoveItemFrontHelper();
+		if (pullingIC == outputICs[0])
+			MoveOneItem(0);
+		else if (pullingIC == outputICs[1])
+			MoveOneItem(1);
 	}
-	private void MoveItemLeftHelper()
+	private void MoveOneItem(int side)
 	{
-		if (outputICs[1] && itemSlots[1] && outputICs[1].AllowItem(this))
+		if (outputICs[side] && itemSlots[side] && outputICs[side].AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, itemSlots[1], itemSlots[1].transform.position, outputICs[1].transform.position));
-			outputICs[1].setItemSlot(this, itemSlots[1]);
-			itemSlots[1] = null;
+			StartCoroutine(SmoothMove(grid, itemSlots[side], itemSlots[side].transform.position, outputICs[side].transform.position));
+			outputICs[side].setItemSlot(this, itemSlots[side]);
+			itemSlots[side] = null;
 		}
-		if (inputICs[1])
-			inputICs[1].MoveItem(this);
-	}
-	private void MoveItemFrontHelper()
-	{
-		if (outputICs[0] && itemSlots[0] && outputICs[0].AllowItem(this))
-		{
-			StartCoroutine(SmoothMove(grid, itemSlots[0], itemSlots[0].transform.position, outputICs[0].transform.position));
-			outputICs[0].setItemSlot(this, itemSlots[0]);
-			itemSlots[0] = null;
-		}
-		if (inputICs[0])
-			inputICs[0].MoveItem(this);
+		if (inputICs[side])
+			inputICs[side].MoveItem(this);
 	}
 	public override void BeltCycle(object sender, EventArgs e)
 	{
 		if (outputICs[1] == null)
-			MoveItemLeftHelper();
+			MoveOneItem(1);
 		if (outputICs[0] == null)
-			MoveItemFrontHelper();
+			MoveOneItem(0);
 	}
 }

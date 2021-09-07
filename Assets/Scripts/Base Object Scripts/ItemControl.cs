@@ -13,14 +13,6 @@ using static ICHelpers;
 /* For all overriding methods, check Placeable.cs for further documentation */
 public abstract class ItemControl : Placeable
 {
-	/* Variable Information:
-	 * outputIC refers to the output IC, ICs with multiple outputs might not use this variable
-	 * inputIC refers to the input IC, ICs with multiple inputs might not use this variable
-	 * itemSlots[0] refers to the item in this IC, ICs with multiple items might not use this variable 
-	 * allowOutputs will be turned false if this IC cannot have outputs
-	 * allowInputs will be turned false if this IC cannot have inputs
-	 * The transform of this IC should never have a non-integer position, or a rotation that isn't a multiple of 90
-	 */
 	protected List<Vector3> inputValidRelPoses = new List<Vector3>();
 	protected List<Vector3> outputValidRelPoses = new List<Vector3>();
 	public ItemControl[] inputICs = new ItemControl[1];
@@ -90,11 +82,13 @@ public abstract class ItemControl : Placeable
 		{
 			// Resets all connections this currently has
 			for (int i = 0; i < outputICs.Length; i++)
+			{
 				if (outputICs[i])
 				{
 					outputICs[i].setInput(null);
 					outputICs[i] = null;
 				}
+			}
 			// Tries to attach a connection at every valid position
 			foreach (Vector3 validRelPos in outputValidRelPoses)
 				TryAttachOutputHelper(grid, this, validRelPos);
@@ -179,13 +173,20 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void MoveItem(ItemControl pullingIC)
 	{
+		if (pullingIC && pullingIC == outputICs[0])
+			MoveItemHelper(pullingIC, false);
+	}
+	protected void MoveItemHelper(ItemControl pullingIC, bool doChain)
+	{
 		// If this IC can move its item forward legally and immediately
-		if (pullingIC && pullingIC == outputICs[0] && itemSlots[0] && pullingIC.AllowItem(this))
+		if (pullingIC && itemSlots[0] && pullingIC.AllowItem(this))
 		{
 			StartCoroutine(SmoothMove(grid, itemSlots[0], itemSlots[0].transform.position, pullingIC.transform.position));
 			pullingIC.setItemSlot(this, itemSlots[0]);
 			itemSlots[0] = null;
 		}
+		if (doChain && inputICs[0])
+			inputICs[0].MoveItem(this);
 	}
 
 	// Returns if this IC can allow an item to be placed in it

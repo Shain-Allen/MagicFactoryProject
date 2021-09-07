@@ -6,14 +6,15 @@ public class PlaceableHelpers
 	// Returns the Placeable of type T at the provided location, or null if there isn't anything there
 	public static T GetPlaceableAt<T>(GridControl grid, Vector2 pos) where T : Placeable
 	{
-		GameObject objAtPos, chunkParent;
-		T placeableAtPos;
+		GameObject chunkParent;
+		Placeable placeableAtPos;
+		T typeAtPos;
 
 		if (grid.worldChunks.TryGetValue(GetChunkPos((pos)), out chunkParent))
 		{
-			objAtPos = chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(pos).x, GetPosInChunk(pos).y];
-			if (objAtPos != null && (objAtPos.TryGetComponent<T>(out placeableAtPos)))
-				return placeableAtPos;
+			placeableAtPos = chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(pos).x, GetPosInChunk(pos).y];
+			if (placeableAtPos != null && (placeableAtPos.TryGetComponent<T>(out typeAtPos)))
+				return typeAtPos;
 		}
 		return default(T);
 	}
@@ -23,7 +24,7 @@ public class PlaceableHelpers
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
 		if (chunkParent)
-			chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(placeable.transform.position + posOffSet).x, GetPosInChunk(placeable.transform.position + posOffSet).y] = placeable.gameObject;
+			chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(placeable.transform.position + posOffSet).x, GetPosInChunk(placeable.transform.position + posOffSet).y] = placeable;
 	}
 
 	// Remove the Placeable from any references to it. PosOffSet alters the position of the placeable, used for large placeables

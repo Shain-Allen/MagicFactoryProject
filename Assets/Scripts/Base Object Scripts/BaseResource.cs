@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BaseResource : MonoBehaviour
+public abstract class BaseResource : MonoBehaviour
 {
-	public virtual void Generate(GridControl _grid) { }
+	public abstract void Generate(GridControl grid_);
 }

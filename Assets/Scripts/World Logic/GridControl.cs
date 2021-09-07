@@ -27,15 +27,6 @@ public class GridControl : MonoBehaviour
 		beltCycleTimeLeft = beltCycleTime;
 
 		tickRate = 1f / tps;
-
-		int initialChunkSpawningRadius = 0;
-		for (int x = -initialChunkSpawningRadius; x <= initialChunkSpawningRadius; x++)
-		{
-			for (int y = -initialChunkSpawningRadius; y <= initialChunkSpawningRadius; y++)
-			{
-				OreGeneration.GenerateChunkResources(this, worldSeed, new Vector2Int(x, y));
-			}
-		}
 	}
 
 	private void Update()
