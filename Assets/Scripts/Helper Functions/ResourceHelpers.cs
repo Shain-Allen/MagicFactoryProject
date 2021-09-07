@@ -26,7 +26,6 @@ public class ResourceHelpers : MonoBehaviour
 		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);
 		if (chunkParent)
 			chunkParent.GetComponent<Chunk>().oreObjects[GetPosInChunk(resource.transform.position).x, GetPosInChunk(resource.transform.position).y] = resource.gameObject;
-
 	}
 
 	// Removes the Resource given from the world grid

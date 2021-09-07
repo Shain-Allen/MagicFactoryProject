@@ -9,7 +9,7 @@ public class BaseOre : BaseResource
 	private GridControl grid;
 
 	// Creates this ore and initalized how many ore remains in it
-	public void GenerateOre(GridControl _grid, GameObject chunkParent)
+	public override void Generate(GridControl _grid)
 	{
 		grid = _grid;
 		remainingOre = Mathf.RoundToInt(oreInfo.baseOreAmount + oreInfo.DistanceMultiplier * Vector3.Distance(transform.position, Vector3.zero));

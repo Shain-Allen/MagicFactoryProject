@@ -27,13 +27,15 @@ public class ChunkManager : MonoBehaviour
 	public static void LoadChunks(GridControl grid, Vector2Int bottomLeftBound, Vector2Int topRightBound)
 	{
 		GameObject isChunkLoaded;
+		Vector2Int tempPos;
 
 		for (int x = bottomLeftBound.x - BUFFER; x <= topRightBound.x + BUFFER; x++)
 		{
 			for (int y = bottomLeftBound.y - BUFFER; y <= topRightBound.y + BUFFER; y++)
 			{
-				if (!grid.worldChunks.TryGetValue(new Vector2Int(x, y), out isChunkLoaded) || isChunkLoaded == null)
-					OreGeneration.LoadChunkOres(grid, grid.worldSeed, x, y);
+				tempPos = new Vector2Int(x, y);
+				if (!grid.worldChunks.TryGetValue(tempPos, out isChunkLoaded) || isChunkLoaded == null)
+					OreGeneration.LoadChunkResources(grid, grid.worldSeed, tempPos);
 			}
 		}
 	}

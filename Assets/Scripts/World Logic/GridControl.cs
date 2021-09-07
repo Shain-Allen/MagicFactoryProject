@@ -18,7 +18,7 @@ public class GridControl : MonoBehaviour
 	private float tickRate;
 	private float tickTimer = 0;
 
-	public List<GameObject> oreNames;
+	public List<BaseResource> oreNames;
 	public List<GameObject> oreOutputItems;
 	public GameObject chunkParentObject;
 
@@ -33,7 +33,7 @@ public class GridControl : MonoBehaviour
 		{
 			for (int y = -initialChunkSpawningRadius; y <= initialChunkSpawningRadius; y++)
 			{
-				OreGeneration.LoadChunkOres(this, worldSeed, x, y);
+				OreGeneration.LoadChunkResources(this, worldSeed, new Vector2Int(x, y));
 			}
 		}
 	}

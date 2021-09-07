@@ -33,8 +33,11 @@ public class GridHelpers : MonoBehaviour
 	 * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
 	 * Recommend seeing SpiralChunkIDs.xlsx to better understand chunk IDs
 	 */
-	public static int GetChunkID(int x, int y)
+	public static int GetChunkID(Vector2Int chunkPos)
 	{
+		int x = chunkPos.x;
+		int y = chunkPos.y;
+
 		int sprialLayer = Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
 		int topLeft = (int)Mathf.Pow(sprialLayer * 2 + 1, 2) - 1;
 		int diff = Mathf.Abs(x + y);
@@ -62,6 +65,11 @@ public class GridHelpers : MonoBehaviour
 		x -= (chunkPos.x * ChunkManager.CHUNK_SIZE);
 		y -= (chunkPos.y * ChunkManager.CHUNK_SIZE);
 		return new Vector2Int(x, y);
+	}
+
+	public static Vector2Int GetMinPosInChunk(Vector2Int chunkPos)
+	{
+		return new Vector2Int(chunkPos.x * ChunkManager.CHUNK_SIZE, chunkPos.y * ChunkManager.CHUNK_SIZE);
 	}
 
 	public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
