@@ -13,21 +13,14 @@ public class MysticDrillLogic : Placeable
 	[SerializeField]
 	private int miningRadius = 2;
 
-	public override void PlacedAction(GridControl _grid)
+	public override void PlacedAction(GridControl grid_)
 	{
-		grid = _grid;
-		outputLocation = transform.up * 2;
-
-		// Make sure this can be placed, otherwise stop
+		// Add this 3x3 to the relative positons, minus 0,0 because it will be auto added
 		for (int x = -1; x <= 1; x++)
 			for (int y = -1; y <= 1; y++)
-				if (GetPlaceableAt<Placeable>(grid, transform.position + (Vector3.right * x) + (Vector3.up * y)))
-					return;
-
-		// Place this drill into the world
-		for (int x = -1; x <= 1; x++)
-			for (int y = -1; y <= 1; y++)
-				AddToWorld(grid, this, (Vector3.right * x) + (Vector3.up * y));
+				if (x != 0 && y != 0)
+					relativePositions.Add(new Vector2(x, y));
+		base.PlacedAction(grid_);
 
 		// Fill the minableOres list with all the minable ores
 		BaseOre tempOre;
@@ -36,22 +29,19 @@ public class MysticDrillLogic : Placeable
 				if (tempOre = GetResourceAt<BaseOre>(grid, transform.position + new Vector3(x, y)))
 					minableOres.Add(tempOre);
 
+		outputLocation = transform.up * 2;
 		grid.Tick += TryMineOre;
 	}
 
 	public override void RemovedAction()
 	{
-		for (int x = -1; x <= 1; x++)
-			for (int y = -1; y <= 1; y++)
-				RemoveFromWorld(grid, this, (Vector3.right * x) + (Vector3.up * y));
-
 		grid.Tick -= TryMineOre;
-		Destroy(gameObject);
+		base.RemovedAction();
 	}
 
 	public void TryMineOre(object sender, EventArgs e)
 	{
-		if (!isMining && minableOres.Count != 0)
+		if (!isMining && minableOres.Count > 0)
 			StartCoroutine(Mining());
 	}
 
@@ -76,9 +66,7 @@ public class MysticDrillLogic : Placeable
 				if (outputOre == null)
 					minableOres.RemoveAt(oreInListToMine);
 			}
-
 		}
-
 		isMining = false;
 		yield return null;
 	}

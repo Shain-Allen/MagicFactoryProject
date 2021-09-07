@@ -41,6 +41,9 @@ public abstract class ItemControl : Placeable
 	{
 		base.RemovedAction();
 
+		if (inputValidRelPoses.Count > 0)
+			grid.OnBeltTimerCycle -= BeltCycle;
+
 		for (int i = 0; i < inputICs.Length; i++)
 		{
 			if (inputICs[i])
