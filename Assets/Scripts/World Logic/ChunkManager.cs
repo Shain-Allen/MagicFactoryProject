@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static GridHelpers;
 
@@ -10,22 +8,10 @@ public class ChunkManager : MonoBehaviour
 	//BUFFER is the extra # of chunks loaded beyond the Camera's view
 	private const int BUFFER = 1;
 
-	public static Vector2Int getBottomLeftBound(GameObject cam)
+	public static void LoadChunks(GridControl grid, GameObject cam)
 	{
-		Camera camera = cam.GetComponent<Camera>();
-		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
-		return GetChunkPos(botLeft);
-	}
-
-	public static Vector2Int getTopRightBound(GameObject cam)
-	{
-		Camera camera = cam.GetComponent<Camera>();
-		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
-		return GetChunkPos(topRight);
-	}
-
-	public static void LoadChunks(GridControl grid, Vector2Int bottomLeftBound, Vector2Int topRightBound)
-	{
+		Vector2Int bottomLeftBound = getBottomLeftBound(cam);
+		Vector2Int topRightBound = getTopRightBound(cam);
 		GameObject isChunkLoaded;
 		Vector2Int tempPos;
 
@@ -34,55 +20,58 @@ public class ChunkManager : MonoBehaviour
 			for (int y = bottomLeftBound.y - BUFFER; y <= topRightBound.y + BUFFER; y++)
 			{
 				tempPos = new Vector2Int(x, y);
+				// If the chunk isn't instantiated, generate it
 				if (!grid.worldChunks.TryGetValue(tempPos, out isChunkLoaded) || isChunkLoaded == null)
-					OreGeneration.LoadChunkResources(grid, grid.worldSeed, tempPos);
+					OreGeneration.GenerateChunkResources(grid, grid.worldSeed, tempPos);
+				// If the chunk was instantiated but unloaded, reload it
+				else
+					setVisiblity(isChunkLoaded, true);
 			}
 		}
 	}
 
-	public static void UnloadChunks(GridControl grid, Vector2Int bottomLeftBound, Vector2Int topRightBound)
+	public static void UnloadChunks(GridControl grid, GameObject cam)
 	{
-		GameObject chunkToDelete;
+		Vector2Int bottomLeftBound = getBottomLeftBound(cam);
+		Vector2Int topRightBound = getTopRightBound(cam);
+		GameObject chunkToUnload;
 
 		// Get all the Vector2Ints of the loaded chunks, but in a way it doesn't matter that I delete them
 		bottomLeftBound = new Vector2Int(bottomLeftBound.x - BUFFER, bottomLeftBound.y - BUFFER);
 		topRightBound = new Vector2Int(topRightBound.x + BUFFER, topRightBound.y + BUFFER);
-		List<Vector2Int> loadedChunkPositions = new List<Vector2Int>();
-		foreach (Vector2Int LoadedChunkPos in grid.worldChunks.Keys)
-			loadedChunkPositions.Add(LoadedChunkPos);
-
-		Vector2Int loadedChunkPos;
-		for (int i = 0; i < loadedChunkPositions.Count; i++)
+		foreach (Vector2Int loadedChunkPos in grid.worldChunks.Keys)
 		{
-			loadedChunkPos = loadedChunkPositions[i];
-			if (grid.worldChunks.TryGetValue(loadedChunkPos, out chunkToDelete) && chunkToDelete != null)
-			{
-				// If the chunk is outside of the buffer, unload the chunk
-				if (!insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
-				{
-					// Call RemovedAction on the border of the chunk so ICs will reset their connections
-					Chunk tempChunk = chunkToDelete.GetComponent<Chunk>();
-					for (int j = 0; j < ChunkManager.CHUNK_SIZE - 1; j++)
-					{
-						DeletePlaceableHelper(tempChunk, j, 0);
-						DeletePlaceableHelper(tempChunk, j + 1, 31);
-						DeletePlaceableHelper(tempChunk, 0, j + 1);
-						DeletePlaceableHelper(tempChunk, 31, j);
-					}
-
-					grid.worldChunks.Remove(loadedChunkPos);
-					Destroy(chunkToDelete);
-				}
-			}
+			grid.worldChunks.TryGetValue(loadedChunkPos, out chunkToUnload);
+			if (!insideBorder(loadedChunkPos, bottomLeftBound, topRightBound))
+				setVisiblity(chunkToUnload, false);
 		}
 	}
 
-	private static void DeletePlaceableHelper(Chunk tempChunk, int xToDel, int yToDel)
+	private static void setVisiblity(GameObject chunk, bool setting)
 	{
-		if (tempChunk.placeObjects[xToDel, yToDel] == null)
+		Chunk tempChunk = chunk.GetComponent<Chunk>();
+		if (tempChunk.chunkActive == setting)
 			return;
-		Placeable tempPlaceable;
-		if (tempChunk.placeObjects[xToDel, yToDel].TryGetComponent<Placeable>(out tempPlaceable))
-			tempPlaceable.RemovedAction();
+		foreach (GameObject placeable in tempChunk.placeObjects)
+			if (placeable)
+				placeable.GetComponent<SpriteRenderer>().enabled = setting;
+		foreach (GameObject resource in tempChunk.oreObjects)
+			if (resource)
+				resource.GetComponent<SpriteRenderer>().enabled = setting;
+		tempChunk.chunkActive = setting;
 	}
+
+	private static Vector2Int getBottomLeftBound(GameObject cam)
+	{
+		Camera camera = cam.GetComponent<Camera>();
+		Vector3 botLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
+		return GetChunkPos(botLeft);
+	}
+	private static Vector2Int getTopRightBound(GameObject cam)
+	{
+		Camera camera = cam.GetComponent<Camera>();
+		Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
+		return GetChunkPos(topRight);
+	}
+
 }

@@ -48,10 +48,8 @@ public class TileBrush : MonoBehaviour
 		cam.transform.position += new Vector3(moveInput.x, moveInput.y, 0) * moveSpeed * Time.deltaTime;
 
 		//See if new chunks need to be loaded or unloaded
-		Vector2Int bottomLeftBound = ChunkManager.getBottomLeftBound(cam);
-		Vector2Int topRightBound = ChunkManager.getTopRightBound(cam);
-		ChunkManager.LoadChunks(grid, bottomLeftBound, topRightBound);
-		// ChunkManager.UnloadChunks(grid, bottomLeftBound, topRightBound);
+		ChunkManager.LoadChunks(grid, cam);
+		ChunkManager.UnloadChunks(grid, cam);
 	}
 
 	// If the user is left clicks, place their held Placeable

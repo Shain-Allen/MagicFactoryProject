@@ -46,7 +46,7 @@ public class BeltLogic : ItemControl
 			return;
 		// Otherwise, it must be a corner belt; if it's turning right, it needs to be flipped
 		spriteRenderer.sprite = cornerBelt;
-		spriteRenderer.flipX = (transform.position - transform.right == backConnectionPos);
+		spriteRenderer.flipX = (transform.position + transform.right == backConnectionPos);
 	}
 
 	public override void MoveItem(ItemControl pullingIC)

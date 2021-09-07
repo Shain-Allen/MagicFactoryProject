@@ -33,7 +33,7 @@ public class GridControl : MonoBehaviour
 		{
 			for (int y = -initialChunkSpawningRadius; y <= initialChunkSpawningRadius; y++)
 			{
-				OreGeneration.LoadChunkResources(this, worldSeed, new Vector2Int(x, y));
+				OreGeneration.GenerateChunkResources(this, worldSeed, new Vector2Int(x, y));
 			}
 		}
 	}
