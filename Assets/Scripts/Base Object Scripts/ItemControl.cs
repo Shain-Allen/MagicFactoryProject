@@ -166,8 +166,7 @@ public abstract class ItemControl : Placeable
 	 */
 	public virtual void MoveItem(ItemControl pullingIC)
 	{
-		if (pullingIC && pullingIC == outputICs[0])
-			MoveItemHelper(pullingIC, 0, false, 0);
+		MoveItemHelper(pullingIC, 0, false, 0);
 	}
 	// Moves the item in itemSlots[slotNumber] to pullingIC if eligible, then calls MoveItem for inputICs[inputNumberForChain] is doChain is true
 	// Doing this allows more customizability for inheriting ICs without repeated code
