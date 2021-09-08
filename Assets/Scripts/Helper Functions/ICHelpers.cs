@@ -13,8 +13,6 @@ public class ICHelpers : MonoBehaviour
 
 		IC.setOutput(outputIC);
 		outputIC.setInput(IC);
-		IC.UpdateSprite();
-		outputIC.UpdateSprite();
 	}
 
 	// Attaches the input IC if possible from the relative angle, copy documentation from ItemControl.cs
@@ -26,8 +24,6 @@ public class ICHelpers : MonoBehaviour
 
 		IC.setInput(inputIC);
 		inputIC.setOutput(IC);
-		IC.UpdateSprite();
-		inputIC.UpdateSprite();
 	}
 
 	// Smoothly moves the item from slot one to slot two

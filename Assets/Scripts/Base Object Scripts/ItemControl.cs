@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using static ICHelpers;
 
-/* An IC is a placeable that has at least 1 input and/or output, and holds at least 1 item
- * Some ICs can't have an output, signalled by allowOutputTo, or input, signalled by allowInputFrom
- * UpdateSprite is necessary for ICs to change their sprits when the world changes around them
- * TryAttach|In/Out|puts will try to attach that side, if it can't, that reference will be null
- * MoveItem is necessary so ICs can chain together with other ICs so movement can be synced up
+/* ItemControl (IC) are used to move items around the world
+ * An IC should have at least 1 input or output IC, and should hold at least 1 item
+ * TryAttach[In/Out]puts will try to attach an in-out pairing with an eligible legal IC
+ * Before attaching in/outputs, AllowOutputTo/AllowInputFrom should be called to ensure it is legal
+ * MoveItem will move the item from this IC to the output IC
+ * MoveItem is called by the beltCycle, but it synced with other ICs by travels back by chaining calls
  */
 
-/* For all overriding methods, check Placeable.cs for further documentation */
+/* See Base Class for further documentation for all override functions */
 public abstract class ItemControl : Placeable
 {
+	// [in/out]putValidRel(ative)Pos(itions) store the positions relative to the position that are eligible to be an in/output
 	protected List<Vector3> inputValidRelPoses = new List<Vector3>();
 	protected List<Vector3> outputValidRelPoses = new List<Vector3>();
 	public ItemControl[] inputICs = new ItemControl[1];
@@ -26,17 +28,12 @@ public abstract class ItemControl : Placeable
 		base.PlacedAction(grid_);
 		TryAttachInputs();
 		TryAttachOutputs();
+		// If this can have inputs, then this might be the front of a chain
 		if (inputValidRelPoses.Count > 0)
 			grid.OnBeltTimerCycle += BeltCycle;
 	}
 
-	/* RemovedAction removes this IC, then has its output and input IC update their connections
-	 * No special Preconditions
-	 * POSTCONDITIONS: The item in this IC is completely destroyed
-	 * cont.: This IC will be removed from the dictionary and the world
-	 * cont.: This IC's output and input ICs will try to find their new attachments now that this is removed
-	 * cont.: The item in this IC will be deleted
-	 */
+	// Note: The items inside this IC will be deleted along with this currently
 	public override void RemovedAction()
 	{
 		base.RemovedAction();
@@ -66,18 +63,11 @@ public abstract class ItemControl : Placeable
 		}
 	}
 
-	/* (Only applies to children that have multiple sprites)
-	 * UpdateSprite will ensure that this IC has the correct sprite based its current inputs and outputs
-	 * PRECONDTIONS: The sprites are defined and initialized
-	 * POSTCONDITIONS: Only this IC's sprite will be modified, nothing else
-	 */
-	public virtual void UpdateSprite() { }
+	// outputIC Functions
 
-	// Output IC Functions
-
-	/* Pairs this IC's outputIC with the inputIC of the IC in output of it, if possible
+	/* Pairs this IC's outputIC with the inputIC of an eligible IC
 	 * No special preconditions
-	 * POSTCONDITIONS: Only the outputIC of this IC and this IC will be altered
+	 * POSTCONDITIONS: Only this IC, the new outputICs, and the former outputICs could be altered
 	 */
 	public virtual void TryAttachOutputs()
 	{
@@ -98,7 +88,7 @@ public abstract class ItemControl : Placeable
 		}
 	}
 
-	// Returns true if this IC can attach to the askingIC as the output IC of this
+	// Returns true if askingIC is an eligible outputIC of this
 	public virtual bool AllowOutputTo(ItemControl askingIC)
 	{
 		// If every slot is full, then this can't accept an output
@@ -117,14 +107,14 @@ public abstract class ItemControl : Placeable
 		return false;
 	}
 
-	// Sets the outputIC of this IC to be newIC
+	// Sets newIC to be an outputIC of this
 	public virtual void setOutput(ItemControl newIC) { outputICs[0] = newIC; }
 
-	// Input IC Functions
+	// inputIC Functions
 
-	/* Attaches this IC's inputIC
+	/* Pairs this IC's inputIC with the outputIC of an eligible IC
 	 * No special preconditions
-	 * POSTCONDITIONS: Only the inputIC of this IC and this IC will be altered
+	 * POSTCONDITIONS: Only this IC, the new inputICs, and the former inputICs could be altered
 	 */
 	public virtual void TryAttachInputs()
 	{
@@ -143,7 +133,7 @@ public abstract class ItemControl : Placeable
 		}
 	}
 
-	// Returns if this IC can attach to the askingIC as the input IC of this
+	// Returns true if askingIC is an eligible inputIC of this
 	public virtual bool AllowInputFrom(ItemControl askingIC)
 	{
 		// If every slot is full, then this can't accept an input
@@ -162,17 +152,17 @@ public abstract class ItemControl : Placeable
 		return false;
 	}
 
-	// Sets the inputIC of this IC to be newIC
+	// Sets newIC to be an inputIC of this
 	public virtual void setInput(ItemControl newIC) { inputICs[0] = newIC; }
 
-	// Item slot things
+	// itemSlot Functions
 
-	/* Moves the Item in an IC forward one if it can, then calls its InputIC behind it to do the same
-	 * PRECONDITIONS: There cannot be a loop
+	/* Moves an item forward
+	 * PRECONDITIONS: There cannot be a loop, at all
 	 * cont.: The outputIC of this one has already done MoveItem, or this has no outputIC
-	 * POSTCONDITIONS: Each item will only move forward up to 1 IC per cycle
+	 * POSTCONDITIONS: Moves an item to the pullingIC if it is legal
 		(Currently broken in the event a Splitter's output-left side calls MoveItem before the output-right side)
-	 * cont.: An item will never move if its outputIC already has an item
+	 * cont.: Inheriting ICs should chain MoveItem backwards if they have an input IC
 	 */
 	public virtual void MoveItem(ItemControl pullingIC)
 	{
@@ -192,7 +182,7 @@ public abstract class ItemControl : Placeable
 			inputICs[0].MoveItem(this);
 	}
 
-	// Returns if this IC can allow an item to be placed in it
+	// Returns true if askingIC can place an item into this
 	public virtual bool AllowItem(ItemControl askingIC)
 	{
 		for (int i = 0; i < itemSlots.Length; i++)
@@ -201,12 +191,12 @@ public abstract class ItemControl : Placeable
 		return false;
 	}
 
-	/* Sets the itemSlots[0] of this IC to be item
+	/* Sets an itemSlot to be the item being given to it
 	 * This input askingIC is necessary if this IC has multiple inputICs
 	 */
 	public virtual void setItemSlot(ItemControl askingIC, GameObject item) { itemSlots[0] = item; }
 
-	// If this IC is at the front of the line, start a chain reaction backwards of movement
+	// If this IC is at the front of the line, start a chain reaction backwards of MoveItem
 	public virtual void BeltCycle(object sender, EventArgs e)
 	{
 		if (outputValidRelPoses.Count == 0 || outputICs[0] == null)

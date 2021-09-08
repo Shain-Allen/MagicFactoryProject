@@ -29,7 +29,7 @@ public class BeltLogic : ItemControl
 		MoveItemHelper(pullingIC, true);
 	}
 
-	public override void UpdateSprite()
+	public void UpdateSprite()
 	{
 		// Belts should default to straight when it has no inputIC or inputIC is right behind
 		spriteRenderer.sprite = straightBelt;

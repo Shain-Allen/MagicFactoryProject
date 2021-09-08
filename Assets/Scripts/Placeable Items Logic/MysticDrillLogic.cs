@@ -61,7 +61,7 @@ public class MysticDrillLogic : Placeable
 
 			if (outputBelt.AllowItem(null))
 			{
-				outputOre.MineOre(out returnOre);
+				outputOre.Extract(out returnOre);
 				outputBelt.setItemSlot(null, Instantiate(returnOre, outputBelt.transform.position, Quaternion.identity, outputBelt.transform.parent));
 				if (outputOre == null)
 					minableOres.RemoveAt(oreInListToMine);
