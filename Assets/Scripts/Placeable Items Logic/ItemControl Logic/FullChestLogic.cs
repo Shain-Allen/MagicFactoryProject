@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using static ICHelpers;
 
-/* For all overriding methods without documentation, check ItemControl.cs */
+/* See Base Class for further documentation for all override functions */
 public class FullChestLogic : ItemControl, IOpenMenu
 {
 	[SerializeField]

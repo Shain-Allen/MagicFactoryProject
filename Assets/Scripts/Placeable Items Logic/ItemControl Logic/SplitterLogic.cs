@@ -1,6 +1,4 @@
-using System;
-using UnityEngine;
-
+/* See Base Class for further documentation for all override functions */
 public class SplitterLogic : ItemControl
 {
 	// outputICs[0] is the left-side output, outputICs[1] is the right-side output
@@ -43,7 +41,7 @@ public class SplitterLogic : ItemControl
 			if (outputICs[nextOutput] && outputICs[nextOutput].AllowItem(this))
 				return outputICs[nextOutput];
 		}
-		// If that fails, return null
+		// If both fail, return null
 		return null;
 	}
 }

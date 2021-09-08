@@ -6,20 +6,20 @@ using static PlaceableHelpers;
 
 public class TileBrush : MonoBehaviour
 {
-	// ObjectDicionary holds all items in the game
 	public ObjectDictionary ObjectDictionary;
-	GameControls gameControls;
-	Vector2 moveInput;
-	public float moveSpeed;
-	public GameObject Player;
-	Animator animator;
-	GameObject cam;
-	Vector3 mousePos;
-	public Vector3 roundedMousePos;
 	public Grid worldGrid;
+	public GridControl grid;
+	public GameObject Player;
+
 	public GameObject brushItem;
 	public SpriteRenderer itemPreview;
-	public GridControl grid;
+	public float moveSpeed;
+
+	GameControls gameControls;
+	Animator animator;
+	GameObject cam;
+	Vector2 moveInput;
+	Vector3 mousePos, roundedMousePos;
 
 	private void Start()
 	{
@@ -52,30 +52,6 @@ public class TileBrush : MonoBehaviour
 		ChunkManager.UnloadChunks(grid, cam);
 	}
 
-	// If the user is left clicks, place their held Placeable
-	private bool TryToPlace()
-	{
-		if (brushItem && !EventSystem.current.IsPointerOverGameObject())
-		{
-			if (GetPlaceableAt<Placeable>(grid, roundedMousePos) != null)
-				return false;
-			GameObject tempChunkParent = GetChunkParentByPos(grid, roundedMousePos);
-			GameObject tempPlaceable = Instantiate(brushItem, roundedMousePos, itemPreview.transform.rotation, tempChunkParent.transform);
-			tempPlaceable.GetComponent<Placeable>().PlacedAction(grid);
-			return true;
-		}
-		return false;
-	}
-
-	// If the user right clicks, destory the targeted Placeable
-	private void TryToDestroy()
-	{
-		Placeable placeableToRemove = GetPlaceableAt<Placeable>(grid, roundedMousePos);
-		if (placeableToRemove == null)
-			return;
-		placeableToRemove.RemovedAction();
-	}
-
 	// Updates the brush item to the last clicked item
 	public void ChangeBrushItem(int _itemID)
 	{
@@ -83,7 +59,6 @@ public class TileBrush : MonoBehaviour
 		itemPreview.sprite = brushItem.GetComponent<SpriteRenderer>().sprite;
 		itemPreview.color = brushItem.GetComponent<SpriteRenderer>().color;
 	}
-
 	// Empties the current item from the brush
 	public void EmptyBrushItem()
 	{
@@ -95,19 +70,45 @@ public class TileBrush : MonoBehaviour
 	private void PlayerMovementStart(InputAction.CallbackContext context)
 	{
 		moveInput = context.ReadValue<Vector2>();
-
 		animator.SetBool("isWalking", true);
-
 		animator.SetFloat("MoveX", moveInput.x);
 		animator.SetFloat("MoveY", moveInput.y);
 	}
-
-	// Sets movement to 0,0 when WASD is not being pressed
+	// Sets movement to 0,0 when WASD is not being pressed and stops the walking animation
 	private void PlayerMovementStop()
 	{
 		moveInput = Vector2.zero;
-
 		animator.SetBool("isWalking", false);
+	}
+
+	// If the user is left clicks, try to place their held Placeable. If this fails, try to open a menu interface
+	private void LeftClickStart()
+	{
+		if (!TryToPlace())
+		{
+			IOpenMenu placeable;
+			if ((placeable = GetPlaceableAt<Placeable>(grid, roundedMousePos) as IOpenMenu) != null && !brushItem)
+				placeable.OpenMenu();
+		}
+	}
+	private bool TryToPlace()
+	{
+		if (brushItem && !EventSystem.current.IsPointerOverGameObject() && !GetPlaceableAt<Placeable>(grid, roundedMousePos))
+		{
+			GameObject tempChunkParent = GetChunkParentByPos(grid, roundedMousePos);
+			GameObject tempPlaceable = Instantiate(brushItem, roundedMousePos, itemPreview.transform.rotation, tempChunkParent.transform);
+			tempPlaceable.GetComponent<Placeable>().PlacedAction(grid);
+			return true;
+		}
+		return false;
+	}
+
+	// If the user right clicks, try to destroy the targeted Placeable
+	private void RightClickStart()
+	{
+		Placeable placeableToRemove = GetPlaceableAt<Placeable>(grid, roundedMousePos);
+		if (placeableToRemove != null)
+			placeableToRemove.RemovedAction();
 	}
 
 	// Rotates the brush item 90 degrees clockwise
@@ -115,22 +116,5 @@ public class TileBrush : MonoBehaviour
 	{
 		if (itemPreview)
 			itemPreview.transform.Rotate(new Vector3(0, 0, 1), 270f);
-	}
-
-	private void LeftClickStart()
-	{
-		if (!TryToPlace())
-		{
-			IOpenMenu placeable;
-			if ((placeable = GetPlaceableAt<Placeable>(grid, roundedMousePos) as IOpenMenu) != null && !brushItem)
-			{
-				placeable.OpenMenu();
-			}
-		}
-	}
-
-	private void RightClickStart()
-	{
-		TryToDestroy();
 	}
 }

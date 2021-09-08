@@ -1,14 +1,12 @@
 using System;
 using UnityEngine;
-using static ICHelpers;
 
-/* For all overriding methods without documentation, check ItemControl.cs */
+/* See Base Class for further documentation for all override functions */
 public class BridgeLogic : ItemControl
 {
 	// itemSlots[0] is the top item, back-to-front, itemSlots[1] is the bottom item, right-to-left
 	// outputICs[0] is the front output, outputICs[1] is the left output
 	// inputICs[0] is the back input, inputICs[1] is the right input
-
 	public override void PlacedAction(GridControl grid_)
 	{
 		inputICs = new ItemControl[2];
@@ -24,11 +22,8 @@ public class BridgeLogic : ItemControl
 	public override void setOutput(ItemControl newIC)
 	{
 		if (newIC == null)
-		{
 			TryAttachOutputs();
-			return;
-		}
-		if (newIC.transform.position == transform.position + transform.up)
+		else if (newIC.transform.position == transform.position + transform.up)
 			outputICs[0] = newIC;
 		else if (newIC.transform.position == transform.position - transform.right)
 			outputICs[1] = newIC;
@@ -36,11 +31,8 @@ public class BridgeLogic : ItemControl
 	public override void setInput(ItemControl newIC)
 	{
 		if (newIC == null)
-		{
 			TryAttachInputs();
-			return;
-		}
-		if (newIC.transform.position == transform.position - transform.up)
+		else if (newIC.transform.position == transform.position - transform.up)
 			inputICs[0] = newIC;
 		else if (newIC.transform.position == transform.position + transform.right)
 			inputICs[1] = newIC;
@@ -65,26 +57,15 @@ public class BridgeLogic : ItemControl
 	public override void MoveItem(ItemControl pullingIC)
 	{
 		if (pullingIC == outputICs[0])
-			MoveOneItem(0);
+			MoveItemHelper(outputICs[0], 0, true, 0);
 		else if (pullingIC == outputICs[1])
-			MoveOneItem(1);
-	}
-	private void MoveOneItem(int side)
-	{
-		if (outputICs[side] && itemSlots[side] && outputICs[side].AllowItem(this))
-		{
-			StartCoroutine(SmoothMove(grid, itemSlots[side], itemSlots[side].transform.position, outputICs[side].transform.position));
-			outputICs[side].setItemSlot(this, itemSlots[side]);
-			itemSlots[side] = null;
-		}
-		if (inputICs[side])
-			inputICs[side].MoveItem(this);
+			MoveItemHelper(outputICs[1], 1, true, 1);
 	}
 	public override void BeltCycle(object sender, EventArgs e)
 	{
-		if (outputICs[1] == null)
-			MoveOneItem(1);
 		if (outputICs[0] == null)
-			MoveOneItem(0);
+			MoveItemHelper(outputICs[0], 0, true, 0);
+		if (outputICs[1] == null)
+			MoveItemHelper(outputICs[1], 1, true, 1);
 	}
 }

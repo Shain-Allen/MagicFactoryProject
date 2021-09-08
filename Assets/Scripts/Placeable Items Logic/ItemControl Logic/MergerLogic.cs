@@ -1,6 +1,4 @@
-using System;
-using UnityEngine;
-
+/* See Base Class for further documentation for all override functions */
 public class MergerLogic : ItemControl
 {
 	// inputICs[0] is the left-side input, inputICs[1] is the right-side input

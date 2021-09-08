@@ -1,7 +1,4 @@
-using System;
-using UnityEngine;
-
-/* For all overriding methods without documentation, check ItemControl.cs */
+/* See Base Class for further documentation for all override functions */
 public class VoidChestLogic : ItemControl
 {
 	public override void PlacedAction(GridControl grid_)

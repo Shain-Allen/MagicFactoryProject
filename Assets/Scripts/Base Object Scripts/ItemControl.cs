@@ -17,9 +17,9 @@ public abstract class ItemControl : Placeable
 	// [in/out]putValidRel(ative)Pos(itions) store the positions relative to the position that are eligible to be an in/output
 	protected List<Vector3> inputValidRelPoses = new List<Vector3>();
 	protected List<Vector3> outputValidRelPoses = new List<Vector3>();
-	public ItemControl[] inputICs = new ItemControl[1];
-	public ItemControl[] outputICs = new ItemControl[1];
-	public GameObject[] itemSlots = new GameObject[1];
+	protected ItemControl[] inputICs = new ItemControl[1];
+	protected ItemControl[] outputICs = new ItemControl[1];
+	protected GameObject[] itemSlots = new GameObject[1];
 
 	// Generic Placeable Functions
 
@@ -167,19 +167,22 @@ public abstract class ItemControl : Placeable
 	public virtual void MoveItem(ItemControl pullingIC)
 	{
 		if (pullingIC && pullingIC == outputICs[0])
-			MoveItemHelper(pullingIC, false);
+			MoveItemHelper(pullingIC, 0, false, 0);
 	}
-	protected void MoveItemHelper(ItemControl pullingIC, bool doChain)
+	// Moves the item in itemSlots[slotNumber] to pullingIC if eligible, then calls MoveItem for inputICs[inputNumberForChain] is doChain is true
+	// Doing this allows more customizability for inheriting ICs without repeated code
+	protected void MoveItemHelper(ItemControl pullingIC, bool doChain) { MoveItemHelper(pullingIC, 0, doChain, 0); }
+	protected void MoveItemHelper(ItemControl pullingIC, int slotNumber, bool doChain, int inputNumberForChain)
 	{
 		// If this IC can move its item forward legally and immediately
-		if (pullingIC && itemSlots[0] && pullingIC.AllowItem(this))
+		if (pullingIC && itemSlots[slotNumber] && pullingIC.AllowItem(this))
 		{
-			StartCoroutine(SmoothMove(grid, itemSlots[0], itemSlots[0].transform.position, pullingIC.transform.position));
-			pullingIC.setItemSlot(this, itemSlots[0]);
-			itemSlots[0] = null;
+			StartCoroutine(SmoothMove(grid, itemSlots[slotNumber], itemSlots[slotNumber].transform.position, pullingIC.transform.position));
+			pullingIC.setItemSlot(this, itemSlots[slotNumber]);
+			itemSlots[slotNumber] = null;
 		}
-		if (doChain && inputICs[0])
-			inputICs[0].MoveItem(this);
+		if (doChain && inputICs[inputNumberForChain])
+			inputICs[inputNumberForChain].MoveItem(this);
 	}
 
 	// Returns true if askingIC can place an item into this

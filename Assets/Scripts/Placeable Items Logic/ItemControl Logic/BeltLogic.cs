@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/* For all overriding methods, check ItemControl.cs for further documentation*/
+/* See Base Class for further documentation for all override functions */
 public class BeltLogic : ItemControl
 {
 	public Sprite straightBelt;
@@ -12,10 +11,10 @@ public class BeltLogic : ItemControl
 	public override void PlacedAction(GridControl grid_)
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		outputValidRelPoses.Add(transform.up);
 		inputValidRelPoses.Add(-transform.up);
 		inputValidRelPoses.Add(-transform.right);
 		inputValidRelPoses.Add(transform.right);
-		outputValidRelPoses.Add(transform.up);
 		base.PlacedAction(grid_);
 	}
 
@@ -24,10 +23,7 @@ public class BeltLogic : ItemControl
 		base.TryAttachInputs();
 		UpdateSprite();
 	}
-	public override void MoveItem(ItemControl pullingIC)
-	{
-		MoveItemHelper(pullingIC, true);
-	}
+	public override void MoveItem(ItemControl pullingIC) { MoveItemHelper(pullingIC, true); }
 
 	public void UpdateSprite()
 	{
