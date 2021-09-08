@@ -3,7 +3,7 @@ using static GridHelpers;
 
 public class ResourceHelpers : MonoBehaviour
 {
-	// Returns the Ore or Gas at the provided location, or null if there isn't an anything there
+	// Returns the resource of type T at the provided location, or null if there isn't a resource of type T there
 	public static T GetResourceAt<T>(GridControl grid, Vector2 pos) where T : BaseResource
 	{
 		GameObject chunkParent;
@@ -21,7 +21,7 @@ public class ResourceHelpers : MonoBehaviour
 		return default(T);
 	}
 
-	// Places the given resource into the world grid
+	// Adds resource to the worldGrid
 	public static void AddToWorld(GridControl grid, BaseResource resource)
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);
@@ -29,7 +29,7 @@ public class ResourceHelpers : MonoBehaviour
 			chunkParent.GetComponent<Chunk>().resourceObjects[GetPosInChunk(resource.transform.position).x, GetPosInChunk(resource.transform.position).y] = resource;
 	}
 
-	// Removes the given resource from the world grid
+	// Removes resource from the worldGrid
 	public static void RemoveResourceFromWorld(GridControl grid, BaseResource resource)
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, resource.transform.position);

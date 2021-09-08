@@ -3,7 +3,7 @@ using static GridHelpers;
 
 public class PlaceableHelpers
 {
-	// Returns the Placeable of type T at the provided location, or null if there isn't anything there
+	// Returns the Placeable of type T at the provided location, or null if there isn't a placeable of type T there
 	public static T GetPlaceableAt<T>(GridControl grid, Vector2 pos) where T : Placeable
 	{
 		GameObject chunkParent;
@@ -19,7 +19,7 @@ public class PlaceableHelpers
 		return default(T);
 	}
 
-	// Places the given Placeable into the world and the chunk array. PosOffSet alters the position of the placeable, used for large placeables
+	// Adds placeable into the worldGrid. PosOffSet alters the position of the placeable, used for multi-tile placeables
 	public static void AddToWorld(GridControl grid, Placeable placeable, Vector3 posOffSet)
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);
@@ -27,7 +27,7 @@ public class PlaceableHelpers
 			chunkParent.GetComponent<Chunk>().placeObjects[GetPosInChunk(placeable.transform.position + posOffSet).x, GetPosInChunk(placeable.transform.position + posOffSet).y] = placeable;
 	}
 
-	// Remove the Placeable from any references to it. PosOffSet alters the position of the placeable, used for large placeables
+	// Remove placeable from the worldGrid. PosOffSet alters the position of the placeable, used for multi-tile placeables
 	public static void RemoveFromWorld(GridControl grid, Placeable placeable, Vector3 posOffSet)
 	{
 		GameObject chunkParent = GetChunkParentByPos(grid, placeable.transform.position + posOffSet);

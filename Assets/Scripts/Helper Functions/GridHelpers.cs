@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GridHelpers : MonoBehaviour
 {
-	// Returns the parent chunk object given any chunk's position, or a standard position
+	// Returns the chunkParent object given any chunk's position (byChunk), or a standard position (byPos)
 	public static GameObject GetChunkParentByPos(GridControl grid, Vector2 pos)
 	{
 		return GetChunkParentByChunk(grid, GetChunkPos(pos));
@@ -15,12 +15,12 @@ public class GridHelpers : MonoBehaviour
 		return tempChunkParent;
 	}
 
-	// Returns the chunk at the provided position as a Vector2Int
+	// Returns the chunk's coordinates at the provided position as a Vector2Int
 	public static Vector2Int GetChunkPos(Vector2 input)
 	{
-		// Due to rounding issues, negative values of x and y need to be adjusted
 		int x = (int)Mathf.Round(input.x);
 		int y = (int)Mathf.Round(input.y);
+		// Due to rounding issues, negative values of x and y need to be adjusted
 		x = (x < 0) ? x - 31 : x;
 		y = (y < 0) ? y - 31 : y;
 		x /= ChunkManager.CHUNK_SIZE;
@@ -28,9 +28,23 @@ public class GridHelpers : MonoBehaviour
 		return new Vector2Int(x, y);
 	}
 
+	// Returns the bottom-left (smallest X/Y) position coordinate in the given chunk 
+	public static Vector2Int GetMinPosInChunk(Vector2Int chunkPos)
+	{
+		return new Vector2Int(chunkPos.x * ChunkManager.CHUNK_SIZE, chunkPos.y * ChunkManager.CHUNK_SIZE);
+	}
+
+	// Returns the position relative to the bottom left of the chunk
+	public static Vector2Int GetPosInChunk(Vector2 pos)
+	{
+		Vector2Int toReturn = new Vector2Int(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
+		toReturn -= GetMinPosInChunk(GetChunkPos(pos));
+		return toReturn;
+	}
+
 	/* GetChunkID converts the chunk X and Y into a single Int
 	 * PRECONDITIONS: chunkX and chunkY should both be between roughly -30,000 and 30,000 to prevent OverFlows
-	 * POSTCONDITIONS: Returned int will be bwtween 0 and INT32MAX
+	 * POSTCONDITIONS: Returned int will be between 0 and INT32MAX
 	 * Recommend seeing SpiralChunkIDs.xlsx to better understand chunk IDs
 	 */
 	public static int GetChunkID(Vector2Int chunkPos)
@@ -56,22 +70,7 @@ public class GridHelpers : MonoBehaviour
 		return topRight - diff;
 	}
 
-	// Returns the position relative to the bottom left of the chunk
-	public static Vector2Int GetPosInChunk(Vector2 pos)
-	{
-		int x = (int)Mathf.Round(pos.x);
-		int y = (int)Mathf.Round(pos.y);
-		Vector2Int chunkPos = GetChunkPos(pos);
-		x -= (chunkPos.x * ChunkManager.CHUNK_SIZE);
-		y -= (chunkPos.y * ChunkManager.CHUNK_SIZE);
-		return new Vector2Int(x, y);
-	}
-
-	public static Vector2Int GetMinPosInChunk(Vector2Int chunkPos)
-	{
-		return new Vector2Int(chunkPos.x * ChunkManager.CHUNK_SIZE, chunkPos.y * ChunkManager.CHUNK_SIZE);
-	}
-
+	// Returns true if the given position is inside of the given boundaries
 	public static bool insideBorder(Vector2 pos, Vector2 bottomLeft, Vector2 topRight)
 	{
 		return !(pos.x < bottomLeft.x || pos.y < bottomLeft.y || pos.x > topRight.x || pos.y > topRight.y);

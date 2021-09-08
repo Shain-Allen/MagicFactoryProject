@@ -4,7 +4,7 @@ using static PlaceableHelpers;
 
 public class ICHelpers : MonoBehaviour
 {
-	// Attaches the output IC if possible, copy documentation from ItemControl.cs
+	// Pairs IC's outputIC to the inputIC of the IC at the relative position, if legal
 	public static void TryAttachOutputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
 	{
 		ItemControl outputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
@@ -15,7 +15,7 @@ public class ICHelpers : MonoBehaviour
 		outputIC.setInput(IC);
 	}
 
-	// Attaches the input IC if possible from the relative angle, copy documentation from ItemControl.cs
+	// Pairs IC's inputIC to the outputIC of the IC at the relative position, if legal
 	public static void TryAttachInputHelper(GridControl grid, ItemControl IC, Vector3 relativePos)
 	{
 		ItemControl inputIC = GetPlaceableAt<ItemControl>(grid, IC.transform.position + relativePos);
@@ -26,23 +26,19 @@ public class ICHelpers : MonoBehaviour
 		inputIC.setOutput(IC);
 	}
 
-	// Smoothly moves the item from slot one to slot two
-	public static IEnumerator SmoothMove(GridControl grid, GameObject Item, Vector3 startingPOS, Vector3 EndingPOS)
+	// Smoothly moves item from startPos to endPos over the time of 1 beltCycle
+	public static IEnumerator SmoothMove(GridControl grid, GameObject item, Vector3 startPos, Vector3 endPos)
 	{
 		float timeElapsed = 0;
-
 		while (timeElapsed < grid.beltCycleTime)
 		{
-			if (!Item)
-				yield break;
+			if (!item) yield break;
 
-			Item.transform.position = Vector3.Lerp(startingPOS, EndingPOS, timeElapsed / grid.beltCycleTime);
+			item.transform.position = Vector3.Lerp(startPos, endPos, timeElapsed / grid.beltCycleTime);
 			timeElapsed += Time.deltaTime;
 
 			yield return null;
 		}
-
-		if (Item)
-			Item.transform.position = EndingPOS;
+		if (item) item.transform.position = endPos;
 	}
 }
